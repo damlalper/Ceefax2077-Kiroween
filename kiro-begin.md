@@ -66,6 +66,84 @@ First, create the mandatory project structure including the /.kiro folder for sp
 Then, using 'Vibe Coding', generate a robust TeletextContainer component that mimics the 40-column by 24-row grid system. It should support the classic Teletext color palette (Cyan, Yellow, Green, Magenta, Red, Blue, White) and use a monospaced pixel font.
 
 
+# Ceefax 2077 - Restomod Stratejisi 🚗⚡
+
+> *Eski arabaları modernize edenler (Restomod) gibi düşün. Dışarıdan baktığında 1967 model bir Mustang gibidir (Klasik), ama kaputu açtığında içinde 2025 model elektrikli motor vardır (İnovasyon).*
+
+## Ceefax 2077 için Stratejimiz Şu Olmalı:
+
+### 🔒 **A. Neyi KESİNLİKLE DEĞİŞTİRMEYECEĞİZ?** *(Eski Beden)*
+Kullanıcıyı 1980'lerdeymiş gibi hissettiren kısıtlamaları koruyacağız. Bu kısıtlamalar projenin kimliğidir:
+
+#### **Grid Yapısı:**
+- Kesinlikle **40 karakter genişlik × 24 satır yükseklik**
+- Bu ızgaranın dışına çıkmak yok
+- Monospaced font zorunluluğu
+
+#### **Renk Paleti:**
+- Sadece o iğrenç ama harika **7 renk**:
+  - 🖤 Siyah
+  - ⚪ Beyaz  
+  - 🔴 Kırmızı
+  - 🟢 Yeşil
+  - 🟡 Sarı
+  - 🔵 Mavi
+  - 🟣 Magenta
+  - 🔷 Cyan
+- **Ara renk yok, degrade yok, gradient yok**
+
+#### **Navigasyon:**
+- **Mouse yok!** (Veya çok sınırlı)
+- Sayfalar arasında gezinmek için **numara tuşlanmalı** (100, 101, 666)
+- Klavye odaklı kullanım
+
+---
+
+### 🚀 **B. Neyi "REIMAGINE" Edeceğiz?** *(Yeni Zihin)*
+Eski Teletext'in yapamadığı ama Kiro ile yapabileceğimiz şeyler:
+
+#### **🧠 İçerik (Canlı & AI)**
+| Eski Sistem | Bizimki (Ceefax 2077) |
+|-------------|----------------------|
+| Bir editörün elle girdiği dünkü haberler | İnterneti saniyesinde tarayan, karmaşık haberi "Teletext'in sığabileceği kadar" özetleyen, **duygusuz bir AI** |
+| Statik içerik | **Gerçek zamanlı** haber akışı |
+| Manuel güncelleme | **Otomatik AI özetleme** ve distopik dönüştürme |
+
+#### **🎨 Görsel (ASCII/Mosaic Art)**
+| Eski Sistem | Bizimki (Ceefax 2077) |
+|-------------|----------------------|
+| Sadece metin ve basit şekiller | Modern bir fotoğrafı (JPG) anlık olarak analiz edip, onu **Teletext bloklarıyla** yeniden çizen bir görüntü işleme motoru |
+| Limited graphics | **Resurrection burada parlar**: Modern medyayı eski formatta render ediyoruz |
+| Pre-defined art | **Dynamic ASCII art generation** |
+
+#### **⚡ Etkileşim (Spooky/Alive)**
+| Eski Sistem | Bizimki (Ceefax 2077) |
+|-------------|----------------------|
+| Statik ekran | Ekranın seninle **"konuşması"** |
+| Predictable behavior | **Context-aware reactions**:<br>• Hata verdiğinde statik karıncalanma<br>• Gece yarısı renklerin tersine dönmesi<br>• Metinlerin "glitch"lenerek bozulması |
+| Basic navigation | **Intelligent routing** ve **time-based effects** |
+
+---
+
+## 🎯 **Özetle Tartışma Sonucu**
+
+Projeyi şu cümleyle tanımlarsak doğru yoldayız demektir:
+
+> **"Ceefax 2077, eğer 1980'lerdeki Teletext mühendislerinin elinde bugünkü Yapay Zeka gücü olsaydı, üretecekleri şeydir."**
+
+### 📊 **Teknik Özet:**
+Görüntü: %100 Retro (Eski)
+Teknoloji: %100 AI (Yeni)
+──────────
+Deneyim: %100 Büyüleyici
+
+text
+
+### 🎪 **Kullanıcı Deneyimi Hedefi:**
+- **İlk 10 saniye:** "Bu ne kadar retro!"
+- **Sonraki 30 saniye:** "Bunu nasıl yaptılar?"
+- **1. dakika:** "Bu aslında çok zeki bir sistem!"
+
 
 ---
 
@@ -78,3 +156,9 @@ Then, using 'Vibe Coding', generate a robust TeletextContainer component that mi
 6. 🎥 Demo videosu hazırlığı
 
 **Hedef:** Jürinin "Bu kadar retro ama bu kadar modern nasıl olabilir?" dediği bir proje! 🏆
+
+## BRING BACK TELETEXT
+<img width="255" height="197" alt="Teletexnews" src="https://github.com/user-attachments/assets/26f66eb3-c9da-4b19-8991-faf1454351aa" />
+![TELEMMGLPICT000217527839_trans_NvBQzQNjv4BqIHpy6C6WvnRSxwhUqZu6JkjN6D269PF_XpfP5nclIbA](https://github.com/user-attachments/assets/0e636c19-33fc-4db7-8800-7a8ffdaa4a76)
+<img width="241" height="209" alt="images" src="https://github.com/user-attachments/assets/3d511c91-8a8e-44e2-98e5-9c1e12d14992" />
+
