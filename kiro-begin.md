@@ -159,6 +159,7 @@ text
 
 ## BRING BACK TELETEXT
 <img width="255" height="197" alt="Teletexnews" src="https://github.com/user-attachments/assets/26f66eb3-c9da-4b19-8991-faf1454351aa" />
-![TELEMMGLPICT000217527839_trans_NvBQzQNjv4BqIHpy6C6WvnRSxwhUqZu6JkjN6D269PF_XpfP5nclIbA](https://github.com/user-attachments/assets/0e636c19-33fc-4db7-8800-7a8ffdaa4a76)
 <img width="241" height="209" alt="images" src="https://github.com/user-attachments/assets/3d511c91-8a8e-44e2-98e5-9c1e12d14992" />
+<img width="640" height="401" alt="TELEMMGLPICT000217527839_trans_NvBQzQNjv4BqIHpy6C6WvnRSxwhUqZu6JkjN6D269PF_XpfP5nclIbA" src="https://github.com/user-attachments/assets/7a3c032b-b91c-4588-9a5e-f7478cd36a8c" />
+
 
