@@ -1,0 +1,80 @@
+# Ceefax 2077 - Distopik Teletext Projesi
+
+🏗️ **1. Teknik Temel (Tech Stack)**
+Basit tutacağız ama çıktısı çok karmaşık görünecek.
+
+- **Framework**: React (Vite ile) veya Next.js
+- **Stil**: Tailwind CSS (Grid yapısı için) + Custom Canvas (O eski tüplü TV / CRT efektini vermek için)
+- **Veri**: News API (Gerçek haberler) + OpenAI/Claude (Haberleri özetleyip distopik hale getirmek için)
+
+🧠 **2. Kiro Entegrasyon Planı** *(Jüri Puanları Buradan Gelecek)*
+Yarışma kuralları 5 Kiro özelliğini soruyor. Projeyi geliştirirken bunları özellikle kullanacağız ve videoda göstereceğiz:
+
+## A. Vibe Coding (Arayüz Tasarımı)
+Teletext'in o meşhur 40x24 karakterli ızgarasını ve neon renklerini (Cyan, Yellow, Green, Magenta) elle yazmak zordur.
+
+**Strateji**: Kiro'ya bir Teletext ekran görüntüsü atacağız ve diyeceğiz ki: *"Bana bu görseldeki grid yapısını ve renk paletini CSS değişkenleri olarak tanımla. CRT tarama çizgisi (scanline) efekti için bir CSS animasyonu yaz."*
+
+**Sonuç**: Saniyeler içinde mükemmel bir retro arayüz.
+
+## B. Specs (Navigasyon Kuralları)
+Teletext'te sayfa numaraları vardır (100: Haberler, 300: Spor, 666: Kıyamet).
+
+**Strateji**: `/.kiro/specs/routing.yaml` dosyası oluşturacağız.
+
+**İçerik**: *"Sayfa 100 girilirse manşetleri çek. Sayfa 666 girilirse ekranı kırmızı yap ve korku modunu aç."* kuralını buraya yazacağız. Kiro kodun iskeletini bu dosyaya bakarak kuracak.
+
+## C. Steering Docs (Yapay Zeka Personası)
+Bu projenin "kalbi" burası. Haberleri sunan AI'ın kişiliği.
+
+**Strateji**: `/.kiro/steering/editor_persona.md` dosyası oluşturacağız.
+
+**Komut**: *"Sen 2077 yılından gelen, duygusuz, sadece gerçeği söyleyen ama insanlığın sonunun geldiğini bilen bir terminalsın. Haberleri özetlerken hep kinik ve soğuk bir dil kullan. Asla 3 satırı geçme."*
+
+## D. MCP (Haber Entegrasyonu)
+**Strateji**: Kiro'nun MCP sunucusunu kullanarak gerçek zamanlı bir RSS akışını (BBC News veya CNN) projeye bağlayacağız. Kiro, bu ham veriyi alıp yukarıdaki "Persona"ya göre yeniden yazacak.
+
+## E. Hooks (Spooky Twist)
+**Strateji**: `onPageChange` hook'u yazacağız. Eğer kullanıcı gece saat 00:00 ile 03:00 arasında siteye girerse, Kiro Hook devreye girecek ve sitenin fontlarını "bozuk" (glitched) karakterlere dönüştürecek.
+
+🎬 **3. Demo Videosu Senaryosu** *(3 Dakikalık Şov)*
+Videoda jüriyi şöyle etkileyeceğiz:
+
+### Açılış (0-30sn)
+Ekran karıncalı başlar. Eski bir TV açılma sesi. Karşımızda Ceefax 2077.
+
+### Normal Mod (30-90sn)
+Mouse yok! Sadece klavyeyle "100" yazıp haberlere bakıyorsun. Haberler çok kısa ve net. "Information Overload" çözülmüş.
+
+### Kiro Show (90-120sn)
+"Bunu nasıl yaptık?" bölümü. Kiro ile sohbet geçmişini gösteriyoruz. Spec dosyasını ekrana getiriyoruz.
+
+### The Twist (120-180sn)
+Kullanıcı "666" yazar. Müzik gerilir. Haberler değişir: *"Yapay Zeka kontrolü ele geçirdi... Kaçış yok..."* Ekran titrer ve kapanır.
+
+---
+
+## 🚀 Hemen Başlıyoruz: İlk Adım
+
+Şimdi Kiro IDE'yi aç (veya VS Code + Kiro extension).
+
+**İlk prompt'umuz şu olmalı** (Bunu Kiro'ya yapıştır):
+Act as a creative frontend architect for a hackathon project named 'Ceefax 2077'. We are resurrecting the 1980s Teletext interface but using modern React and Tailwind CSS.
+
+First, create the mandatory project structure including the /.kiro folder for specs and steering.
+
+Then, using 'Vibe Coding', generate a robust TeletextContainer component that mimics the 40-column by 24-row grid system. It should support the classic Teletext color palette (Cyan, Yellow, Green, Magenta, Red, Blue, White) and use a monospaced pixel font.
+
+
+
+---
+
+**Sonraki Adımlar:**
+1. ✅ Kiro ile proje yapısını oluştur
+2. 🎨 Teletext arayüzünü kodla
+3. 🔗 News API entegrasyonu
+4. 🤖 AI persona ile haber işleme
+5. ⚡ Özel efektler ve hook'lar
+6. 🎥 Demo videosu hazırlığı
+
+**Hedef:** Jürinin "Bu kadar retro ama bu kadar modern nasıl olabilir?" dediği bir proje! 🏆
