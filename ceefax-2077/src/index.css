@@ -1,0 +1,967 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000000;
+  overflow: hidden;
+  font-family: 'VT323', monospace;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* ============================================
+   AUTHENTIC TELETEXT VISUAL SYSTEM
+   Based on BBC Ceefax, TRT Telegün, NOS
+   ============================================ */
+
+/* Main Screen Container */
+.teletext-screen {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* CRT Container - 4:3 Aspect Ratio - Large and Immersive */
+.teletext-container {
+  height: 92vh;
+  width: calc(92vh * 4 / 3); /* Maintain 4:3 aspect ratio */
+  max-width: 98vw; /* Prevent horizontal overflow */
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  border: 4px solid #333;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 255, 0.3),
+    inset 0 0 120px rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+/* Adjust if width constraint is hit */
+@media (max-aspect-ratio: 4/3) {
+  .teletext-container {
+    width: 98vw;
+    height: calc(98vw * 3 / 4);
+    max-height: 92vh;
+  }
+}
+
+/* ============================================
+   HEADER ROW - The Blue Strip
+   ============================================ */
+
+.teletext-header-row {
+  background-color: #0000FF;
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  align-items: center;
+  padding: 0.3rem 0.8rem;
+  min-height: 8%;
+  border-bottom: 2px solid #000000;
+}
+
+.teletext-header-left {
+  color: #FFFFFF;
+  font-size: clamp(18px, 2.5vmin, 28px);
+  font-weight: bold;
+  text-align: left;
+}
+
+.teletext-header-center {
+  text-align: center;
+  color: #FFFF00;
+  font-size: clamp(20px, 2.8vmin, 32px);
+  font-weight: bold;
+}
+
+.teletext-header-right {
+  color: #FFFF00;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  text-align: right;
+  font-weight: bold;
+}
+
+/* Double Height Text Effect */
+.double-height {
+  display: inline-block;
+  transform: scaleY(2);
+  transform-origin: center;
+  line-height: 0.5;
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+
+.teletext-main-content {
+  flex: 1;
+  background-color: #000000;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   FASTEXT FOOTER - 4 Colored Bars
+   ============================================ */
+
+.teletext-fastext-footer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  min-height: 6%;
+  border-top: 2px solid #000000;
+}
+
+.teletext-fastext-footer > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(14px, 2vmin, 20px);
+  font-weight: bold;
+  padding: 0.4rem 0.2rem;
+  text-align: center;
+}
+
+.fastext-red {
+  background-color: #FF0000;
+  color: #FFFFFF;
+}
+
+.fastext-green {
+  background-color: #00FF00;
+  color: #000000;
+}
+
+.fastext-yellow {
+  background-color: #FFFF00;
+  color: #000000;
+}
+
+.fastext-cyan {
+  background-color: #00FFFF;
+  color: #000000;
+}
+
+/* CRT Scanlines Overlay */
+.crt-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+
+/* Glitch Animation for Page 666 */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.glitch-effect {
+  animation: glitch 0.3s infinite;
+}
+
+/* Pulse animation for warnings */
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+
+/* ============================================
+   PHASE 5: HORROR EFFECTS FOR PAGE 666
+   ============================================ */
+
+/* Screen Tearing Effect */
+@keyframes tear {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-5px);
+  }
+  20% {
+    transform: translateX(5px);
+  }
+  30% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Background Static Noise */
+@keyframes noise {
+  0%, 100% {
+    background-position: 0 0;
+  }
+  10% {
+    background-position: -5% -10%;
+  }
+  20% {
+    background-position: -15% 5%;
+  }
+  30% {
+    background-position: 7% -25%;
+  }
+  40% {
+    background-position: 20% 25%;
+  }
+  50% {
+    background-position: -25% 10%;
+  }
+  60% {
+    background-position: 15% 5%;
+  }
+  70% {
+    background-position: 0 15%;
+  }
+  80% {
+    background-position: 25% 35%;
+  }
+  90% {
+    background-position: -10% 10%;
+  }
+}
+
+/* Red Alert Pulsing */
+@keyframes red-alert {
+  0%, 100% {
+    background-color: #000000;
+  }
+  50% {
+    background-color: #330000;
+  }
+}
+
+/* Intense Red Pulse */
+@keyframes red-pulse-intense {
+  0%, 100% {
+    background-color: #000000;
+    box-shadow: inset 0 0 50px rgba(255, 0, 0, 0.3);
+  }
+  25% {
+    background-color: #220000;
+    box-shadow: inset 0 0 80px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    background-color: #440000;
+    box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.7);
+  }
+  75% {
+    background-color: #220000;
+    box-shadow: inset 0 0 80px rgba(255, 0, 0, 0.5);
+  }
+}
+
+/* Glitch Text Effect - RGB Split */
+.glitch-text {
+  position: relative;
+  animation: glitch-skew 1s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 #ff00ff;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 #00ffff, 2px 2px #ff00ff;
+  animation: glitch-anim2 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {
+    clip: rect(10px, 9999px, 31px, 0);
+    transform: skew(0.5deg);
+  }
+  5% {
+    clip: rect(70px, 9999px, 71px, 0);
+    transform: skew(0.1deg);
+  }
+  10% {
+    clip: rect(60px, 9999px, 95px, 0);
+    transform: skew(0.8deg);
+  }
+  15% {
+    clip: rect(80px, 9999px, 15px, 0);
+    transform: skew(0.3deg);
+  }
+  20% {
+    clip: rect(40px, 9999px, 66px, 0);
+    transform: skew(0.6deg);
+  }
+  100% {
+    clip: rect(25px, 9999px, 99px, 0);
+    transform: skew(0.4deg);
+  }
+}
+
+@keyframes glitch-anim2 {
+  0% {
+    clip: rect(65px, 9999px, 119px, 0);
+    transform: skew(0.7deg);
+  }
+  5% {
+    clip: rect(25px, 9999px, 90px, 0);
+    transform: skew(0.2deg);
+  }
+  10% {
+    clip: rect(50px, 9999px, 60px, 0);
+    transform: skew(0.9deg);
+  }
+  100% {
+    clip: rect(95px, 9999px, 15px, 0);
+    transform: skew(0.5deg);
+  }
+}
+
+@keyframes glitch-skew {
+  0% {
+    transform: skew(0deg);
+  }
+  10% {
+    transform: skew(-2deg);
+  }
+  20% {
+    transform: skew(2deg);
+  }
+  30% {
+    transform: skew(-1deg);
+  }
+  40% {
+    transform: skew(1deg);
+  }
+  50% {
+    transform: skew(0deg);
+  }
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+/* Screen Shake */
+.screen-shake {
+  animation: shake 0.2s infinite;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  10% {
+    transform: translate(-2px, -2px) rotate(-0.5deg);
+  }
+  20% {
+    transform: translate(2px, 2px) rotate(0.5deg);
+  }
+  30% {
+    transform: translate(-2px, 2px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translate(2px, -2px) rotate(0.5deg);
+  }
+  50% {
+    transform: translate(-2px, -2px) rotate(-0.5deg);
+  }
+  60% {
+    transform: translate(2px, 2px) rotate(0.5deg);
+  }
+  70% {
+    transform: translate(-2px, 2px) rotate(-0.5deg);
+  }
+  80% {
+    transform: translate(2px, -2px) rotate(0.5deg);
+  }
+  90% {
+    transform: translate(-2px, -2px) rotate(-0.5deg);
+  }
+}
+
+/* Corrupted Grid Effect */
+.corrupted-grid {
+  animation: tear 0.5s infinite, red-alert 1s infinite;
+}
+
+/* Static Noise Background */
+.noise-bg {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 0, 0, 0.03) 2px,
+      rgba(255, 0, 0, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 0, 0, 0.03) 2px,
+      rgba(255, 0, 0, 0.03) 4px
+    );
+  animation: noise 0.2s infinite;
+}
+
+/* Distorted Text */
+.distorted-text {
+  text-shadow: 
+    2px 0 #ff0000,
+    -2px 0 #00ffff,
+    0 2px #ff00ff;
+  animation: glitch-skew 0.3s infinite;
+}
+
+/* Flicker Effect */
+.flicker {
+  animation: flicker-animation 0.1s infinite;
+}
+
+@keyframes flicker-animation {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Inverted Colors */
+.inverted {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Scan Line Intensified */
+.scan-lines-intense::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 0, 0, 0.1),
+    rgba(255, 0, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 1000;
+  animation: scan-line-move 8s linear infinite;
+}
+
+@keyframes scan-line-move {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+
+/* ============================================
+   TEXT VISIBILITY FIX
+   ============================================ */
+
+/* Ensure all text is visible with proper colors */
+.text-teletext-white {
+  color: #FFFFFF !important;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.text-teletext-cyan {
+  color: #00FFFF !important;
+  text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);
+}
+
+.text-teletext-yellow {
+  color: #FFFF00 !important;
+  text-shadow: 0 0 2px rgba(255, 255, 0, 0.5);
+}
+
+.text-teletext-red {
+  color: #FF0000 !important;
+  text-shadow: 0 0 2px rgba(255, 0, 0, 0.5);
+}
+
+.text-teletext-green {
+  color: #00FF00 !important;
+  text-shadow: 0 0 2px rgba(0, 255, 0, 0.5);
+}
+
+.text-teletext-blue {
+  color: #0000FF !important;
+  text-shadow: 0 0 2px rgba(0, 0, 255, 0.5);
+}
+
+.text-teletext-magenta {
+  color: #FF00FF !important;
+  text-shadow: 0 0 2px rgba(255, 0, 255, 0.5);
+}
+
+/* Background colors */
+.bg-teletext-black {
+  background-color: #000000 !important;
+}
+
+.bg-teletext-white {
+  background-color: #FFFFFF !important;
+}
+
+.bg-teletext-cyan {
+  background-color: #00FFFF !important;
+}
+
+.bg-teletext-yellow {
+  background-color: #FFFF00 !important;
+}
+
+.bg-teletext-red {
+  background-color: #FF0000 !important;
+}
+
+.bg-teletext-green {
+  background-color: #00FF00 !important;
+}
+
+.bg-teletext-blue {
+  background-color: #0000FF !important;
+}
+
+.bg-teletext-magenta {
+  background-color: #FF00FF !important;
+}
+
+/* Ensure text in teletext content is always visible */
+.teletext-content * {
+  opacity: 1 !important;
+}
+
+
+/* ============================================
+   PAGE LAYOUT STYLES
+   ============================================ */
+
+.teletext-page {
+  width: 100%;
+  height: 100%;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Title Banner - Blue Background with Double-Height Text */
+.teletext-title-banner {
+  background-color: #0000FF;
+  color: #FFFF00;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: clamp(24px, 3.5vmin, 40px);
+  font-weight: bold;
+  border: 2px solid #FFFF00;
+}
+
+/* Subtitle */
+.teletext-subtitle {
+  color: #00FFFF;
+  text-align: center;
+  font-size: clamp(16px, 2.2vmin, 22px);
+  font-weight: bold;
+  padding: 0.3rem;
+}
+
+/* Index Grid - Two Columns */
+.teletext-index-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  flex: 1;
+  font-size: clamp(14px, 2vmin, 20px);
+  line-height: 1.4;
+}
+
+.teletext-index-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* Instructions */
+.teletext-instructions {
+  text-align: center;
+  font-size: clamp(14px, 1.8vmin, 18px);
+  padding: 0.5rem;
+  border-top: 2px solid #00FFFF;
+  border-bottom: 2px solid #00FFFF;
+}
+
+.teletext-instructions p {
+  margin: 0.2rem 0;
+}
+
+/* Bottom Banner */
+.teletext-bottom-banner {
+  background-color: #0000FF;
+  color: #FFFF00;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: clamp(14px, 2vmin, 20px);
+  font-weight: bold;
+}
+
+/* ============================================
+   TEXT COLOR UTILITIES
+   ============================================ */
+
+.text-white {
+  color: #FFFFFF !important;
+}
+
+.text-yellow {
+  color: #FFFF00 !important;
+}
+
+.text-cyan {
+  color: #00FFFF !important;
+}
+
+.text-green {
+  color: #00FF00 !important;
+}
+
+.text-red {
+  color: #FF0000 !important;
+}
+
+.text-blue {
+  color: #0000FF !important;
+}
+
+.text-magenta {
+  color: #FF00FF !important;
+}
+
+/* Background Color Utilities */
+.bg-blue {
+  background-color: #0000FF !important;
+}
+
+.bg-yellow {
+  background-color: #FFFF00 !important;
+}
+
+.bg-cyan {
+  background-color: #00FFFF !important;
+}
+
+.bg-green {
+  background-color: #00FF00 !important;
+}
+
+.bg-red {
+  background-color: #FF0000 !important;
+}
+
+.bg-magenta {
+  background-color: #FF00FF !important;
+}
+
+.bg-white {
+  background-color: #FFFFFF !important;
+}
+
+.bg-black {
+  background-color: #000000 !important;
+}
+
+
+/* ============================================
+   NEWS PAGE STYLES - Larger, Readable Text
+   ============================================ */
+
+.teletext-news-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.teletext-news-item {
+  border-bottom: 2px solid #00FFFF;
+  padding-bottom: 0.8rem;
+}
+
+.teletext-news-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  font-size: clamp(18px, 2.5vmin, 26px);
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.teletext-page-ref {
+  font-size: clamp(16px, 2.2vmin, 24px);
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.teletext-news-body {
+  font-size: clamp(16px, 2.2vmin, 24px);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.teletext-news-body p {
+  margin: 0.2rem 0;
+}
+
+.teletext-news-ending {
+  font-size: clamp(15px, 2vmin, 22px);
+  font-style: italic;
+  margin-top: 0.3rem;
+}
+
+/* Loading State */
+.teletext-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: clamp(20px, 3vmin, 32px);
+  color: #00FFFF;
+}
+
+
+/* ============================================
+   NEWS DETAIL PAGE STYLES
+   ============================================ */
+
+.teletext-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.teletext-detail-body {
+  font-size: clamp(18px, 2.5vmin, 26px);
+  line-height: 1.5;
+}
+
+.teletext-detail-body p {
+  margin: 0.5rem 0;
+}
+
+.teletext-detail-related {
+  border-top: 2px solid #00FFFF;
+  padding-top: 1rem;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  line-height: 1.4;
+}
+
+.teletext-detail-related p {
+  margin: 0.3rem 0;
+}
+
+.teletext-detail-verified {
+  background-color: #FF0000;
+  color: #FFFFFF;
+  padding: 1rem;
+  text-align: center;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  font-weight: bold;
+}
+
+.teletext-detail-verified p {
+  margin: 0.3rem 0;
+}
+
+
+/* ============================================
+   DEVOPS / SYSTEM STATUS STYLES
+   ============================================ */
+
+/* Status Box on Index */
+.teletext-status-box {
+  background-color: #000000;
+  border: 2px solid #00FFFF;
+  padding: 1rem;
+  text-align: center;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  margin: 1rem 0;
+}
+
+.teletext-status-box p {
+  margin: 0.3rem 0;
+}
+
+/* Alert Banner */
+.teletext-alert {
+  padding: 0.8rem;
+  text-align: center;
+  font-size: clamp(18px, 2.5vmin, 26px);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.teletext-alert-safe {
+  background-color: #00FF00;
+  color: #000000;
+}
+
+.teletext-alert-warning {
+  background-color: #FFFF00;
+  color: #000000;
+}
+
+.teletext-alert-critical {
+  background-color: #FF0000;
+  color: #FFFFFF;
+}
+
+.teletext-alert-emergency {
+  background-color: #FF0000;
+  color: #FFFFFF;
+  animation: pulse-red 1s infinite;
+}
+
+/* Metrics Display */
+.teletext-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.teletext-metric-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1rem;
+  align-items: center;
+  font-size: clamp(16px, 2.2vmin, 24px);
+}
+
+.teletext-metric-label {
+  font-weight: bold;
+}
+
+.teletext-metric-bar {
+  font-family: monospace;
+  letter-spacing: -2px;
+}
+
+/* Status Grid */
+.teletext-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+  font-size: clamp(15px, 2vmin, 22px);
+}
+
+.teletext-status-item {
+  border: 1px solid #00FFFF;
+  padding: 0.8rem;
+  text-align: center;
+}
+
+.teletext-status-item p {
+  margin: 0.3rem 0;
+}
+
+/* Recommendations */
+.teletext-recommendations {
+  background-color: #000000;
+  border: 2px solid #FFFF00;
+  padding: 1rem;
+  margin: 1rem 0;
+  font-size: clamp(15px, 2vmin, 22px);
+}
+
+.teletext-recommendations p {
+  margin: 0.3rem 0;
+}
+
+/* Refresh Indicator */
+.teletext-refresh {
+  text-align: center;
+  font-size: clamp(14px, 1.8vmin, 20px);
+  padding: 0.5rem;
+  border-top: 1px solid #00FFFF;
+  margin-top: auto;
+}

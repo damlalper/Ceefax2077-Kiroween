@@ -1,0 +1,81 @@
+# Ceefax 2077 - Low-Bandwidth DevOps Incident Commander
+# Page Routing Specification
+
+version: "2.0"
+default_page: 100
+fallback_page: "404_SIGNAL_LOST"
+
+concept: "Emergency Command Center for DevOps"
+problem: "Modern dashboards (Grafana, Datadog, AWS) are too slow and complex during incidents"
+solution: "Teletext-style interface - 40x24 characters, instant load, zero bloat"
+
+# Page Route Definitions
+routes:
+  100:
+    id: "HOME"
+    name: "Command Index"
+    description: "Main dashboard with system overview"
+    color: "cyan"
+    
+  101:
+    id: "SYSTEM_STATUS"
+    name: "System Health"
+    description: "Real-time CPU, RAM, server uptime monitoring"
+    color: "cyan"
+    refresh_rate: "1s"
+    alerts:
+      - "CPU > 90%: RED + BLINK"
+      - "RAM > 85%: YELLOW"
+      - "Uptime < 1h: WARNING"
+    
+  200:
+    id: "DEPLOY_LOGS"
+    name: "Deployment History"
+    description: "Recent GitHub commits and Vercel deployments"
+    color: "yellow"
+    data_source: "GitHub API / Vercel API"
+    
+  300:
+    id: "ERROR_LOGS"
+    name: "Error Monitor"
+    description: "Live error tracking and stack traces"
+    color: "red"
+    
+  666:
+    id: "KILL_SWITCH"
+    name: "Emergency Shutdown"
+    description: "Interactive kill switch for emergency server shutdown"
+    color: "red"
+    interactive: true
+    commands:
+      - "KILL: Trigger emergency shutdown"
+      - "RESTART: Reboot all services"
+      - "ROLLBACK: Deploy previous version"
+    effects:
+      - "Screen corruption"
+      - "Shutdown simulation"
+      - "Visual chaos"
+
+# Navigation Rules
+navigation:
+  input_method: "numeric_keypad"
+  buffer_length: 3
+  auto_navigate: true
+  clear_buffer_on_navigate: true
+  
+  invalid_page_behavior:
+    show: "404_SIGNAL_LOST"
+    duration: 3000  # milliseconds
+    auto_return_to: 100
+
+# Special Behaviors
+special_modes:
+  haunted_hours:
+    enabled: true
+    start_time: "00:00"
+    end_time: "03:00"
+    auto_redirect_to: 666
+    
+  emergency_exit:
+    key: "100"
+    description: "Always returns to home from any page"
