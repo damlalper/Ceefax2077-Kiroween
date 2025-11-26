@@ -1,0 +1,5 @@
+// Climate, Travel, Flight pages (402-404)
+// Wellness, Nutrition, Mindfulness, Lifestyle pages (501-504)
+// Music, Movies, Art, Creator pages (601-604)
+// Shopping, Reviews, Trends, Community pages (701-704)
+// Games, Streaming, Reviews, Retro pages (801-804)

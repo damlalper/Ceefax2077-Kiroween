@@ -965,3 +965,294 @@ body {
   border-top: 1px solid #00FFFF;
   margin-top: auto;
 }
+
+
+/* ============================================
+   MASTER INDEX - 9 ZONES GRID
+   ============================================ */
+
+.teletext-master-index {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+  flex: 1;
+}
+
+.zone-block {
+  border: 2px solid #00FFFF;
+  padding: 1rem;
+  text-align: center;
+  background-color: #000000;
+  transition: all 0.2s;
+}
+
+.zone-block:hover {
+  background-color: #111111;
+  border-color: #FFFF00;
+}
+
+.zone-title {
+  font-size: clamp(18px, 2.5vmin, 26px);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.zone-desc {
+  font-size: clamp(14px, 1.8vmin, 20px);
+  opacity: 0.8;
+}
+
+.teletext-special-access {
+  text-align: center;
+  padding: 1rem;
+  border: 2px solid #FF0000;
+  margin: 1rem 0;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  animation: pulse-red 2s infinite;
+}
+
+
+/* ============================================
+   ANGEL NUMBERS - HIDDEN HORROR FEATURES
+   ============================================ */
+
+/* 777: GHOST WRITER */
+.ghost-story-content {
+  flex: 1;
+  padding: 2rem;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  line-height: 1.6;
+  transition: opacity 0.5s;
+}
+
+.ghost-story-line {
+  margin: 0.3rem 0;
+  min-height: 1.6em;
+}
+
+.ghost-story-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 2rem;
+}
+
+.ghost-choice {
+  background-color: #000000;
+  color: #FFFF00;
+  border: 2px solid #FFFF00;
+  padding: 1rem;
+  font-family: 'VT323', monospace;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ghost-choice:hover {
+  background-color: #FFFF00;
+  color: #000000;
+  transform: scale(1.02);
+}
+
+.ghost-choice-a {
+  border-color: #00FF00;
+  color: #00FF00;
+}
+
+.ghost-choice-a:hover {
+  background-color: #00FF00;
+  color: #000000;
+}
+
+.ghost-choice-b {
+  border-color: #FF0000;
+  color: #FF0000;
+}
+
+.ghost-choice-b:hover {
+  background-color: #FF0000;
+  color: #FFFFFF;
+}
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* 333: THE OUIJA */
+.ouija-question-box {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  align-items: center;
+}
+
+.ouija-input {
+  flex: 1;
+  background-color: #000000;
+  color: #FF00FF;
+  border: 2px solid #FF00FF;
+  padding: 0.8rem;
+  font-family: 'VT323', monospace;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  text-transform: uppercase;
+}
+
+.ouija-input::placeholder {
+  color: #FF00FF;
+  opacity: 0.5;
+}
+
+.ouija-ask-button {
+  background-color: #FF00FF;
+  color: #000000;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-family: 'VT323', monospace;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ouija-ask-button:hover {
+  background-color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.ouija-board {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 0.3rem;
+  padding: 1rem 2rem;
+  margin: 1rem 0;
+}
+
+.ouija-letter {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #FF00FF;
+  color: #FFFFFF;
+  font-size: clamp(14px, 2vmin, 22px);
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.ouija-letter-active {
+  background-color: #FF00FF;
+  color: #000000;
+  transform: scale(1.3);
+  box-shadow: 0 0 20px #FF00FF;
+  z-index: 10;
+  animation: ouija-pulse 0.5s;
+}
+
+@keyframes ouija-pulse {
+  0%, 100% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+.ouija-answer {
+  text-align: center;
+  padding: 2rem;
+  min-height: 4rem;
+  font-size: clamp(18px, 2.5vmin, 28px);
+  font-weight: bold;
+}
+
+/* 444: DEAD SIGNAL */
+.dead-signal-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.dead-signal-static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(255, 255, 255, 0.03) 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.03) 1px,
+      rgba(255, 255, 255, 0.03) 2px
+    );
+  animation: noise 0.1s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dead-signal-fragments {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ghost-fragment {
+  position: absolute;
+  color: #00FFFF;
+  font-size: clamp(12px, 1.5vmin, 18px);
+  white-space: nowrap;
+  animation: ghost-float 3s ease-in-out;
+  text-shadow: 0 0 10px #00FFFF;
+}
+
+@keyframes ghost-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.dead-signal-message {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dead-signal-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 1rem 0;
+}

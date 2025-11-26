@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTeletext } from '../context/TeletextContext'
+import { getZoneColor, getZoneTitle, getZoneNavigation } from '../utils/zoneHelper'
 
 interface TeletextGridProps {
   children?: React.ReactNode
@@ -37,17 +38,25 @@ export default function TeletextGrid({ children }: TeletextGridProps) {
     ? inputBuffer.padEnd(3, '_') 
     : String(currentPage).padStart(3, '0')
 
+  // Get zone-specific styling
+  const zoneColor = getZoneColor(currentPage)
+  const zoneTitle = getZoneTitle(currentPage)
+  const navigation = getZoneNavigation(currentPage)
+
   return (
     <div className="teletext-screen">
       {/* CRT Container */}
       <div className="teletext-container">
-        {/* Header Row - Blue Strip with Yellow Double-Height Text */}
-        <div className="teletext-header-row">
+        {/* Header Row - Dynamic Color Based on Zone */}
+        <div 
+          className="teletext-header-row"
+          style={{ backgroundColor: zoneColor }}
+        >
           <div className="teletext-header-left">
             P{pageDisplay}
           </div>
           <div className="teletext-header-center">
-            <span className="double-height">CEEFAX 2077</span>
+            <span className="double-height">{zoneTitle}</span>
           </div>
           <div className="teletext-header-right">
             {formatDate(time)} {formatTime(time)}
@@ -59,12 +68,23 @@ export default function TeletextGrid({ children }: TeletextGridProps) {
           {children}
         </div>
 
-        {/* Fastext Footer - 4 Colored Bars */}
+        {/* Fastext Footer - Dynamic Navigation */}
         <div className="teletext-fastext-footer">
-          <div className="fastext-red">100 INDEX</div>
-          <div className="fastext-green">101 STATUS</div>
-          <div className="fastext-yellow">200 DEPLOYS</div>
-          <div className="fastext-cyan">300 ERRORS</div>
+          {navigation ? (
+            <>
+              <div className="fastext-red">{navigation.prevZone} PREV</div>
+              <div className="fastext-green">{navigation.currentZone} INDEX</div>
+              <div className="fastext-yellow">{navigation.nextZone} NEXT</div>
+              <div className="fastext-cyan">666 KILL</div>
+            </>
+          ) : (
+            <>
+              <div className="fastext-red">100 GLOBAL</div>
+              <div className="fastext-green">500 VIBE</div>
+              <div className="fastext-yellow">900 SYSTEM</div>
+              <div className="fastext-cyan">666 KILL</div>
+            </>
+          )}
         </div>
       </div>
 

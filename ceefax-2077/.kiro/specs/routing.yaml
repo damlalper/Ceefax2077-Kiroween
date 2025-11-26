@@ -1,60 +1,351 @@
-# Ceefax 2077 - Low-Bandwidth DevOps Incident Commander
-# Page Routing Specification
+# Ceefax 2077 - Grand Master Plan: 9-Zone Architecture
+# Complete Teletext Resurrection for Tomorrow's Problems
 
-version: "2.0"
+version: "3.0"
 default_page: 100
 fallback_page: "404_SIGNAL_LOST"
 
-concept: "Emergency Command Center for DevOps"
-problem: "Modern dashboards (Grafana, Datadog, AWS) are too slow and complex during incidents"
-solution: "Teletext-style interface - 40x24 characters, instant load, zero bloat"
+concept: "AI-Powered Teletext Platform - 9 Zones for Modern Life"
+vision: "Every aspect of 2077 life, accessible in 40x24 characters"
+tagline: "Old Technology. Tomorrow's Problems. Today's Solutions."
 
-# Page Route Definitions
-routes:
+# ============================================
+# ZONE ARCHITECTURE
+# ============================================
+
+zones:
   100:
-    id: "HOME"
-    name: "Command Index"
-    description: "Main dashboard with system overview"
-    color: "cyan"
-    
-  101:
-    id: "SYSTEM_STATUS"
-    name: "System Health"
-    description: "Real-time CPU, RAM, server uptime monitoring"
-    color: "cyan"
-    refresh_rate: "1s"
-    alerts:
-      - "CPU > 90%: RED + BLINK"
-      - "RAM > 85%: YELLOW"
-      - "Uptime < 1h: WARNING"
+    name: "GLOBAL"
+    theme: "News & Information"
+    color: "blue"
+    description: "AI-curated news and fact-checking"
     
   200:
-    id: "DEPLOY_LOGS"
-    name: "Deployment History"
-    description: "Recent GitHub commits and Vercel deployments"
-    color: "yellow"
-    data_source: "GitHub API / Vercel API"
+    name: "HUSTLE"
+    theme: "Finance & Work"
+    color: "blue"
+    description: "Crypto, DeFi, and gig economy"
     
   300:
-    id: "ERROR_LOGS"
-    name: "Error Monitor"
-    description: "Live error tracking and stack traces"
+    name: "ARENA"
+    theme: "Sports & Competition"
+    color: "green"
+    description: "Live scores, e-sports, racing"
+    
+  400:
+    name: "ELEMENT"
+    theme: "Environment & Travel"
+    color: "green"
+    description: "Climate, flights, space exploration"
+    
+  500:
+    name: "VIBE"
+    theme: "Lifestyle & Wellness"
+    color: "magenta"
+    description: "Music, food, spirituality"
+    
+  600:
+    name: "CREATOR"
+    theme: "Media & Content"
+    color: "magenta"
+    description: "Trending videos, podcasts"
+    
+  700:
+    name: "NOMAD"
+    theme: "Consumer & Social"
+    color: "yellow"
+    description: "Travel, dating, NFTs"
+    
+  800:
+    name: "PLAY"
+    theme: "Entertainment & Games"
+    color: "yellow"
+    description: "RPG, quizzes, AI art"
+    
+  900:
+    name: "SYSTEM"
+    theme: "Technology & DevOps"
     color: "red"
+    description: "System monitoring, git logs, translation"
+
+# ============================================
+# PAGE ROUTES - 9 ZONES × 3 PAGES = 27 PAGES
+# ============================================
+
+routes:
+  # ZONE 100: GLOBAL (News & Information)
+  100:
+    id: "GLOBAL_INDEX"
+    zone: 100
+    name: "Global Index"
+    description: "News categories and navigation"
+    
+  101:
+    id: "TRUTH_TERMINAL"
+    zone: 100
+    name: "Truth Terminal"
+    description: "AI-curated news with dystopian commentary"
+    ai_powered: true
+    
+  102:
+    id: "VERITAS"
+    zone: 100
+    name: "Veritas Fact Check"
+    description: "Real-time fact checking and source verification"
+    
+  103:
+    id: "POLITICO"
+    zone: 100
+    name: "Politico 2077"
+    description: "Political analysis and government tracking"
+
+  # ZONE 200: HUSTLE (Finance & Work)
+  200:
+    id: "HUSTLE_INDEX"
+    zone: 200
+    name: "Hustle Index"
+    description: "Finance and work opportunities"
+    
+  201:
+    id: "STONKS"
+    zone: 200
+    name: "Stonks Terminal"
+    description: "Crypto prices, DeFi yields, market sentiment"
+    refresh_rate: "5s"
+    
+  202:
+    id: "DEFI_FARM"
+    zone: 200
+    name: "DeFi Farm"
+    description: "Yield farming opportunities and APY tracking"
+    
+  203:
+    id: "GIG_HUB"
+    zone: 200
+    name: "Gig Hub"
+    description: "Freelance jobs, remote work, AI gigs"
+
+  # ZONE 300: ARENA (Sports & Competition)
+  300:
+    id: "ARENA_INDEX"
+    zone: 300
+    name: "Arena Index"
+    description: "Sports and competition hub"
+    
+  301:
+    id: "LIVE_SCORE"
+    zone: 300
+    name: "Live Score"
+    description: "Real-time sports scores and updates"
+    refresh_rate: "10s"
+    
+  302:
+    id: "E_SPORTS"
+    zone: 300
+    name: "E-Sports Arena"
+    description: "Gaming tournaments, Twitch streams, rankings"
+    
+  303:
+    id: "META_RACE"
+    zone: 300
+    name: "Meta Race"
+    description: "F1, racing, autonomous vehicle competitions"
+
+  # ZONE 400: ELEMENT (Environment & Travel)
+  400:
+    id: "ELEMENT_INDEX"
+    zone: 400
+    name: "Element Index"
+    description: "Environment and exploration"
+    
+  401:
+    id: "ECO_SENSE"
+    zone: 400
+    name: "Eco Sense"
+    description: "Climate data, air quality, carbon tracking"
+    
+  402:
+    id: "SKY_SCAN"
+    zone: 400
+    name: "Sky Scan"
+    description: "Flight tracker, delays, cheap flights"
+    
+  403:
+    id: "ORBITAL"
+    zone: 400
+    name: "Orbital"
+    description: "Space launches, ISS tracker, Mars missions"
+
+  # ZONE 500: VIBE (Lifestyle & Wellness)
+  500:
+    id: "VIBE_INDEX"
+    zone: 500
+    name: "Vibe Index"
+    description: "Lifestyle and wellness hub"
+    
+  501:
+    id: "LOFI"
+    zone: 500
+    name: "LoFi Terminal"
+    description: "Spotify playlists, music recommendations"
+    
+  502:
+    id: "CHEF_GPT"
+    zone: 500
+    name: "Chef GPT"
+    description: "AI recipe generator, meal planning"
+    
+  503:
+    id: "MERCURY"
+    zone: 500
+    name: "Mercury Tarot"
+    description: "Daily horoscope, tarot readings, astrology"
+
+  # ZONE 600: CREATOR (Media & Content)
+  600:
+    id: "CREATOR_INDEX"
+    zone: 600
+    name: "Creator Index"
+    description: "Media and content hub"
+    
+  601:
+    id: "TRENDING"
+    zone: 600
+    name: "Trending Now"
+    description: "YouTube/TikTok trending, viral content"
+    
+  602:
+    id: "POD_CAST"
+    zone: 600
+    name: "Pod Cast"
+    description: "Podcast summaries, episode highlights"
+    
+  603:
+    id: "STREAM_HUB"
+    zone: 600
+    name: "Stream Hub"
+    description: "Live streams, Twitch, YouTube Live"
+
+  # ZONE 700: NOMAD (Consumer & Social)
+  700:
+    id: "NOMAD_INDEX"
+    zone: 700
+    name: "Nomad Index"
+    description: "Consumer and social hub"
+    
+  701:
+    id: "NOMAD_LIFE"
+    zone: 700
+    name: "Nomad Life"
+    description: "Travel deals, digital nomad spots, visas"
+    
+  702:
+    id: "BLIND_DATE"
+    zone: 700
+    name: "Blind Date"
+    description: "AI matchmaking, dating profiles"
+    
+  703:
+    id: "DROP_ZONE"
+    zone: 700
+    name: "Drop Zone"
+    description: "NFT drops, limited releases, collectibles"
+
+  # ZONE 800: PLAY (Entertainment & Games)
+  800:
+    id: "PLAY_INDEX"
+    zone: 800
+    name: "Play Index"
+    description: "Entertainment and games hub"
+    
+  801:
+    id: "ROGUE_TXT"
+    zone: 800
+    name: "Rogue TXT"
+    description: "Text-based RPG adventure game"
+    interactive: true
+    
+  802:
+    id: "QUIZ_AI"
+    zone: 800
+    name: "Quiz AI"
+    description: "AI-generated trivia and challenges"
+    interactive: true
+    
+  803:
+    id: "PIXEL_GEN"
+    zone: 800
+    name: "Pixel Gen"
+    description: "AI art generator in Teletext style"
+    ai_powered: true
+
+  # ZONE 900: SYSTEM (Technology & DevOps)
+  900:
+    id: "SYSTEM_INDEX"
+    zone: 900
+    name: "System Index"
+    description: "Technology and DevOps hub"
+    
+  901:
+    id: "OPS_CENTER"
+    zone: 900
+    name: "Ops Center"
+    description: "DevOps monitoring, CPU/RAM/Disk"
+    refresh_rate: "2s"
+    
+  902:
+    id: "GIT_LOG"
+    zone: 900
+    name: "Git Log"
+    description: "GitHub commits, deployment history"
+    
+  903:
+    id: "BABEL"
+    zone: 900
+    name: "Babel Translate"
+    description: "Live translation, language detection"
+    ai_powered: true
+
+  # SPECIAL: ANGEL NUMBERS (Hidden Horror Features)
+  333:
+    id: "THE_OUIJA"
+    zone: 333
+    name: "The Ouija"
+    description: "Creepy chatbot that spells out answers letter by letter"
+    color: "magenta"
+    interactive: true
+    horror: true
+    hidden: true
+    
+  444:
+    id: "DEAD_SIGNAL"
+    zone: 444
+    name: "Dead Signal"
+    description: "Visualizing deleted internet data as digital ghosts"
+    color: "cyan"
+    atmospheric: true
+    horror: true
+    hidden: true
     
   666:
     id: "KILL_SWITCH"
-    name: "Emergency Shutdown"
-    description: "Interactive kill switch for emergency server shutdown"
+    zone: 666
+    name: "System Failure"
+    description: "Emergency shutdown and glitch mode"
     color: "red"
     interactive: true
-    commands:
-      - "KILL: Trigger emergency shutdown"
-      - "RESTART: Reboot all services"
-      - "ROLLBACK: Deploy previous version"
-    effects:
-      - "Screen corruption"
-      - "Shutdown simulation"
-      - "Visual chaos"
+    horror: true
+    
+  777:
+    id: "GHOST_WRITER"
+    zone: 777
+    name: "Ghost Writer"
+    description: "Interactive AI horror fiction generator"
+    color: "yellow"
+    interactive: true
+    horror: true
+    ai_powered: true
+    hidden: true
 
 # Navigation Rules
 navigation:
