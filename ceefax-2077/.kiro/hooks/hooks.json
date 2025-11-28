@@ -1,0 +1,163 @@
+{
+  "version": "1.0.0",
+  "description": "Teletext 2077 Agent Hooks Configuration",
+  "hooks": [
+    {
+      "id": "auto-refresh",
+      "name": "Auto Data Refresh",
+      "enabled": true,
+      "trigger": {
+        "type": "timer",
+        "interval": 30000
+      },
+      "conditions": {
+        "pages": [101, 201, 301, 401, 501]
+      },
+      "action": {
+        "type": "refresh_data",
+        "description": "Refresh live data (crypto, news, climate, security)"
+      },
+      "priority": 1
+    },
+    {
+      "id": "performance-monitor",
+      "name": "Performance Tracker",
+      "enabled": true,
+      "trigger": {
+        "type": "page_change"
+      },
+      "action": {
+        "type": "measure_performance",
+        "threshold": 1000,
+        "description": "Measure page load time and alert if > 1s"
+      },
+      "priority": 2
+    },
+    {
+      "id": "theme-auto-switcher",
+      "name": "Day/Night Theme Switcher",
+      "enabled": true,
+      "trigger": {
+        "type": "time_based",
+        "schedule": [
+          { "time": "06:00", "theme": "cyberpunk" },
+          { "time": "18:00", "theme": "matrix" },
+          { "time": "22:00", "theme": "vaporwave" }
+        ]
+      },
+      "action": {
+        "type": "switch_theme",
+        "description": "Auto-switch theme based on time of day"
+      },
+      "priority": 3
+    },
+    {
+      "id": "alert-aggregator",
+      "name": "Emergency Dashboard",
+      "enabled": true,
+      "trigger": {
+        "type": "critical_alert",
+        "conditions": {
+          "cpu": { "operator": ">", "value": 90 },
+          "errors": { "operator": ">", "value": 10 },
+          "threats": { "operator": ">", "value": 0 }
+        }
+      },
+      "action": {
+        "type": "navigate",
+        "target": 999,
+        "description": "Auto-navigate to Emergency Hub"
+      },
+      "priority": 10
+    },
+    {
+      "id": "session-logger",
+      "name": "Usage Analytics",
+      "enabled": true,
+      "trigger": {
+        "type": "user_interaction",
+        "events": ["page_visit", "button_click", "key_press"]
+      },
+      "action": {
+        "type": "log_analytics",
+        "storage": "localStorage",
+        "report_page": 910,
+        "description": "Track user behavior and generate reports"
+      },
+      "priority": 4
+    },
+    {
+      "id": "smart-suggestions",
+      "name": "Related Pages Suggester",
+      "enabled": true,
+      "trigger": {
+        "type": "idle_on_page",
+        "timeout": 10000
+      },
+      "action": {
+        "type": "suggest_pages",
+        "count": 3,
+        "description": "Suggest related pages after 10s idle"
+      },
+      "priority": 5
+    },
+    {
+      "id": "security-audit",
+      "name": "Security Scanner",
+      "enabled": true,
+      "trigger": {
+        "type": "zone_access",
+        "zone": 500
+      },
+      "action": {
+        "type": "security_check",
+        "checks": ["biometric", "session", "access_log"],
+        "description": "Verify security on Zone 500 access"
+      },
+      "priority": 9
+    },
+    {
+      "id": "auto-backup",
+      "name": "Data Backup",
+      "enabled": true,
+      "trigger": {
+        "type": "timer",
+        "interval": 300000
+      },
+      "action": {
+        "type": "backup_data",
+        "targets": ["vhs_tapes", "theme_prefs", "biometric_data"],
+        "description": "Backup user data every 5 minutes"
+      },
+      "priority": 6
+    },
+    {
+      "id": "network-status",
+      "name": "Offline Mode Manager",
+      "enabled": true,
+      "trigger": {
+        "type": "network_change"
+      },
+      "action": {
+        "type": "toggle_offline_mode",
+        "description": "Switch to cached data when offline"
+      },
+      "priority": 8
+    },
+    {
+      "id": "easter-egg",
+      "name": "Konami Code Trigger",
+      "enabled": true,
+      "trigger": {
+        "type": "key_sequence",
+        "sequence": ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
+      },
+      "action": {
+        "type": "navigate",
+        "target": 1337,
+        "description": "Secret dev tools page"
+      },
+      "priority": 7
+    }
+  ]
+}

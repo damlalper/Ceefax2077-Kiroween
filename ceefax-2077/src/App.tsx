@@ -6,6 +6,7 @@ import BiosBootLoader from './components/BiosBootLoader'
 import BiometricGate from './components/BiometricGate'
 import { VHSPlayback } from './components/VHSPlayback'
 import { useVHS } from './hooks/useVHS'
+import { useAgentHooks } from './hooks/useAgentHooks'
 
 // ZONE 100: TRUTH
 import TruthHub from './pages/100_truth/TruthHub'
@@ -44,8 +45,7 @@ import GlitchMode from './pages/666_glitch/GlitchMode'
 import { HomeHub, TeleHome, TimeMachine, PixelGen } from './pages/800_home'
 
 // ZONE 900: THEMES (Skeleton Crew)
-import { ThemeSelector } from './pages/900_themes'
-import { TapeLibrary } from './pages/900_themes/TapeLibrary'
+import { ThemeSelector, TapeLibrary, HookDashboard } from './pages/900_themes'
 
 // Fallback
 import SignalLostPage from './components/SignalLostPage'
@@ -54,6 +54,9 @@ function TeletextRouter() {
   const { currentPage } = useTeletext()
   const { bootMode } = useBoot()
   const { isPlaybackMode, currentTape, playTape, stopPlayback } = useVHS(currentPage, '')
+  
+  // Initialize agent hooks
+  useAgentHooks()
 
   const renderPage = () => {
     // Check if zone is allowed in current boot mode
@@ -120,6 +123,7 @@ function TeletextRouter() {
     // ZONE 900: THEMES (Skeleton Crew)
     if (currentPage === 905) return <ThemeSelector />
     if (currentPage === 906) return <TapeLibrary onPlayTape={playTape} />
+    if (currentPage === 907) return <HookDashboard />
 
     // Default fallback for invalid pages
     return <SignalLostPage />
