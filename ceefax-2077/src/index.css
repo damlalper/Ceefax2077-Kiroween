@@ -4,6 +4,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   THEME ENGINE: CSS VARIABLES
+   Runtime-switchable color system
+   ============================================ */
+
+:root {
+  /* Primary colors - Default Classic Theme */
+  --color-primary: #0000FF;
+  --color-secondary: #FFFF00;
+  --color-accent: #00FFFF;
+  
+  /* Backgrounds */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0000FF;
+  --color-bg-accent: #111111;
+  
+  /* Text colors */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #FFFF00;
+  --color-text-accent: #00FFFF;
+  --color-text-warning: #FFFF00;
+  --color-text-danger: #FF0000;
+  --color-text-success: #00FF00;
+  
+  /* UI elements */
+  --color-border: #00FFFF;
+  --color-glow: rgba(0, 255, 255, 0.5);
+  --color-shadow: rgba(0, 0, 0, 0.9);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +43,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #000000;
+  background-color: var(--color-bg-primary);
   overflow: hidden;
   font-family: 'VT323', monospace;
   text-transform: uppercase;
@@ -66,17 +96,17 @@ body {
    ============================================ */
 
 .teletext-header-row {
-  background-color: #0000FF;
+  background-color: var(--color-bg-secondary);
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   align-items: center;
   padding: 0.3rem 0.8rem;
   min-height: 8%;
-  border-bottom: 2px solid #000000;
+  border-bottom: 2px solid var(--color-bg-primary);
 }
 
 .teletext-header-left {
-  color: #FFFFFF;
+  color: var(--color-text-primary);
   font-size: clamp(18px, 2.5vmin, 28px);
   font-weight: bold;
   text-align: left;
@@ -84,13 +114,13 @@ body {
 
 .teletext-header-center {
   text-align: center;
-  color: #FFFF00;
+  color: var(--color-text-secondary);
   font-size: clamp(20px, 2.8vmin, 32px);
   font-weight: bold;
 }
 
 .teletext-header-right {
-  color: #FFFF00;
+  color: var(--color-text-secondary);
   font-size: clamp(16px, 2.2vmin, 24px);
   text-align: right;
   font-weight: bold;
@@ -124,7 +154,7 @@ body {
 
 .teletext-fastext-footer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   min-height: 6%;
   border-top: 2px solid #000000;
 }
@@ -157,6 +187,11 @@ body {
 .fastext-cyan {
   background-color: #00FFFF;
   color: #000000;
+}
+
+.fastext-magenta {
+  background-color: #FF00FF;
+  color: #FFFFFF;
 }
 
 /* CRT Scanlines Overlay */
@@ -1255,4 +1290,307 @@ body {
   flex-direction: column;
   gap: 2px;
   margin: 1rem 0;
+}
+
+
+/* ============================================
+   CRASH MODE - Market Risk Alert System
+   Activated by MCP Agent when HIGH RISK detected
+   ============================================ */
+
+body.crash-mode {
+  animation: crash-flash 1s infinite;
+}
+
+body.crash-mode .teletext-container {
+  animation: crash-shake 0.5s infinite;
+  box-shadow: 
+    0 0 60px rgba(255, 0, 0, 0.8),
+    inset 0 0 120px rgba(255, 0, 0, 0.3);
+}
+
+body.crash-mode .teletext-header-row {
+  background-color: #CC0000 !important;
+  animation: crash-pulse 0.8s infinite;
+}
+
+body.crash-mode .teletext-fastext-footer {
+  animation: crash-pulse 0.8s infinite;
+}
+
+@keyframes crash-flash {
+  0%, 100% {
+    background-color: #000000;
+  }
+  50% {
+    background-color: #220000;
+  }
+}
+
+@keyframes crash-shake {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-2px, -1px);
+  }
+  20% {
+    transform: translate(2px, 1px);
+  }
+  30% {
+    transform: translate(-1px, 2px);
+  }
+  40% {
+    transform: translate(1px, -2px);
+  }
+  50% {
+    transform: translate(-2px, 1px);
+  }
+  60% {
+    transform: translate(2px, -1px);
+  }
+  70% {
+    transform: translate(-1px, -2px);
+  }
+  80% {
+    transform: translate(1px, 2px);
+  }
+  90% {
+    transform: translate(-2px, -1px);
+  }
+}
+
+@keyframes crash-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Crash mode warning text */
+body.crash-mode .crash-warning {
+  color: #FF0000 !important;
+  text-shadow: 0 0 10px #FF0000;
+  animation: crash-pulse 0.5s infinite;
+}
+
+
+/* ============================================
+   SKELETON CREW: SYSADMIN MODE THEME
+   Matrix-style green-on-black hacker terminal
+   ============================================ */
+
+/* SysAdmin Mode - Complete Theme Override */
+body.sysadmin-mode {
+  background-color: #000000;
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Override all colors to green-on-black */
+body.sysadmin-mode * {
+  color: #00FF00 !important;
+}
+
+/* Container styling */
+body.sysadmin-mode .teletext-container {
+  border-color: #00FF00;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 0, 0.5),
+    inset 0 0 120px rgba(0, 50, 0, 0.9);
+}
+
+/* Header - Black with green text */
+body.sysadmin-mode .teletext-header-row {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #00FF00;
+}
+
+body.sysadmin-mode .teletext-header-left,
+body.sysadmin-mode .teletext-header-center,
+body.sysadmin-mode .teletext-header-right {
+  color: #00FF00 !important;
+  text-shadow: 0 0 5px #00FF00;
+}
+
+/* Fastext footer - All green */
+body.sysadmin-mode .teletext-fastext-footer > div {
+  background-color: #001100 !important;
+  color: #00FF00 !important;
+  border: 1px solid #00FF00;
+  text-shadow: 0 0 3px #00FF00;
+}
+
+/* Scanlines - Green tint */
+body.sysadmin-mode .crt-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 0, 0.03),
+    rgba(0, 255, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* All text elements */
+body.sysadmin-mode .text-white,
+body.sysadmin-mode .text-yellow,
+body.sysadmin-mode .text-cyan,
+body.sysadmin-mode .text-red,
+body.sysadmin-mode .text-blue,
+body.sysadmin-mode .text-magenta {
+  color: #00FF00 !important;
+  text-shadow: 0 0 3px #00FF00;
+}
+
+/* Backgrounds - Dark green tint */
+body.sysadmin-mode .bg-blue,
+body.sysadmin-mode .bg-yellow,
+body.sysadmin-mode .bg-cyan,
+body.sysadmin-mode .bg-red {
+  background-color: #001100 !important;
+}
+
+/* Borders - All green */
+body.sysadmin-mode [style*="border"] {
+  border-color: #00FF00 !important;
+}
+
+/* Links and interactive elements */
+body.sysadmin-mode a,
+body.sysadmin-mode button {
+  color: #00FF00 !important;
+  border-color: #00FF00 !important;
+}
+
+body.sysadmin-mode button {
+  background-color: #001100 !important;
+}
+
+body.sysadmin-mode button:hover {
+  background-color: #00FF00 !important;
+  color: #000000 !important;
+}
+
+/* Input fields */
+body.sysadmin-mode input,
+body.sysadmin-mode textarea {
+  background-color: #000000 !important;
+  color: #00FF00 !important;
+  border-color: #00FF00 !important;
+}
+
+body.sysadmin-mode input::placeholder {
+  color: #00FF00 !important;
+  opacity: 0.5;
+}
+
+/* Sharper, more terminal-like appearance */
+body.sysadmin-mode {
+  letter-spacing: 0.5px;
+}
+
+/* Matrix-style glow effect */
+body.sysadmin-mode .teletext-main-content {
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Stronger scanline effect for terminal feel */
+body.sysadmin-mode .crt-scanlines {
+  opacity: 0.8;
+}
+
+/* Terminal cursor blink */
+@keyframes terminal-cursor {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+body.sysadmin-mode .cursor::after {
+  content: '█';
+  animation: terminal-cursor 1s infinite;
+}
+
+/* Status indicators - Green variants */
+body.sysadmin-mode .teletext-alert-safe {
+  background-color: #003300 !important;
+  color: #00FF00 !important;
+  border: 2px solid #00FF00;
+}
+
+body.sysadmin-mode .teletext-alert-warning {
+  background-color: #002200 !important;
+  color: #00FF00 !important;
+  border: 2px solid #00FF00;
+  animation: terminal-pulse 1s infinite;
+}
+
+body.sysadmin-mode .teletext-alert-critical {
+  background-color: #001100 !important;
+  color: #00FF00 !important;
+  border: 2px solid #00FF00;
+  animation: terminal-pulse 0.5s infinite;
+}
+
+@keyframes terminal-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Override any remaining color styles */
+body.sysadmin-mode [style*="color: #"] {
+  color: #00FF00 !important;
+}
+
+body.sysadmin-mode [style*="background-color: #"]:not([style*="background-color: #000"]) {
+  background-color: #001100 !important;
+}
+
+/* Glitch effects in sysadmin mode - green variant */
+body.sysadmin-mode .glitch-text::before {
+  text-shadow: -2px 0 #00FF00;
+}
+
+body.sysadmin-mode .glitch-text::after {
+  text-shadow: -2px 0 #00FF00, 2px 2px #00FF00;
+}
+
+/* Zone blocks in sysadmin mode */
+body.sysadmin-mode .zone-block {
+  border-color: #00FF00 !important;
+  background-color: #000000 !important;
+}
+
+body.sysadmin-mode .zone-block:hover {
+  background-color: #001100 !important;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Restricted access indicator */
+body.sysadmin-mode .zone-restricted {
+  opacity: 0.3;
+  pointer-events: none;
+  position: relative;
+}
+
+body.sysadmin-mode .zone-restricted::after {
+  content: '🔒 RESTRICTED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #00FF00;
+  font-size: 1.2em;
+  text-shadow: 0 0 10px #00FF00;
 }

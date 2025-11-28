@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useTeletext } from '../context/TeletextContext'
-import { getZoneColor, getZoneTitle, getZoneNavigation } from '../utils/zoneHelper'
+import { getZoneColor, getZoneTitle } from '../utils/zoneHelper'
+import { useNarrator } from '../hooks/useNarrator'
+import { useVHS } from '../hooks/useVHS'
 
 interface TeletextGridProps {
   children?: React.ReactNode
+  pageContent?: string
 }
 
-export default function TeletextGrid({ children }: TeletextGridProps) {
+export default function TeletextGrid({ children, pageContent = '' }: TeletextGridProps) {
   const [time, setTime] = useState(new Date())
   const { currentPage, inputBuffer } = useTeletext()
+  const { isEnabled, toggle } = useNarrator()
+  const { isRecording } = useVHS(currentPage, pageContent)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -41,7 +46,6 @@ export default function TeletextGrid({ children }: TeletextGridProps) {
   // Get zone-specific styling
   const zoneColor = getZoneColor(currentPage)
   const zoneTitle = getZoneTitle(currentPage)
-  const navigation = getZoneNavigation(currentPage)
 
   return (
     <div className="teletext-screen">
@@ -54,6 +58,14 @@ export default function TeletextGrid({ children }: TeletextGridProps) {
         >
           <div className="teletext-header-left">
             P{pageDisplay}
+            {isRecording && (
+              <span 
+                className="ml-2 text-red-500 animate-pulse font-bold"
+                style={{ animation: 'pulse 0.5s ease-in-out infinite' }}
+              >
+                [REC ●]
+              </span>
+            )}
           </div>
           <div className="teletext-header-center">
             <span className="double-height">{zoneTitle}</span>
@@ -68,23 +80,21 @@ export default function TeletextGrid({ children }: TeletextGridProps) {
           {children}
         </div>
 
-        {/* Fastext Footer - Dynamic Navigation */}
+        {/* Fastext Footer - 5-ZONE Navigation */}
         <div className="teletext-fastext-footer">
-          {navigation ? (
-            <>
-              <div className="fastext-red">{navigation.prevZone} PREV</div>
-              <div className="fastext-green">{navigation.currentZone} INDEX</div>
-              <div className="fastext-yellow">{navigation.nextZone} NEXT</div>
-              <div className="fastext-cyan">666 KILL</div>
-            </>
-          ) : (
-            <>
-              <div className="fastext-red">100 GLOBAL</div>
-              <div className="fastext-green">500 VIBE</div>
-              <div className="fastext-yellow">900 SYSTEM</div>
-              <div className="fastext-cyan">666 KILL</div>
-            </>
-          )}
+          <div className="fastext-red">100 TRUTH</div>
+          <div className="fastext-green">200 SYSTM</div>
+          <div className="fastext-yellow">300 PULSE</div>
+          <div className="fastext-cyan">400 PLNET</div>
+          <div className="fastext-blue">500 SHILD</div>
+          <div 
+            className="fastext-magenta"
+            onClick={toggle}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+            title={isEnabled ? 'Narrator: ON' : 'Narrator: OFF'}
+          >
+            {isEnabled ? '🔊 ON' : '🔇 OFF'}
+          </div>
         </div>
       </div>
 

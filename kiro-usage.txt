@@ -1,0 +1,850 @@
+PROMPT1:
+read requirements.md prd.md and kiro-begin.md. Act as a Senior Frontend Architect and Project Lead for a hackathon project named "Ceefax 2077". 
+
+Our goal is to win the "Resurrection" category by rebuilding the 1980s Teletext interface using modern tech (React, Vite, Tailwind) while leveraging Kiro's specific features.
+
+## Phase 1: Initialization
+
+Please perform the following steps sequentially:
+
+1.  **Initialize Project:** Scaffold a new React project using Vite with TypeScript and Tailwind CSS.
+
+    
+
+2.  **Initialize prd.md:**
+
+    """
+
+    # Project: Ceefax 2077
+
+    - **Category:** Resurrection
+
+    - **Core Concept:** A modern news terminal with a strict 40x24 character grid, using Teletext aesthetics (8 colors, block graphics) to solve "Information Overload".
+
+    - **Winning Strategy:** Use Kiro features (Vibe Coding, Specs, MCP, Hooks) visibly.
+
+    - **Target Audience:** Minimalists, Retro Tech Lovers, Developers, Teletext Nostalgics.
+
+    - **Tech Stack:** React, Vite, Tailwind, Custom CSS for CRT effects.
+
+    """
+
+3.  **Hackathon Compliance:** Create the mandatory `/.kiro` directory at the root. Inside it, create two subfolders:
+
+    - `/.kiro/specs` (For technical specifications)
+
+    - `/.kiro/steering` (For AI persona definitions)
+
+4.  **Clean Up:** Remove all default Vite logos, CSS, and boilerplate code. I want a blank black screen ready for our grid.
+
+Confirm when you are done and the folder structure is ready.
+
+
+
+
+
+PROMPT 2:
+Great job on the setup. Now, let's execute Phase 2: The Core Visuals using Vibe Coding.
+
+I need you to create the main layout components that enforce the strict Teletext constraints.
+
+1.  **Tailwind Configuration:** Update `tailwind.config.js` to include the specific Teletext color palette as utility classes:
+
+    - Black: #000000
+
+    - Blue: #0000FF
+
+    - Green: #00FF00
+
+    - Cyan: #00FFFF
+
+    - Red: #FF0000
+
+    - Magenta: #FF00FF
+
+    - Yellow: #FFFF00
+
+    - White: #FFFFFF
+
+2.  **The Grid Component:** Create a React component named `TeletextGrid`.
+
+    - It must use **CSS Grid** with exactly 40 columns and 24 rows.
+
+    - It must maintain a **4:3 Aspect Ratio** (like an old CRT TV) and be centered on the screen. If the window resizes, the grid should scale but never break the ratio.
+
+    - The background must be deep black (#000000).
+
+3.  **The Header:** Build a standard Teletext Header row (Row 0) inside the grid that includes:
+
+    - Top Left: "P100" (Static for now)
+
+    - Top Center: "Ceefax 2077"
+
+    - Top Right: Real-time Clock (HH:MM:SS) that updates every second.
+
+    - Use the correct colors (usually White text on Black, or Yellow/Cyan headers).
+
+4.  **Global Styles:** Ensure the `VT323` font is applied globally and text is always uppercase.
+
+Write the code for `tailwind.config.js`, `App.tsx`, and `TeletextGrid.tsx`.   Here is the  Teletext interface we are aiming for: 
+images
+
+
+PROMPT 3:
+Now, let's execute **Phase 3: The Brain (Navigation & Logic)**.
+
+We need to implement the classic Teletext navigation system (typing 3-digit numbers to switch pages) driven by a formal Spec file.
+
+Please perform the following steps:
+
+1.  **Define Specs:** Create a YAML file at `/.kiro/specs/routing.yaml`.
+
+    - Content should map numbers to Route IDs:
+
+      - `100`: "HOME" (The Index page we built)
+
+      - `101`: "NEWS_HEADLINES"
+
+      - `200`: "FINANCE"
+
+      - `300`: "SPORT"
+
+      - `666`: "GLITCH_MODE" (The hidden spooky page)
+
+    - Add a default fallback: "If number not found, show 404_SIGNAL_LOST".
+
+2.  **State Management:** Create a `TeletextContext.tsx`.
+
+    - It should store the `currentPage` (default: 100) and `inputBuffer` (what the user is currently typing, e.g., "1..0..").
+
+    - It should expose a function to `goToPage(number)`.
+
+3.  **Input Listener:** Create a `KeyboardListener` component.
+
+    - It listens globally for numeric keys (0-9).
+
+    - When 3 digits are typed (e.g., "1", "0", "1"), it automatically triggers `goToPage(101)` and clears the buffer.
+
+    - Add a visual indicator in the Header (Row 0) showing the numbers being typed (e.g., "P10..").
+
+4.  **The Router:** Update `App.tsx` to conditionally render content based on `currentPage`.
+
+    - Create placeholder components for `NewsPage` (101) and `GlitchPage` (666) so we can test navigation.
+
+    - Ensure the "Signal Lost" screen appears for undefined numbers (like 999).
+
+5.  **Refine Header:** Connect the Header to the Context so "P100" updates dynamically to "P101" when we switch pages.
+
+Implement these logic layers now.
+
+
+PROMPT 4:
+Incredible progress. The navigation is smooth. Now, let's execute **Phase 4: The Intelligence (Content & Persona)**.
+
+We need to populate Page 101 (News) with content that feels like it comes from a cynical AI in the year 2077.
+
+Please perform the following steps:
+
+1.  **Define the Persona (Steering):** Create a file at `/.kiro/steering/editor.md`.
+    - **Persona:** "The Truth Terminal". Cold, objective, slightly dystopian.
+    - **Rules:**
+      - Never use emojis.
+      - Headlines must be uppercase and sensational but short.
+      - Body text must be strictly limited to 3 lines per story to fit the grid.
+      - Ending phrases should be ominous (e.g., "End of line.", "Watch the skies.").
+
+2.  **News Service (MCP Simulation):** Create a `services/NewsService.ts`.
+    - Since we don't have a live NewsAPI key connected yet, create a mock function `fetchHeadlines()` that returns an array of 4-5 "Breaking News" items.
+    - **Content:** Mix real-world themes with 2077 twists (e.g., "AI Regulation Bill Passes" -> "SENTIENCE ACT RATIFIED: HUMAN OVERSIGHT REMOVED").
+
+3.  **Build NewsPage (P101):** detailed implementation of `NewsPage.tsx`.
+    - **Layout:** Refer back to the reference image I uploaded earlier.
+      - Top Banner: "Teletext News" (Yellow text on Blue background).
+      - Sub-header: "HEADLINES" (Yellow text) with a Red separator line.
+    - **List:** Map through the news items.
+      - Headline: White or Cyan text.
+      - Page Ref: Right-aligned page number (e.g., "102") in White.
+    - **Footer:** A classic Teletext navigation footer (Red/Green/Yellow/Cyan links) at the bottom row.
+
+4.  **Integration:** Connect this service to the `NewsPage` so it loads data on mount.
+
+Make the news page look exactly like the classic BBC Ceefax layout but with our dystopian content.
+
+
+PROMPT 5:
+**Phase 5: The Horror (Page 666 & Glitch Effects)**.
+
+We need to build the "Wicked" part of the Kiroween challenge. When a user visits Page 666, the interface should feel "possessed" or broken.
+
+Please perform the following steps:
+
+1.  **Create Custom Hook:** Build `src/hooks/useGlitch.ts`.
+
+    - This hook should handle the logic for "corruption".
+
+    - It takes a string (text) and randomly corrupts characters (e.g., replacing 'E' with '3', adding Zalgo text marks, or random binary).
+
+    - It should provide a `isGlitching` boolean state that flickers randomly.
+
+2.  **Advanced Vibe Coding (CSS):** Add new animations to `index.css`:
+
+    - `@keyframes tear`: A screen tearing effect that shifts grid rows horizontally.
+
+    - `@keyframes noise`: A background static noise effect.
+
+    - `@keyframes red-alert`: A pulsing red background animation.
+
+    - `.glitch-text`: A class that applies a text-shadow offset (red/cyan split) to simulate signal loss.
+
+3.  **Build GlitchPage (P666):** Implement `GlitchPage.tsx`.
+
+    - **Visuals:** Background must pulse Red/Black. The entire grid should shake occasionally.
+
+    - **Content:**
+
+      - Header: "SYSTEM FAILURE" or "RUN".
+
+      - Body: A cryptic message from the AI (e.g., "I CAN SEE YOU", "THERE IS NO ESCAPE").
+
+      - The text should use the `useGlitch` hook to become progressively unreadable.
+
+    - **Navigation Trap:** Disable normal navigation. If the user tries to type "100" to escape, it should fail or print "ACCESS DENIED" first, before finally letting them go after a delay.
+
+4.  **Global Trigger:** Update `App.tsx` to include a hidden timer.
+
+    - If the user stays on any page for more than 5 minutes (or if it's between 00:00-03:00 system time), automatically redirect them to Page 666.
+
+Make this page genuinely unsettling. Use the full power of CSS animations to simulate a dying CRT monitor possessed by a ghost.
+
+
+PROMPT 6:
+fix the error : > ceefax-2077@0.0.0 dev
+
+077\.kiro> npm run dev
+
+077\.kiro> npm run dev
+
+01:59:44 [vite] Internal server error: [postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+
+  Plugin: vite:css
+
+  File: C:/Users/Lenovo/Desktop/hackathons/Kiroween/Ceefax2077-Kiroween/ceefax-2077/src/index.css:undefined:NaN
+
+      at at (C:\Users\Lenovo\Desktop\hackathons\Kiroween\Ceefax2077-Kiroween\ceefax-2077\node_modules\tailwindcss\dist\lib.js:38:1629)
+
+      at LazyResult.runOnRoot (C:\Users\Lenovo\Desktop\hackathons\Kiroween\Ceefax2077-Kiroween\ceefax-2077\nodeeeeeen/Ceefax2077-Kiroween/ceefax-2077/node_modules/vite/dist/node/chunks/config.js:30707:26)
+
+      at async TransformPluginContext.handler (file:///C:/Users/Lenovo/Desktop/hackathons/Kiroween/Ceefax2077-Kiroween/ceefax-2077/node_modules/vite/dist/node/chunks/config.js:30240:54)
+
+      at async EnvironmentPluginContainer.transform (file:///C:/Users/Lenovo/Desktop/hackathons/Kiroween/Ceefax2077-Kiroween/ceefax-2077/node_modules/vite/dist/node/chunks/config.js:29445:14)
+
+      at async loadAndTransform (file:///C:/Users/Lenovo/Desktop/hackathons/Kiroween/Ceefax2077-Kiroween/ceefax-2077/node_modules/vite/dist/node/chunks/config.js:23316:26)
+
+01:59:44 [vite] (client) Pre-transform error: [postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+
+  Plugin: vite:css
+
+  File: C:/Users/Lenovo/Desktop/hackathons/Kiroween/Ceefax2077-Kiroween/ceefax-2077/src/index.css:undefined:NaN   
+
+
+PROMPT 7:
+BUT ITS ONLY 666 HORROR PAGE AND WHEN I PRESS 100 FOR EXIT. ITS NOT WORKING IT STILL HOLDS IN HORROR  PAGE
+
+NAVIGATE THE MAIN PAGE WHERE WE SHOULD SEE OROGINAL TELETEXT CONCEPT. THE GLITCH PAGE MUST APPEAR WHEN USER CLICKED ON NUMBER 666.
+
+SO IN HERE ITS 2 AM. THATS WHY WE CANT ESCAPE 666 HORROR PAGE? THAT IS A GOOD IDEA BUT WE CAN TEST THIS LATER
+
+im in main page and i see nothing, just like i said before in main page we should see teletext concept for now. Then we will customize and modernize this teletext concept
+
+added ss of main page: i am only seeing this
+
+ I just tried to copy the texts and they were visible otherwise they were not visible I think you made the texts black but you had to use yellow, blue, red and green colors like teletext colors. I just tried to copy the texts and they were visible otherwise they were not visible I think you made the texts black but you had to use yellow, blue, red and green colors like teletext
+ 
+
+ PROMPT
+ I have uploaded reference images of REAL Teletext interfaces (BBC Ceefax, TRT Telegün, NOS).
+
+**CRITICAL FEEDBACK:**
+The current design looks too much like a "Computer Terminal" (Command Line). We do NOT want a terminal. We want a **TV BROADCAST TELETEXT INTERFACE**.
+
+Please completely REFACTOR the visual layer (`TeletextGrid` and `index.css`) to match these images exactly.
+
+**Visual Rules for Authentic Teletext Vibe:**
+
+1.  **The Header (The "Blue Strip"):**
+    - Look at the images: The top row (Row 0) almost always has a solid BLUE background with YELLOW text.
+    - Left: Page Number (e.g., P100) in White.
+    - Center: "Ceefax 2077" or "TELEGÜN" in Double-Height Yellow text.
+    - Right: Date and Real-time Seconds in White/Green.
+
+2.  **Typography (The most important part):**
+    - Teletext uses specific "Block Fonts". Ensure we are using `VT323` or a similar pixelated monospaced font.
+    - **Double Height:** Teletext headers use characters that are 2 rows high. Create a utility class `.double-height` using `transform: scaleY(2)` and `transform-origin: top` to simulate this effect on headers.
+    - **No Padding/Margin:** Characters must touch each other. There is no whitespace between grid cells.
+
+3.  **The "Fastext" Footer:**
+    - Look at the bottom of the images. There are always 4 colored links corresponding to remote control buttons.
+    - Create a footer row with exactly these colors in order: Red, Green, Yellow, Cyan.
+    - Text inside them should be Black or White depending on contrast.
+
+4.  **Block Graphics (Mosaic):**
+    - The logos in the images (like the BBC logo or the Globe) are made of 2x3 pixel blocks.
+    - Do not use SVG or PNG. Try to simulate simple block graphics using Unicode Block Elements (█, ▀, ▄, ▌, ▐) or CSS squares.
+
+5.  **Colors:**
+    - Stop using dim colors. Teletext colors are 100% saturated.
+    - Yellow is `#FFFF00`, Cyan is `#00FFFF`, Magenta is `#FF00FF`, Blue is `#0000FF`.
+
+**Action:**
+Rewrite `index.css` and `TeletextGrid.tsx` to implement these strict visual rules. Make it look exactly like the "TRT Telegün" or "BBC Ceefax" images I uploaded.
+
+
+
+PROMPT
+The Teletext visual style is perfect, but the grid container is currently too small in the center.
+
+Please adjust the CSS for the main container to make it **significantly larger** and more immersive:
+
+1.  Set the container height to approximately **90vh to 95vh** (95% of the viewport height).
+
+2.  Let the width adjust automatically to maintain the correct aspect ratio.
+
+3.  Ensure it is perfectly centered with a small, equal margin on all sides.
+
+4.  It should dominate the screen but strictly **not** cause any scrollbars.
+
+
+PROMPT
+in 101,200,300 page the texts are very small. make bigger a little bit. it should be understandble by the people who read the news.
+
+
+PROMPT
+the next step. We are pivoting the project logic to increase "Potential Value" and win the Startup Prize, while keeping the "Resurrection" aesthetics.
+
+**New Concept:** Ceefax 2077 is no longer just a news reader. It is a **"Low-Bandwidth DevOps Incident Commander"**. It solves the problem of bloated dashboards during emergencies.
+
+Please update the project with these changes:
+
+1.  **Update Specs (`/.kiro/specs/routing.yaml`):**
+
+    - Keep `100` as INDEX.
+
+    - Change `101` from "NEWS" to **"SYSTEM_STATUS"** (Mock CPU, RAM, Server Uptime).
+
+    - Change `200` to **"DEPLOY_LOGS"** (Mock list of GitHub commits/Vercel deployments).
+
+    - Keep `666` as **"KILL_SWITCH"** (The Horror/Glitch mode).
+
+2.  **Update `Services`:**
+
+    - Rename `NewsService` to `OpsService`.
+
+    - Create a function `getSystemHealth()`: Returns random CPU usage, RAM, and "DANGER LEVEL".
+
+    - Create a function `getDeployments()`: Returns a list of recent code pushes (e.g., "Fix: Memory Leak", "Feat: AI Agent").
+
+3.  **Refactor Page 101 (Now System Status):**
+
+    - Instead of news headlines, display a "Server Health Grid".
+
+    - If CPU > 90%, the text should turn Red and blink.
+
+    - Use the Teletext block graphics to draw simple bar charts for CPU usage.
+
+4.  **Refactor Page 666 (The Kill Switch):**
+
+    - Make it interactive. Add a blinking prompt: `> AWAITING COMMAND`.
+
+    - If user types "KILL", trigger the Glitch effect and simulate a server shutdown with sound/visual chaos.
+
+Keep the visual style exactly the same (Teletext Grid), but change the *content* to be a developer tool.
+
+THAT'S OUR PLAN: Old Technology: Teletext (Fast, text-based, low bandwidth). Modern Problem: Modern "Dashboards" (Grafana, Datadog, AWS Console) are too slow, too complex, and take minutes to load in a crisis. Tomorrow's Solution: Leverage the simplicity of Teletext for DevOps/Crisis Management.
+
+New Concept: Ceefax 2077 is the "Emergency Command Center" for developers and system administrators. When your servers are burning out and the AWS dashboard freezes, you open Ceefax 2077. Just 40x24 characters. No graphics. No ads. Just the status of your servers and the opportunity to intervene.
+
+
+PROMPT
+we push to GitHub, but you forgot to write a compelling readme. Prepare a nice, detailed, and descriptive readme and commit it to the repo.
+
+
+PROMPT
+We are executing the **Grand Master Plan** for Ceefax 2077.
+
+We will map ALL 9 original Teletext categories (100-900) to modern, AI-driven equivalents to solve "Tomorrow's Problems".
+
+**Action Plan - Re-Scaffold the Project into 9 Zones:**
+
+1.  **Update Routing Specs (`/.kiro/specs/routing.yaml`):**
+
+    Map the layout strictly as follows:
+
+    * **100 ZONE: GLOBAL (News)** -> `101` Truth_Terminal (AI News), `102` Veritas (Fact Check), `103` Politico.
+
+    * **200 ZONE: HUSTLE (Finance)** -> `201` Stonks (Crypto), `202` DeFi_Farm, `203` Gig_Hub (Jobs).
+
+    * **300 ZONE: ARENA (Sport)** -> `301` Live_Score, `302` E_Sports, `303` Meta_Race.
+
+    * **400 ZONE: ELEMENT (Env)** -> `401` Eco_Sense (Climate), `402` Sky_Scan (Flights), `403` Orbital (Space).
+
+    * **500 ZONE: VIBE (Lifestyle)** -> `501` LoFi (Spotify), `502` Chef_GPT, `503` Mercury (Tarot).
+
+    * **600 ZONE: CREATOR (Media)** -> `601` Trending (YouTube/TikTok), `602` Pod_Cast (Summaries).
+
+    * **700 ZONE: NOMAD (Consumer)** -> `701` Nomad_Life (Travel Deals), `702` Blind_Date, `703` Drop_Zone (NFTs).
+
+    * **800 ZONE: PLAY (Fun)** -> `801` Rogue_Txt (RPG), `802` Quiz_AI, `803` Pixel_Gen (AI Art).
+
+    * **900 ZONE: SYSTEM (Tech)** -> `901` Ops_Center (DevOps), `902` Git_Log, `903` Babel (Live Translate).
+
+    * **666:** Glitch Mode (System Failure).
+
+2.  **Folder Structure:**
+
+    Create a highly organized structure:
+
+    `src/pages/100_global/`
+
+    `src/pages/200_hustle/`
+
+    `src/pages/300_arena/`
+
+    `src/pages/400_element/`
+
+    `src/pages/500_vibe/`
+
+    `src/pages/600_creator/`
+
+    `src/pages/700_nomad/`
+
+    `src/pages/800_play/`
+
+    `src/pages/900_system/`
+
+3.  **Color Coding:**
+
+    Update `TeletextGrid` to dynamically change the Header Color based on the Zone:
+
+    - 100/200: Blue
+
+    - 300/400: Green
+
+    - 500/600: Magenta
+
+    - 700/800: Yellow
+
+    - 900: Red
+
+4.  **Navigation:**
+
+    Update the footer. Since there are too many links, make it dynamic: Show only the relevant "Next/Prev" zones based on current page.
+
+Refactor the project to this 9-Zone Architecture now.
+
+
+PROMPT
+We are refining the "Angel Numbers" feature. We want Quality over Quantity.
+
+Instead of random tricks, we will implement **3 specific, high-intelligence Halloween features** that fit the Teletext vibe.
+
+**Action Plan - Implement these 3 Hidden Pages:**
+
+1.  **Update Routing Specs (`/.kiro/specs/routing.yaml`):**
+    Add only these specific hidden routes:
+    - `777`: **GHOST_WRITER** (Interactive AI Horror Fiction).
+    - `333`: **THE_OUIJA** (Creepy Chatbot that spells out answers).
+    - `444`: **DEAD_SIGNAL** (Visualizing deleted internet data as "ghosts").
+    - *(Keep `666` as the Glitch Mode)*.
+
+2.  **Feature 1: 777 Ghost Writer (The Storyteller)**
+    - Create `GhostStoryPage.tsx`.
+    - **Logic:** It should start a text adventure.
+    - **AI Integration:** Use a mock function for now (connected to `Steering`) that generates a short horror scenario based on user choice (A or B).
+    - **Steering:** Update `/.kiro/steering/storyteller.md` to ensure the AI writes in a suspenseful, retro-horror style.
+
+3.  **Feature 2: 333 The Ouija (The Oracle)**
+    - Create `OuijaPage.tsx`.
+    - **Visual:** Display the Alphabet (A-Z) in a grid.
+    - **Interaction:** User types a question -> The system highlights letters one by one to spell the answer.
+
+4.  **Feature 3: 444 Dead Signal (The Atmosphere)**
+    - Create `DeadSignalPage.tsx`.
+    - **Visual:** Heavy static noise (CSS). Random text fragments ("404 not found", "help", "null pointer") should flicker on screen and disappear.
+
+Implement these three features with a focus on atmosphere and "smart" horror.
+
+
+PROMPT
+201-202-203-204-301-302-303-304-401-402-403-404-501-502-503-504-601-602-603-604-701-702-703-704-801-802-803-804 sayfaları boş onları doldur
+
+PROMPT
+sayfa tasarımlarını güzelleştirip içlerini dolduralım.  We need to **INJECT THE VISUAL CONTENT** now.
+
+You must rewrite the code for the following files to include **Rich Teletext UI** (ASCII charts, tables, colored text). Do not use generic text.
+
+**Visual Rules:**
+
+- Use `TeletextGrid` layout.
+
+- Use **Block Characters** (`█ ▄ ▀`) for charts.
+
+- Use **Colors:** Yellow for Headings, Cyan for Data, Green for Status.
+
+**Action: Implement the visual logic for ZONES 100-400:**
+
+1.  **`101_TruthTerminal.tsx` (News Layout):**
+
+    - Create a list of 4 headlines.
+
+    - Format: `[YELLOW] HEADLINE TEXT [WHITE] ................... [CYAN] P102`
+
+    - Add a "BREAKING" banner at the bottom in Red background / White text.
+
+2.  **`202_CryptoTracker.tsx` (Chart Layout):**
+
+    - **CRITICAL:** Render a Bitcoin price chart using ASCII blocks.
+
+    - Create a helper function that takes an array of numbers and renders vertical bars `█` of varying heights.
+
+    - Display: "BTC/USD: $98,420 [GREEN] ▲"
+
+    - Below it: The ASCII Chart spanning 20 columns.
+
+3.  **`301_LiveScores.tsx` (Scoreboard Layout):**
+
+    - Render a table of matches.
+
+    - Format: `[CYAN] MAN CITY [YELLOW] 2 - 1 [CYAN] LIVERPOOL [GREEN] (LIVE)`
+
+    - Add a "Goal Alert" box that blinks if a goal happens (simulate with mock state).
+
+4.  **`401_Weather.tsx` (Map Layout):**
+
+    - Draw a crude map of the region using dots `.` and stars `*`.
+
+    - Overlay ASCII icons on top: `☼` for Sun, `☁` for Cloud, `☂` for Rain.
+
+    - List 5 major cities with temperatures in a grid on the right.
+
+5.  **`402_SkyScan.tsx` (Table Layout):**
+
+    - Create a flight board.
+
+    - Headers: `FLIGHT | DEST | TIME | STATUS` (Yellow).
+
+    - Rows: `TK1923 | IST  | 14:00| [RED] DELAYED`.
+
+
+
+**Action: Implement the visual logic for the remaining zones:**
+
+1.  **`501_LoFi.tsx` (Spotify Visualizer):**
+
+    - **Visual:** Create a "Spectrum Analyzer" animation at the bottom using 10 vertical bars ` ▂▃▅▆▇`.
+
+    - Make them dance (change height) randomly using a `useEffect` interval.
+
+    - Show "NOW PLAYING" in Double Height text.
+
+2.  **`701_TheBlast.tsx` (Gossip Feed):**
+
+    - **Layout:** A feed of messages.
+
+    - **Style:** Use Pink (`#FF00FF`) for the header "THE BLAST".
+
+    - Each message should have `[CYAN] TRUST` and `[RED] CAP` buttons rendered as text links.
+
+3.  **`801_RogueTxt.tsx` (The Game):**
+
+    - **Visual:** A 20x15 grid box for the game map.
+
+    - Render the player as `@` (Yellow) and enemies as `E` (Red).
+
+    - Render walls as `#` (Blue).
+
+    - Display Stats (HP, XP) on the right sidebar.
+
+4.  **`901_OpsCenter.tsx` (DevOps Bars):**
+
+    - Render System Stats (CPU, RAM, DISK).
+
+    - Use horizontal progress bars: `CPU: [████████░░] 80%`.
+
+    - If usage > 90%, make the bar blink Red.
+
+5.  **HIDDEN PAGES (The Magic):**
+
+    - **`333_Ouija.tsx`:** Render the Alphabet `A-Z` in an arc shape (or grid). Highlight the active letter in Red.
+
+    - **`777_GhostWriter.tsx`:** Use a "Typewriter Effect" hook. Text should appear letter-by-letter like a retro computer processing data.
+
+    - **`444_DeadSignal.tsx`:** Use CSS opacity to make random text fragments flicker in and out of the static noise background.
+
+Rewrite these files now to complete the application content.                                           kalan sayfalar da şöyle: We are entering the final content sprint. We have filled the main pages, but many specific sub-pages are still empty or generic.
+
+**Objective:** Implement the UI and Logic for the remaining specific pages.
+
+**Strict Rule:** Every page must feel unique and use **ASCII/Block Graphics**. No generic lists!
+
+**Action: Implement the following files with these specific visual designs:**
+
+### 🟡 ZONE 200: HUSTLE (Remaining)
+
+1.  **`203_CareerBoard.tsx`:**
+
+    - **Layout:** A list of job cards.
+
+    - **Visual:** Highlight the Salary in GREEN background (e.g., `[BG-GREEN] $120k [RESET]`).
+
+    - **Tags:** Show tags like `[REMOTE]` or `[ONSITE]` in Cyan.
+
+2.  **`204_BizNews.tsx`:**
+
+    - **Layout:** Ticker style news.
+
+    - **Visual:** Use a separator line `----------------` between items.
+
+    - **Icon:** Use `$` symbol in Yellow next to headlines.
+
+### 🔵 ZONE 300: ARENA (Remaining)
+
+3.  **`302_LeagueTables.tsx`:**
+
+    - **Layout:** A dense data grid.
+
+    - **Header:** `POS | TEAM       | P | W | D | PTS` (Yellow).
+
+    - **Rows:** Alternate row colors (Cyan text, White text) for readability.
+
+    - **Visual:** Use `^` (Green) or `v` (Red) to show rank changes.
+
+4.  **`303_Esports.tsx`:**
+
+    - **Visual:** Draw a **Tournament Bracket** using ASCII lines.
+
+    - Example:
+
+      ```
+
+      T1       ──┐
+
+                 ├── T1
+
+      G2       ──┘
+
+      ```
+
+    - **Status:** Show `[LIVE]` blinking in Red for active matches.
+
+### 🌤️ ZONE 400: ELEMENT (Remaining)
+
+5.  **`403_EcoMonitor.tsx`:**
+
+    - **Visual:** "Radiation Level" or "Air Quality" bar charts.
+
+    - **Alert:** If AQI is bad, flash the whole background Red/Black.
+
+    - **Icon:** Use `☢` or `⚠` characters.
+
+6.  **`404_RouteAI.tsx` (Traffic):**
+
+    - **Visual:** A simple road map using `|` and `:`.
+
+    - **Cars:** Represent traffic jams with Red `█` blocks blocking the road.
+
+### 🟣 ZONE 500: VIBE (Remaining)
+
+7.  **`502_ChefGPT.tsx`:**
+
+    - **Layout:** Recipe card.
+
+    - **Visual:** Draw a simple plate/bowl using parenthesis `(  )`.
+
+    - **List:** Bullet points for ingredients using `*`.
+
+8.  **`503_Mercury.tsx` (Tarot):**
+
+    - **Interaction:** User presses a key to "Draw Card".
+
+    - **Visual:** Render a large ASCII Tarot Card border:
+
+      ```
+
+      ┌────────┐
+
+      │  THE   │
+
+      │  FOOL  │
+
+      │   0    │
+
+      └────────┘
+
+      ```
+
+### 📺 ZONE 600: CREATOR (Entire Zone)
+
+9.  **`601_Trending.tsx`:**
+
+    - **Visual:** Mock video thumbnails using colored blocks `[  Video  ]`.
+
+    - **Stats:** Show "Views: 1M" in Yellow.
+
+10. **`602_PodCast.tsx`:**
+
+    - **Visual:** Audio wave animation `|||..||..|||` (static or animated).
+
+### 🧡 ZONE 700: NOMAD (Remaining)
+
+11. **`702_BlindDate.tsx`:**
+
+    - **Visual:** A "Character Sheet" style box.
+
+    - **Stats:** Strength/Int/Charisma bars (RPG style) for dating stats.
+
+12. **`703_Marketplace.tsx`:**
+
+    - **Layout:** Classified ads grid.
+
+    - **Visual:** Box borders around "Featured Items".
+
+### 🕹️ ZONE 800: PLAY (Remaining)
+
+13. **`802_QuizAI.tsx`:**
+
+    - **Layout:** One question at the top.
+
+    - **Buttons:** 4 Colored Boxes at the bottom: Red (A), Green (B), Yellow (C), Cyan (D).
+
+14. **`804_Confessions.tsx`:**
+
+    - **Visual:** A scrolling wall of text (Matrix style rain effect if possible, or just a list).
+
+    - **Privacy:** Blur names using `****`.
+
+### ⚙️ ZONE 900: SYSTEM (Remaining)
+
+15. **`902_GitLog.tsx`:**
+
+    - **Visual:** Git Tree Graph.
+
+    - Example:
+
+      ```
+
+      * Commit 1
+
+      |
+
+      * Commit 2
+
+      |\
+
+      | * Branch merge
+
+      ```
+
+    - **Colors:** Use different colors for different branches.
+
+16. **`903_Babel.tsx`:**
+
+    - **Visual:** A clean, large text area at the bottom.
+
+    - **Icon:** A microphone icon `(o)` blinking when "listening".
+
+**Instruction:**
+
+Implement all these remaining files now. Ensure no file in `src/pages` is left empty. Use the `TeletextGrid` wrapper for all.                                                                    her sayfa içini dolu dolu yap güzel o teletext ruhunu yanstan tablolarla grafiklerle doldur bir kullanıcı bunu kullandığında hem o nostaljı hissini hatırlayıp sevinmeli hem de çok gelişmiş bir sistem olduğundan her sayfayı gezip aradığını bulabilmeli her sayfa dolu dolu ui ları çok etkileyici ve teletext konseptinde olmalı
+
+
+
+PROMPT
+We are changing pages in the project.
+
+**The Vision:** "Teletext 2077" is not a toy. It is a serious, AI-powered Intelligence Terminal designed to solve modern problems (Fake News, Complexity, Danger) using a minimalist retro interface.
+
+**Action Plan - Re-Scaffold the Entire Project Architecture:**
+
+1.  **Update Specs (`/.kiro/specs/routing.yaml`):**
+
+    Overwrite the routing rules with this strict 5-ZONE system:
+
+    * **100 ZONE: THE TRUTH (News & Facts)**
+
+        * `100`: **Hub** (Dashboard)
+
+        * `101`: **Global_Wire** (AI Summarized World News - Unbiased)
+
+        * `103`: **Lie_Detector** (Paste text -> AI highlights manipulation/bias)
+
+    * **200 ZONE: THE SYSTEM (Economy & Tech)**
+
+        * `200`: **Hub** (Market & Server Status)
+
+        * `201`: **Stonks** (Crypto/Stock Charts using Block Graphics)
+
+        * `202`: **Code_Exorcist** (Paste Legacy Code -> AI Refactors it with "Spooky" comments)
+
+        * `204`: **Oracle_Of_Doom** (Market Risk "Doomsday Clock")
+
+    * **300 ZONE: THE PULSE (Society)**
+
+        * `300`: **Hub** (Global Sentiment)
+
+        * `301`: **The_Blast** (Anonymous Gossip Feed with Trust/Cap voting)
+
+        * `304`: **Soul_Weight** (Social Media Toxicity Analyzer)
+
+    * **400 ZONE: THE PLANET (Environment)**
+
+        * `400`: **Hub** (Earth Status)
+
+        * `401`: **Eco_Sense** (Air Quality & Radiation Warning)
+
+        * `405`: **Shelter_Seeker** (Low-bandwidth Disaster Map: Water, Power, Meds)
+
+    * **500 ZONE: SHIELD (Security & Rights)**
+
+        * `500`: **Hub** (Personal Protection)
+
+        * `501`: **Crime_Watch** (Location-based Safety Risk Score)
+
+        * `502`: **Scam_Buster** (AI Fraud Detection for Links/SMS)
+
+        * `503`: **Pocket_Lawyer** (Simplifies Legal Rights into 1 sentence)
+
+        * `504`: **SOS_Beacon** (Visual Strobe Light & Emergency Info)
+
+    * **666**: **GLITCH_MODE** (System Failure / Horror Mode)
+
+2.  **Folder Structure:**
+
+    Refactor `src/pages/` to match these zones exactly:
+
+    * `src/pages/100_truth/`
+
+    * `src/pages/200_system/`
+
+    * `src/pages/300_pulse/`
+
+    * `src/pages/400_planet/`
+
+    * `src/pages/500_shield/`
+
+    * `src/pages/666_glitch/`
+
+3.  **Component Scaffolding:**
+
+    Create the `.tsx` files for ALL pages listed above.
+
+    * **Crucial:** Every page must use the `TeletextGrid` layout.
+
+    * **Visuals:** Use distinct header colors for each zone (Blue, Gold, Pink, Green, Red).
+
+    * **Content:** For now, add placeholder UI elements (Inputs, Charts, Lists) suitable for the feature description.
+
+4.  **Navigation:**
+
+    Update the `TeletextGrid` footer to: `100 TRUTH | 200 SYSTM | 300 PULSE | 400 PLNET | 500 SHILD`.
+
+Execute this complete refactor now.

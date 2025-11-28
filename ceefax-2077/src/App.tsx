@@ -1,182 +1,165 @@
-import { useEffect } from 'react'
 import { TeletextProvider, useTeletext } from './context/TeletextContext'
-import TeletextGrid from './components/TeletextGrid'
+import { BootProvider, useBoot, isZoneAllowed } from './context/BootContext'
+import { ThemeProvider } from './context/ThemeContext'
 import KeyboardListener from './components/KeyboardListener'
-import IndexPage from './components/IndexPage'
-import SystemStatusPage from './components/SystemStatusPage'
-import GlitchPage from './components/GlitchPage'
-import SignalLostPage from './components/SignalLostPage'
-import OuijaPage from './components/OuijaPage'
-import DeadSignalPage from './components/DeadSignalPage'
-import GhostWriterPage from './components/GhostWriterPage'
-import GlobalZonePage from './components/GlobalZonePage'
-import HustleZonePage from './components/HustleZonePage'
-import ArenaZonePage from './components/ArenaZonePage'
-import ElementZonePage from './components/ElementZonePage'
-import VibeZonePage from './components/VibeZonePage'
-import CreatorZonePage from './components/CreatorZonePage'
-import NomadZonePage from './components/NomadZonePage'
-import PlayZonePage from './components/PlayZonePage'
-import SystemZonePage from './components/SystemZonePage'
+import BiosBootLoader from './components/BiosBootLoader'
+import BiometricGate from './components/BiometricGate'
+import { VHSPlayback } from './components/VHSPlayback'
+import { useVHS } from './hooks/useVHS'
 
-import MarketWatchPage from './components/pages/MarketWatchPage'
-import CryptoTrackerPage from './components/pages/CryptoTrackerPage'
-import CareerBoardPage from './components/pages/CareerBoardPage'
-import BusinessNewsPage from './components/pages/BusinessNewsPage'
-import LiveScoresPage from './components/pages/LiveScoresPage'
-import LeagueTablesPage from './components/pages/LeagueTablesPage'
-import EsportsPage from './components/pages/EsportsPage'
-import SportsNewsPage from './components/pages/SportsNewsPage'
-import WeatherPage from './components/pages/WeatherPage'
-import WorldNewsPage from './components/pages/WorldNewsPage'
-import ClimateAlertsPage from './components/pages/ClimateAlertsPage'
-import { 
-  WellnessPage, NutritionPage, MindfulnessPage, LifestylePage,
-  MusicChartsPage, MovieReviewsPage, ArtGalleryPage, CreatorToolsPage,
-  ShoppingDealsPage, ProductReviewsPage, SocialTrendsPage, CommunityBoardPage,
-  GameReleasesPage, StreamingGuidePage, GameReviewsPage, RetroArcadePage,
-  ServerStatusPage, DeployLogsPage, ErrorTrackingPage, GitLogPage,
-  TravelGuidePage, FlightStatusPage
-} from './components/pages/AllPages'
+// ZONE 100: TRUTH
+import TruthHub from './pages/100_truth/TruthHub'
+import GlobalWire from './pages/100_truth/GlobalWire'
+import LieDetector from './pages/100_truth/LieDetector'
+
+// ZONE 200: SYSTEM
+import SystemHub from './pages/200_system/SystemHub'
+import Stonks from './pages/200_system/Stonks'
+import CodeExorcist from './pages/200_system/CodeExorcist'
+import OracleOfDoom from './pages/200_system/OracleOfDoom'
+import TheBasilisk from './pages/200_system/TheBasilisk'
+
+// ZONE 300: PULSE
+import PulseHub from './pages/300_pulse/PulseHub'
+import TheBlast from './pages/300_pulse/TheBlast'
+import SoulWeight from './pages/300_pulse/SoulWeight'
+
+// ZONE 400: PLANET
+import PlanetHub from './pages/400_planet/PlanetHub'
+import EcoSense from './pages/400_planet/EcoSense'
+import PlanB from './pages/400_planet/PlanB'
+import ShelterSeeker from './pages/400_planet/ShelterSeeker'
+
+// ZONE 500: SHIELD
+import ShieldHub from './pages/500_shield/ShieldHub'
+import CrimeWatch from './pages/500_shield/CrimeWatch'
+import ScamBuster from './pages/500_shield/ScamBuster'
+import PocketLawyer from './pages/500_shield/PocketLawyer'
+import SOSBeacon from './pages/500_shield/SOSBeacon'
+
+// ZONE 666: GLITCH
+import GlitchMode from './pages/666_glitch/GlitchMode'
+
+// ZONE 800: TELE-HOME (Frankenstein)
+import { HomeHub, TeleHome, TimeMachine, PixelGen } from './pages/800_home'
+
+// ZONE 900: THEMES (Skeleton Crew)
+import { ThemeSelector } from './pages/900_themes'
+import { TapeLibrary } from './pages/900_themes/TapeLibrary'
+
+// Fallback
+import SignalLostPage from './components/SignalLostPage'
 
 function TeletextRouter() {
-  const { currentPage, goToPage } = useTeletext()
+  const { currentPage } = useTeletext()
+  const { bootMode } = useBoot()
+  const { isPlaybackMode, currentTape, playTape, stopPlayback } = useVHS(currentPage, '')
 
-  // Haunted Hours: Auto-redirect to 666 between 00:00-03:00
-  // DISABLED FOR DEMO - Uncomment to enable automatic horror mode
-  useEffect(() => {
-    // Uncomment below to enable haunted hours (00:00-03:00 auto-redirect)
-    /*
-    const checkHauntedHours = () => {
-      const now = new Date()
-      const hours = now.getHours()
-      
-      // Between midnight and 3 AM
-      if (hours >= 0 && hours < 3 && currentPage !== 666) {
-        setTimeout(() => {
-          goToPage(666)
-        }, 3000) // Give them 3 seconds warning
-      }
-    }
-
-    // Check immediately
-    checkHauntedHours()
-
-    // Check every minute
-    const hauntedInterval = setInterval(checkHauntedHours, 60000)
-
-    return () => {
-      clearInterval(hauntedInterval)
-    }
-    */
-
-    // Uncomment below to enable inactivity timer (auto-redirect after 2 minutes)
-    /*
-    const inactivityTimer = setTimeout(() => {
-      if (currentPage !== 666 && currentPage !== 100) {
-        goToPage(666)
-      }
-    }, 120000) // 2 minutes
-
-    return () => {
-      clearTimeout(inactivityTimer)
-    }
-    */
-  }, [currentPage, goToPage])
-
-  // Route mapping based on .kiro/specs/routing.yaml
   const renderPage = () => {
-    // Special pages
-    if (currentPage === 100) return <IndexPage />
-    if (currentPage === 101) return <SystemStatusPage />
-    if (currentPage === 333) return <OuijaPage />
-    if (currentPage === 444) return <DeadSignalPage />
-    if (currentPage === 666) return <GlitchPage />
-    if (currentPage === 777) return <GhostWriterPage />
-    
-    // 200s - HUSTLE (Finance & Work)
-    if (currentPage === 201) return <MarketWatchPage />
-    if (currentPage === 202) return <CryptoTrackerPage />
-    if (currentPage === 203) return <CareerBoardPage />
-    if (currentPage === 204) return <BusinessNewsPage />
-    if (currentPage >= 200 && currentPage < 300) return <HustleZonePage />
-    
-    // 300s - ARENA (Sports)
-    if (currentPage === 301) return <LiveScoresPage />
-    if (currentPage === 302) return <LeagueTablesPage />
-    if (currentPage === 303) return <EsportsPage />
-    if (currentPage === 304) return <SportsNewsPage />
-    if (currentPage >= 300 && currentPage < 400) return <ArenaZonePage />
-    
-    // 100s - GLOBAL (News)
-    if (currentPage === 102) return <WorldNewsPage />
-    if (currentPage === 103) return <WorldNewsPage />
-    if (currentPage === 104) return <WorldNewsPage />
-    
-    // 400s - ELEMENT (Travel & Environment)
-    if (currentPage === 401) return <WeatherPage />
-    if (currentPage === 402) return <ClimateAlertsPage />
-    if (currentPage === 403) return <TravelGuidePage />
-    if (currentPage === 404) return <FlightStatusPage />
-    if (currentPage >= 400 && currentPage < 500) return <ElementZonePage />
-    
-    // 500s - VIBE (Lifestyle & Wellness)
-    if (currentPage === 501) return <WellnessPage />
-    if (currentPage === 502) return <NutritionPage />
-    if (currentPage === 503) return <MindfulnessPage />
-    if (currentPage === 504) return <LifestylePage />
-    if (currentPage >= 500 && currentPage < 600) return <VibeZonePage />
-    
-    // 600s - CREATOR (Media & Content)
-    if (currentPage === 601) return <MusicChartsPage />
-    if (currentPage === 602) return <MovieReviewsPage />
-    if (currentPage === 603) return <ArtGalleryPage />
-    if (currentPage === 604) return <CreatorToolsPage />
-    if (currentPage >= 600 && currentPage < 700) return <CreatorZonePage />
-    
-    // 700s - NOMAD (Consumer & Social)
-    if (currentPage === 701) return <ShoppingDealsPage />
-    if (currentPage === 702) return <ProductReviewsPage />
-    if (currentPage === 703) return <SocialTrendsPage />
-    if (currentPage === 704) return <CommunityBoardPage />
-    if (currentPage >= 700 && currentPage < 800) return <NomadZonePage />
-    
-    // 800s - PLAY (Entertainment & Games)
-    if (currentPage === 801) return <GameReleasesPage />
-    if (currentPage === 802) return <StreamingGuidePage />
-    if (currentPage === 803) return <GameReviewsPage />
-    if (currentPage === 804) return <RetroArcadePage />
-    if (currentPage >= 800 && currentPage < 900) return <PlayZonePage />
-    
-    // 900s - SYSTEM (Technology & DevOps)
-    if (currentPage === 901) return <ServerStatusPage />
-    if (currentPage === 902) return <DeployLogsPage />
-    if (currentPage === 903) return <ErrorTrackingPage />
-    if (currentPage === 904) return <GitLogPage />
-    if (currentPage >= 900 && currentPage < 1000) return <SystemZonePage />
-    
-    // 100s - GLOBAL (News & Information)
-    if (currentPage >= 100 && currentPage < 200) return <GlobalZonePage />
+    // Check if zone is allowed in current boot mode
+    const zone = Math.floor(currentPage / 100) * 100
+    if (!isZoneAllowed(zone, bootMode)) {
+      return (
+        <div style={{ 
+          color: '#FF0000', 
+          textAlign: 'center', 
+          padding: '50px',
+          fontSize: '1.5em'
+        }}>
+          <div style={{ marginBottom: '20px' }}>
+            ⛔ ACCESS DENIED ⛔
+          </div>
+          <div style={{ fontSize: '0.8em', color: '#00FF00' }}>
+            ZONE {zone} NOT AVAILABLE IN SYSADMIN MODE
+          </div>
+          <div style={{ fontSize: '0.6em', color: '#00FFFF', marginTop: '20px' }}>
+            AUTHORIZED ZONES: 200 (SYSTEM), 500 (SHIELD)
+          </div>
+        </div>
+      )
+    }
+    // ZONE 100: THE TRUTH (News & Facts)
+    if (currentPage === 100) return <TruthHub />
+    if (currentPage === 101) return <GlobalWire />
+    if (currentPage === 103) return <LieDetector />
 
-    // Default
+    // ZONE 200: THE SYSTEM (Economy & Tech)
+    if (currentPage === 200) return <SystemHub />
+    if (currentPage === 201) return <Stonks />
+    if (currentPage === 202) return <CodeExorcist />
+    if (currentPage === 204) return <OracleOfDoom />
+    if (currentPage === 205) return <TheBasilisk />
+
+    // ZONE 300: THE PULSE (Society)
+    if (currentPage === 300) return <PulseHub />
+    if (currentPage === 301) return <TheBlast />
+    if (currentPage === 304) return <SoulWeight />
+
+    // ZONE 400: THE PLANET (Environment)
+    if (currentPage === 400) return <PlanetHub />
+    if (currentPage === 401) return <EcoSense />
+    if (currentPage === 403) return <PlanB />
+    if (currentPage === 405) return <ShelterSeeker />
+
+    // ZONE 500: SHIELD (Security & Rights)
+    if (currentPage === 500) return <ShieldHub />
+    if (currentPage === 501) return <CrimeWatch />
+    if (currentPage === 502) return <ScamBuster />
+    if (currentPage === 503) return <PocketLawyer />
+    if (currentPage === 504) return <SOSBeacon />
+
+    // ZONE 666: GLITCH MODE
+    if (currentPage === 666) return <GlitchMode />
+
+    // ZONE 800: TELE-HOME (Frankenstein)
+    if (currentPage === 800) return <HomeHub />
+    if (currentPage === 801) return <TeleHome />
+    if (currentPage === 802) return <TimeMachine />
+    if (currentPage === 803) return <PixelGen />
+
+    // ZONE 900: THEMES (Skeleton Crew)
+    if (currentPage === 905) return <ThemeSelector />
+    if (currentPage === 906) return <TapeLibrary onPlayTape={playTape} />
+
+    // Default fallback for invalid pages
     return <SignalLostPage />
   }
 
   return (
     <>
       <KeyboardListener />
-      <TeletextGrid>
-        {renderPage()}
-      </TeletextGrid>
+      {isPlaybackMode && currentTape ? (
+        <VHSPlayback tape={currentTape} onStop={stopPlayback} />
+      ) : (
+        renderPage()
+      )}
     </>
   )
 }
 
 function App() {
   return (
-    <TeletextProvider>
+    <ThemeProvider>
+      <BootProvider>
+        <TeletextProvider>
+          <AppWithBoot />
+        </TeletextProvider>
+      </BootProvider>
+    </ThemeProvider>
+  )
+}
+
+function AppWithBoot() {
+  const { isBooted } = useBoot()
+
+  if (!isBooted) {
+    return <BiosBootLoader />
+  }
+
+  return (
+    <BiometricGate requiredZone={500} redirectPage={100}>
       <TeletextRouter />
-    </TeletextProvider>
+    </BiometricGate>
   )
 }
 

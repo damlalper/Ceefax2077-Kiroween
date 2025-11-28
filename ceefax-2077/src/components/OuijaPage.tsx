@@ -26,7 +26,7 @@ export default function OuijaPage() {
   const [question, setQuestion] = useState('')
   const [isAnswering, setIsAnswering] = useState(false)
   const [answer, setAnswer] = useState('')
-  const [currentLetter, setCurrentLetter] = useState('')
+  const [_currentLetter, setCurrentLetter] = useState('')
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const [sessionCount, setSessionCount] = useState(0)
   const [displayedAnswer, setDisplayedAnswer] = useState('')

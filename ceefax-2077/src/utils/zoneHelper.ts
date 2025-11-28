@@ -1,154 +1,63 @@
-// Ceefax 2077 - Zone Helper Utilities
-// Maps pages to zones and provides zone-specific styling
+// Zone Helper - Maps page numbers to zones and styling
+// Teletext 2077 - 5-ZONE Intelligence Terminal
 
-export interface Zone {
-  id: number
-  name: string
-  theme: string
-  color: 'blue' | 'green' | 'magenta' | 'yellow' | 'red'
-  description: string
-}
-
-export const ZONES: Record<number, Zone> = {
-  100: {
-    id: 100,
-    name: 'GLOBAL',
-    theme: 'News & Information',
-    color: 'blue',
-    description: 'AI-curated news and fact-checking',
-  },
-  200: {
-    id: 200,
-    name: 'HUSTLE',
-    theme: 'Finance & Work',
-    color: 'blue',
-    description: 'Crypto, DeFi, and gig economy',
-  },
-  300: {
-    id: 300,
-    name: 'ARENA',
-    theme: 'Sports & Competition',
-    color: 'green',
-    description: 'Live scores, e-sports, racing',
-  },
-  400: {
-    id: 400,
-    name: 'ELEMENT',
-    theme: 'Environment & Travel',
-    color: 'green',
-    description: 'Climate, flights, space exploration',
-  },
-  500: {
-    id: 500,
-    name: 'VIBE',
-    theme: 'Lifestyle & Wellness',
-    color: 'magenta',
-    description: 'Music, food, spirituality',
-  },
-  600: {
-    id: 600,
-    name: 'CREATOR',
-    theme: 'Media & Content',
-    color: 'magenta',
-    description: 'Trending videos, podcasts',
-  },
-  700: {
-    id: 700,
-    name: 'NOMAD',
-    theme: 'Consumer & Social',
-    color: 'yellow',
-    description: 'Travel, dating, NFTs',
-  },
-  800: {
-    id: 800,
-    name: 'PLAY',
-    theme: 'Entertainment & Games',
-    color: 'yellow',
-    description: 'RPG, quizzes, AI art',
-  },
-  900: {
-    id: 900,
-    name: 'SYSTEM',
-    theme: 'Technology & DevOps',
-    color: 'red',
-    description: 'System monitoring, git logs, translation',
-  },
-}
-
-/**
- * Get zone from page number
- * Example: 101 → Zone 100, 205 → Zone 200
- */
-export function getZoneFromPage(page: number): Zone | null {
-  if (page === 666) return null // Special case
-  
-  const zoneId = Math.floor(page / 100) * 100
-  return ZONES[zoneId] || null
-}
-
-/**
- * Get zone color for styling
- */
 export function getZoneColor(page: number): string {
-  const zone = getZoneFromPage(page)
-  if (!zone) return '#FF0000' // Red for 666
-  
-  const colorMap = {
-    blue: '#0000FF',
-    green: '#00FF00',
-    magenta: '#FF00FF',
-    yellow: '#FFFF00',
-    red: '#FF0000',
-  }
-  
-  return colorMap[zone.color]
+  if (page >= 100 && page < 200) return '#0066CC' // TRUTH - Blue
+  if (page >= 200 && page < 300) return '#FFD700' // SYSTM - Gold
+  if (page >= 300 && page < 400) return '#FF1493' // PULSE - Pink
+  if (page >= 400 && page < 500) return '#00CC66' // PLNET - Green
+  if (page >= 500 && page < 600) return '#CC0000' // SHILD - Red
+  if (page === 666) return '#CC0000' // GLITCH - Red
+  return '#FFFFFF' // Default white
 }
 
-/**
- * Get navigation links for current zone
- * Returns prev/next zones and pages within current zone
- */
-export function getZoneNavigation(currentPage: number) {
-  const currentZone = getZoneFromPage(currentPage)
-  if (!currentZone) return null
-  
-  const zoneId = currentZone.id
-  const prevZone = zoneId - 100
-  const nextZone = zoneId + 100
-  
-  return {
-    currentZone: zoneId,
-    prevZone: prevZone >= 100 ? prevZone : 900, // Wrap around
-    nextZone: nextZone <= 900 ? nextZone : 100, // Wrap around
-    pages: [
-      zoneId, // Index
-      zoneId + 1, // Page 1
-      zoneId + 2, // Page 2
-      zoneId + 3, // Page 3
-    ],
-  }
-}
-
-/**
- * Get zone title for header
- */
 export function getZoneTitle(page: number): string {
-  const zone = getZoneFromPage(page)
-  if (!zone) return 'SYSTEM FAILURE'
-  
-  return `${zone.name} - ${zone.theme.toUpperCase()}`
+  if (page >= 100 && page < 200) return 'TELETEXT 2077 :: THE TRUTH'
+  if (page >= 200 && page < 300) return 'TELETEXT 2077 :: THE SYSTEM'
+  if (page >= 300 && page < 400) return 'TELETEXT 2077 :: THE PULSE'
+  if (page >= 400 && page < 500) return 'TELETEXT 2077 :: THE PLANET'
+  if (page >= 500 && page < 600) return 'TELETEXT 2077 :: SHIELD'
+  if (page === 666) return 'SYSTEM FAILURE :: GLITCH MODE'
+  return 'TELETEXT 2077'
 }
 
-/**
- * Check if page exists in routing
- */
-export function isValidPage(page: number): boolean {
-  if (page === 666) return true
-  if (page === 100) return true
-  
-  const zone = Math.floor(page / 100) * 100
-  if (!ZONES[zone]) return false
-  
-  const pageInZone = page % 100
-  return pageInZone >= 0 && pageInZone <= 3
+export function getZoneNavigation(page: number) {
+  // Determine current zone
+  let currentZone = 100
+  if (page >= 200 && page < 300) currentZone = 200
+  else if (page >= 300 && page < 400) currentZone = 300
+  else if (page >= 400 && page < 500) currentZone = 400
+  else if (page >= 500 && page < 600) currentZone = 500
+  else if (page === 666) currentZone = 666
+
+  // Zone navigation mapping
+  const zones = [100, 200, 300, 400, 500]
+  const currentIndex = zones.indexOf(currentZone)
+
+  if (currentZone === 666) {
+    return {
+      prevZone: '500',
+      currentZone: '666',
+      nextZone: '100',
+    }
+  }
+
+  const prevIndex = currentIndex > 0 ? currentIndex - 1 : zones.length - 1
+  const nextIndex = currentIndex < zones.length - 1 ? currentIndex + 1 : 0
+
+  return {
+    prevZone: String(zones[prevIndex]),
+    currentZone: String(currentZone),
+    nextZone: String(zones[nextIndex]),
+  }
+}
+
+export function getZoneName(page: number): string {
+  if (page >= 100 && page < 200) return 'TRUTH'
+  if (page >= 200 && page < 300) return 'SYSTM'
+  if (page >= 300 && page < 400) return 'PULSE'
+  if (page >= 400 && page < 500) return 'PLNET'
+  if (page >= 500 && page < 600) return 'SHILD'
+  if (page === 666) return 'GLITCH'
+  return 'UNKNOWN'
 }
