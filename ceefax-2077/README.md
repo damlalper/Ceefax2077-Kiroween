@@ -11,6 +11,8 @@ A resurrection of the 1980s BBC Ceefax Teletext system, reimagined as an **emerg
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-7-purple.svg)](https://vitejs.dev/)
 
+📚 **[Complete Documentation →](./docs/README.md)**
+
 ---
 
 ## 🚨 The Problem
