@@ -1594,3 +1594,142 @@ body.sysadmin-mode .zone-restricted::after {
   font-size: 1.2em;
   text-shadow: 0 0 10px #00FF00;
 }
+
+/* ============================================
+   CRISIS MODE STYLES
+   ============================================ */
+
+body.crisis-mode {
+  animation: crisis-pulse 2s infinite;
+  border: 3px solid #ff0000;
+}
+
+@keyframes crisis-pulse {
+  0%, 100% { 
+    border-color: #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+  50% { 
+    border-color: #ff6666;
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+  }
+}
+
+body.crisis-mode .teletext-content {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+body.crisis-mode h1,
+body.crisis-mode h2,
+body.crisis-mode .text-cyan-400 {
+  color: #ff4444 !important;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+body.crisis-mode button {
+  background-color: #cc0000 !important;
+  border-color: #ff0000 !important;
+}
+
+body.crisis-mode button:hover {
+  background-color: #ff0000 !important;
+}
+
+/* Crisis alert banner */
+body.crisis-mode::before {
+  content: '🚨 CRISIS MODE ACTIVE 🚨';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #ff0000;
+  color: white;
+  text-align: center;
+  padding: 0.5rem;
+  font-weight: bold;
+  z-index: 9999;
+  animation: crisis-flash 1s infinite;
+}
+
+@keyframes crisis-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ============================================
+   QUIET MODE STYLES
+   ============================================ */
+
+body.quiet-mode {
+  filter: brightness(0.7) saturate(0.6);
+  transition: filter 2s ease;
+}
+
+body.quiet-mode .teletext-content {
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+body.quiet-mode * {
+  animation-duration: 2s !important; /* Slow down all animations */
+}
+
+body.quiet-mode h1,
+body.quiet-mode h2 {
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+body.quiet-mode button {
+  opacity: 0.7;
+  transition: all 0.5s ease;
+}
+
+body.quiet-mode button:hover {
+  opacity: 1;
+}
+
+/* Quiet mode indicator */
+body.quiet-mode::after {
+  content: '🌙 quiet mode';
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  z-index: 9999;
+}
+
+/* Reduce motion in quiet mode */
+body.quiet-mode .animate-pulse {
+  animation: quiet-pulse 4s ease-in-out infinite;
+}
+
+@keyframes quiet-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.6; }
+}
+
+/* Softer colors in quiet mode */
+body.quiet-mode .text-red-500,
+body.quiet-mode .text-red-400 {
+  color: #ff9999 !important;
+}
+
+body.quiet-mode .text-cyan-400,
+body.quiet-mode .text-cyan-500 {
+  color: #88cccc !important;
+}
+
+body.quiet-mode .text-yellow-400 {
+  color: #cccc88 !important;
+}
+
+body.quiet-mode .bg-red-900 {
+  background-color: rgba(100, 0, 0, 0.3) !important;
+}

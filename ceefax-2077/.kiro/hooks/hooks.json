@@ -158,6 +158,37 @@
         "description": "Secret dev tools page"
       },
       "priority": 7
+    },
+    {
+      "id": "crisis-detector",
+      "name": "Crisis Mode Detector",
+      "enabled": true,
+      "trigger": {
+        "type": "timer",
+        "interval": 5000
+      },
+      "action": {
+        "type": "check_crisis_conditions",
+        "description": "Monitor for crisis conditions (market crash, Zone 666 trap)"
+      },
+      "priority": 10
+    },
+    {
+      "id": "quiet-mode-scheduler",
+      "name": "Quiet Mode Time Scheduler",
+      "enabled": true,
+      "trigger": {
+        "type": "time_based",
+        "schedule": [
+          { "time": "22:00", "mode": "quiet" },
+          { "time": "06:00", "mode": "normal" }
+        ]
+      },
+      "action": {
+        "type": "toggle_quiet_mode",
+        "description": "Activate/deactivate quiet mode based on time"
+      },
+      "priority": 5
     }
   ]
 }
