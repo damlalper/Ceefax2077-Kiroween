@@ -1,0 +1,181 @@
+name: Crypto Intelligence Workflow
+version: 1.0.0
+description: Real-time market analysis with predictive modeling for Zone 200
+
+workflow:
+  id: crypto-intelligence
+  zone: 200
+  trigger: Market data update or user request
+  
+stages:
+  - stage: 1_market_data
+    name: Multi-Source Price Aggregation
+    description: Gather price data from multiple exchanges
+    mcp_tools:
+      - coingecko_api
+      - binance_api
+      - coinbase_api
+    inputs:
+      coins: [bitcoin, ethereum, solana]
+      timeframe: 24h
+      granularity: 1m
+    outputs:
+      - prices: Map<string, PriceData>
+      - volumes: Map<string, number>
+      - market_caps: Map<string, number>
+    
+  - stage: 2_whale_tracking
+    name: Whale Movement Detection
+    description: Track large transactions and wallet movements
+    mcp_tool: blockchain_scanner
+    inputs:
+      chains: [bitcoin, ethereum]
+      threshold: 1000000 # $1M+ transactions
+      lookback: 1h
+    outputs:
+      - whale_movements: Array<WhaleTransaction>
+      - accumulation_score: number
+      - distribution_score: number
+    parallel_with: [1_market_data]
+    
+  - stage: 3_sentiment_analysis
+    name: Social Sentiment Tracking
+    description: Analyze crypto Twitter and Reddit sentiment
+    mcp_tool: social_sentiment
+    inputs:
+      platforms: [twitter, reddit]
+      keywords: [bitcoin, crypto, btc]
+      sample_size: 1000
+    outputs:
+      - sentiment_score: number # -1 to 1
+      - trending_topics: Array<string>
+      - influencer_opinions: Array<Opinion>
+    parallel_with: [1_market_data, 2_whale_tracking]
+    
+  - stage: 4_technical_analysis
+    name: Chart Pattern Recognition
+    description: Identify technical patterns and indicators
+    mcp_tool: technical_analyzer
+    inputs:
+      prices: ${stage_1.prices}
+      indicators:
+        - RSI
+        - MACD
+        - Bollinger_Bands
+        - Support_Resistance
+    outputs:
+      - patterns: Array<ChartPattern>
+      - signals: Array<TradingSignal>
+      - strength: number
+    depends_on: [1_market_data]
+    
+  - stage: 5_risk_assessment
+    name: Market Risk Calculation
+    description: Calculate comprehensive risk metrics
+    mcp_tool: risk_calculator
+    inputs:
+      prices: ${stage_1.prices}
+      whale_movements: ${stage_2.whale_movements}
+      sentiment: ${stage_3.sentiment_score}
+      technical_signals: ${stage_4.signals}
+    outputs:
+      - risk_level: RiskLevel
+      - crash_probability: number
+      - volatility_index: number
+    depends_on: [1_market_data, 2_whale_tracking, 3_sentiment_analysis, 4_technical_analysis]
+    
+  - stage: 6_prediction
+    name: Price Prediction Model
+    description: ML-based price prediction
+    mcp_tool: price_predictor
+    inputs:
+      historical_data: ${stage_1.prices}
+      whale_data: ${stage_2.whale_movements}
+      sentiment: ${stage_3.sentiment_score}
+      technical: ${stage_4.patterns}
+      model: ensemble # Combines multiple models
+    outputs:
+      - predictions: Map<string, PricePrediction>
+      - confidence: number
+      - timeframes: [1h, 4h, 24h]
+    depends_on: [5_risk_assessment]
+    
+  - stage: 7_recommendation
+    name: Trading Recommendation Engine
+    description: Generate actionable trading advice
+    mcp_tool: recommendation_engine
+    inputs:
+      risk_assessment: ${stage_5}
+      predictions: ${stage_6.predictions}
+      user_profile: conservative # or aggressive
+    outputs:
+      - action: 'BUY' | 'SELL' | 'HOLD'
+      - confidence: number
+      - reasoning: Array<string>
+      - stop_loss: number
+      - take_profit: number
+    depends_on: [6_prediction]
+
+execution:
+  mode: parallel_then_sequential
+  parallel_stages: [1, 2, 3]
+  timeout: 45000 # 45 seconds
+  cache_results: true
+  cache_duration: 60000 # 1 minute (fast-moving market)
+  
+crisis_detection:
+  triggers:
+    - price_drop_30_percent: Activate crisis mode
+    - whale_dump_detected: Alert user immediately
+    - sentiment_crash: Show warning
+    - technical_breakdown: Suggest exit strategy
+  
+  actions:
+    - Trigger useMarketCrash hook
+    - Activate crisis steering
+    - Show emergency UI
+    - Auto-backup user positions
+
+real_time_updates:
+  websocket_enabled: true
+  update_frequency: 5000 # 5 seconds
+  incremental_updates: true
+  
+implementation_status:
+  current: Partially implemented
+  existing:
+    - CryptoAgent.ts has basic risk analysis
+    - useMarketCrash.ts detects crashes
+    - Stonks page shows prices
+  
+  missing:
+    - Multi-stage workflow orchestration
+    - Whale tracking integration
+    - Sentiment analysis
+    - Prediction models
+    - Recommendation engine
+  
+  required_files:
+    - Create: src/mcp/workflows/CryptoIntelligence.ts
+    - Create: src/mcp/tools/WhaleTracker.ts
+    - Create: src/mcp/tools/SentimentAnalyzer.ts
+    - Create: src/mcp/tools/PricePredictor.ts
+    - Modify: src/pages/200_system/Stonks.tsx (integrate workflow)
+    - Modify: src/mcp/CryptoAgent.ts (add workflow support)
+
+integration_example: |
+  // In Stonks.tsx
+  const { data, loading, error } = useCryptoIntelligence('bitcoin');
+  
+  if (data?.risk_level === 'CRITICAL') {
+    // Crisis mode already activated by useMarketCrash
+    // Show emergency recommendations
+  }
+  
+  // Display predictions
+  {data?.predictions.map(pred => (
+    <div>
+      <p>{pred.timeframe}: ${pred.price}</p>
+      <p>Confidence: {pred.confidence}%</p>
+    </div>
+  ))}

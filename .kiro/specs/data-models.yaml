@@ -1,0 +1,188 @@
+name: Data Models Specification
+version: 2.0.0
+description: Strict TypeScript interface definitions for all data structures
+
+# This spec MUST match actual TypeScript interfaces in src/
+# Any deviation is a bug and must be fixed immediately
+
+models:
+  # Personality System
+  Personality:
+    file: src/services/PersonalityService.ts
+    interface: Personality
+    properties:
+      type:
+        type: PersonalityType
+        enum: ['anchor', 'gossip', 'rogue', 'sysadmin', 'demon', 'neutral']
+        required: true
+      name:
+        type: string
+        required: true
+      description:
+        type: string
+        required: true
+      zone:
+        type: number
+        required: true
+        validation: Must be multiple of 100 (0, 100, 200, etc.)
+      transformText:
+        type: function
+        signature: (text: string) => string
+        required: true
+
+  # Hook System
+  Hook:
+    file: src/services/HookService.ts
+    interface: Hook
+    properties:
+      id:
+        type: string
+        required: true
+        format: kebab-case
+      name:
+        type: string
+        required: true
+      enabled:
+        type: boolean
+        required: true
+        default: true
+      trigger:
+        type: HookTrigger
+        required: true
+      action:
+        type: HookAction
+        required: true
+      priority:
+        type: number
+        required: true
+        range: [1, 10]
+      conditions:
+        type: Record<string, unknown>
+        required: false
+
+  HookTrigger:
+    file: src/services/HookService.ts
+    interface: HookTrigger
+    properties:
+      type:
+        type: string
+        enum: ['timer', 'page_change', 'time_based', 'critical_alert', 
+               'user_interaction', 'idle_on_page', 'zone_access', 
+               'network_change', 'key_sequence']
+        required: true
+      interval:
+        type: number
+        required: false
+        description: Milliseconds for timer triggers
+      timeout:
+        type: number
+        required: false
+      schedule:
+        type: Array<{time: string, theme: string}>
+        required: false
+      conditions:
+        type: Record<string, unknown>
+        required: false
+      events:
+        type: string[]
+        required: false
+      zone:
+        type: number
+        required: false
+      sequence:
+        type: string[]
+        required: false
+
+  HookAction:
+    file: src/services/HookService.ts
+    interface: HookAction
+    properties:
+      type:
+        type: string
+        enum: ['refresh_data', 'measure_performance', 'switch_theme', 
+               'navigate', 'log_analytics', 'suggest_pages', 
+               'security_check', 'backup_data', 'toggle_offline_mode']
+        required: true
+      description:
+        type: string
+        required: true
+      # Additional properties allowed via index signature
+
+  # Market Crash System
+  MarketRiskAnalysis:
+    file: src/mcp/CryptoAgent.ts
+    interface: MarketRiskAnalysis
+    properties:
+      risk_level:
+        type: string
+        enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
+        required: true
+      risk_score:
+        type: number
+        required: true
+        range: [0, 100]
+      factors:
+        type: string[]
+        required: true
+      recommendation:
+        type: string
+        required: true
+      timestamp:
+        type: number
+        required: true
+
+  # Teletext Context
+  TeletextContextType:
+    file: src/context/TeletextContext.tsx
+    interface: TeletextContextType
+    properties:
+      currentPage:
+        type: number
+        required: true
+        validation: Must be valid page number
+      inputBuffer:
+        type: string
+        required: true
+        validation: Max 3 digits
+      currentPersonality:
+        type: Personality
+        required: true
+      addDigit:
+        type: function
+        signature: (digit: string) => void
+        required: true
+      goToPage:
+        type: function
+        signature: (page: number) => void
+        required: true
+      clearBuffer:
+        type: function
+        signature: () => void
+        required: true
+      transformText:
+        type: function
+        signature: (text: string) => string
+        required: true
+
+validation_rules:
+  - name: Zone Numbers
+    rule: All zone numbers must be multiples of 100
+    zones: [0, 100, 200, 300, 400, 500, 666, 800, 900]
+    
+  - name: Page Numbers
+    rule: Page numbers must be within zone range
+    example: Zone 100 pages are 100-199
+    
+  - name: Hook IDs
+    rule: Must be unique and kebab-case
+    pattern: ^[a-z0-9-]+$
+    
+  - name: Personality Types
+    rule: Must match one of the defined types
+    enforcement: TypeScript enum
+
+integrity_checks:
+  - Check that all Personality types in PersonalityService match the enum
+  - Verify all Hook actions in HookService have implementations
+  - Ensure TeletextContext provides all required methods
+  - Validate MarketRiskAnalysis calculations are within bounds

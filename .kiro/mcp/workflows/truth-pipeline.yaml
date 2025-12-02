@@ -1,0 +1,154 @@
+name: Truth Terminal Data Pipeline
+version: 1.0.0
+description: Multi-stage MCP workflow for news analysis and fact-checking
+
+# This workflow chains multiple MCP tools to create a "Chain of Thought" for Zone 100
+
+workflow:
+  id: truth-pipeline
+  zone: 100
+  trigger: User requests news analysis
+  
+stages:
+  - stage: 1_fetch
+    name: News Aggregation
+    mcp_tool: fetch_news
+    description: Gather news from multiple sources
+    inputs:
+      sources:
+        - newsapi
+        - guardian
+        - bbc
+      topics:
+        - technology
+        - politics
+        - economy
+      limit: 10
+    outputs:
+      - articles: Array<NewsArticle>
+    error_handling:
+      retry: 3
+      fallback: Use cached articles
+      
+  - stage: 2_analyze
+    name: Bias Detection
+    mcp_tool: analyze_bias
+    description: Detect political and editorial bias
+    inputs:
+      articles: ${stage_1.articles}
+      models:
+        - sentiment_analysis
+        - political_lean_detector
+        - source_credibility
+    outputs:
+      - bias_scores: Array<BiasScore>
+      - credibility_ratings: Array<number>
+    depends_on: [1_fetch]
+    
+  - stage: 3_fact_check
+    name: Fact Verification
+    mcp_tool: fact_check
+    description: Cross-reference claims with fact-checking databases
+    inputs:
+      articles: ${stage_1.articles}
+      databases:
+        - snopes
+        - factcheck_org
+        - politifact
+    outputs:
+      - fact_checks: Array<FactCheck>
+      - verified_claims: number
+      - disputed_claims: number
+    depends_on: [1_fetch]
+    parallel_with: [2_analyze]
+    
+  - stage: 4_synthesize
+    name: Truth Score Calculation
+    mcp_tool: calculate_truth_score
+    description: Combine all metrics into final truth score
+    inputs:
+      bias_scores: ${stage_2.bias_scores}
+      credibility_ratings: ${stage_2.credibility_ratings}
+      fact_checks: ${stage_3.fact_checks}
+      weights:
+        bias: 0.3
+        credibility: 0.4
+        fact_check: 0.3
+    outputs:
+      - truth_scores: Array<TruthScore>
+      - recommendations: Array<string>
+    depends_on: [2_analyze, 3_fact_check]
+    
+  - stage: 5_present
+    name: Format for Display
+    mcp_tool: format_results
+    description: Transform data for Teletext display
+    inputs:
+      articles: ${stage_1.articles}
+      truth_scores: ${stage_4.truth_scores}
+      recommendations: ${stage_4.recommendations}
+      format: teletext_40x25
+    outputs:
+      - formatted_pages: Array<TeletextPage>
+    depends_on: [4_synthesize]
+
+execution:
+  mode: sequential_with_parallel
+  timeout: 30000 # 30 seconds total
+  cache_results: true
+  cache_duration: 300000 # 5 minutes
+  
+error_recovery:
+  - If stage 1 fails: Use cached news
+  - If stage 2 fails: Skip bias analysis, proceed with warning
+  - If stage 3 fails: Skip fact-checking, mark as unverified
+  - If stage 4 fails: Use simple average scoring
+  - If stage 5 fails: Use raw data display
+
+monitoring:
+  log_each_stage: true
+  track_performance: true
+  alert_on_failure: true
+  metrics:
+    - stage_duration
+    - success_rate
+    - cache_hit_rate
+    - data_quality_score
+
+implementation_status:
+  current: Not implemented
+  required_files:
+    - Create: src/mcp/workflows/TruthPipeline.ts
+    - Create: src/types/workflow.ts
+    - Modify: src/pages/100_truth/GlobalWire.tsx (integrate pipeline)
+    - Modify: src/services/NewsService.ts (add workflow support)
+  
+  code_example: |
+    // In src/mcp/workflows/TruthPipeline.ts
+    export class TruthPipeline {
+      async execute(query: string): Promise<TruthPipelineResult> {
+        // Stage 1: Fetch
+        const articles = await this.fetchNews(query);
+        
+        // Stage 2 & 3: Parallel analysis
+        const [biasScores, factChecks] = await Promise.all([
+          this.analyzeBias(articles),
+          this.factCheck(articles)
+        ]);
+        
+        // Stage 4: Synthesize
+        const truthScores = this.calculateTruthScores(
+          biasScores,
+          factChecks
+        );
+        
+        // Stage 5: Format
+        return this.formatForDisplay(articles, truthScores);
+      }
+    }
+
+integration_points:
+  - GlobalWire component calls TruthPipeline.execute()
+  - Results cached in NewsService
+  - UI shows pipeline progress
+  - Errors handled gracefully with fallbacks

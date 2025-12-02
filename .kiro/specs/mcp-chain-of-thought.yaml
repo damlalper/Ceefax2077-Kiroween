@@ -1,0 +1,286 @@
+name: MCP Chain of Thought Specification
+version: 1.0.0
+description: Multi-step reasoning workflows using MCP tool chains
+
+# This spec defines how to chain MCP tools for complex reasoning tasks
+
+concept:
+  description: |
+    Instead of single MCP tool calls, we create "chains of thought" where
+    the output of one tool becomes the input to the next, building up
+    complex analysis through multiple reasoning steps.
+  
+  benefits:
+    - More sophisticated analysis
+    - Transparent reasoning process
+    - Easier debugging
+    - Modular and reusable
+    - Better error handling
+
+chains:
+  # TRUTH TERMINAL CHAIN
+  truth_verification_chain:
+    name: Truth Verification Chain
+    zone: 100
+    description: Multi-step fact-checking and bias analysis
+    
+    steps:
+      - step: 1
+        tool: fetch_article
+        input: { url: string }
+        output: { content: string, metadata: object }
+        
+      - step: 2
+        tool: extract_claims
+        input: { content: ${step_1.content} }
+        output: { claims: Array<string> }
+        
+      - step: 3
+        tool: fact_check_claims
+        input: { claims: ${step_2.claims} }
+        output: { verified: Array<FactCheck> }
+        
+      - step: 4
+        tool: analyze_bias
+        input: { content: ${step_1.content} }
+        output: { bias_score: number, indicators: Array<string> }
+        
+      - step: 5
+        tool: calculate_credibility
+        input:
+          fact_checks: ${step_3.verified}
+          bias_score: ${step_4.bias_score}
+          source_reputation: ${step_1.metadata.source}
+        output: { credibility_score: number, reasoning: string }
+    
+    implementation:
+      file: src/mcp/chains/TruthVerificationChain.ts
+      status: not_implemented
+      
+  # CRYPTO ANALYSIS CHAIN
+  crypto_prediction_chain:
+    name: Crypto Price Prediction Chain
+    zone: 200
+    description: Multi-factor price prediction with reasoning
+    
+    steps:
+      - step: 1
+        tool: fetch_price_history
+        input: { coin: string, timeframe: string }
+        output: { prices: Array<PricePoint> }
+        
+      - step: 2
+        tool: technical_analysis
+        input: { prices: ${step_1.prices} }
+        output: { patterns: Array<Pattern>, signals: Array<Signal> }
+        
+      - step: 3
+        tool: sentiment_analysis
+        input: { coin: ${input.coin} }
+        output: { sentiment: number, volume: number }
+        
+      - step: 4
+        tool: whale_analysis
+        input: { coin: ${input.coin} }
+        output: { whale_movements: Array<Transaction> }
+        
+      - step: 5
+        tool: synthesize_prediction
+        input:
+          technical: ${step_2}
+          sentiment: ${step_3}
+          whale_data: ${step_4}
+        output:
+          prediction: { price: number, confidence: number }
+          reasoning: Array<string>
+          risk_factors: Array<string>
+    
+    implementation:
+      file: src/mcp/chains/CryptoPredictionChain.ts
+      status: not_implemented
+
+  # SOCIAL IMPACT CHAIN
+  social_impact_chain:
+    name: Social Impact Analysis Chain
+    zone: 300
+    description: Analyze social content impact and virality
+    
+    steps:
+      - step: 1
+        tool: fetch_post
+        input: { post_id: string }
+        output: { content: string, metrics: object }
+        
+      - step: 2
+        tool: sentiment_analysis
+        input: { content: ${step_1.content} }
+        output: { sentiment: number, emotions: Array<string> }
+        
+      - step: 3
+        tool: toxicity_detection
+        input: { content: ${step_1.content} }
+        output: { toxicity_score: number, flags: Array<string> }
+        
+      - step: 4
+        tool: virality_prediction
+        input:
+          content: ${step_1.content}
+          current_metrics: ${step_1.metrics}
+          sentiment: ${step_2.sentiment}
+        output: { viral_probability: number, peak_reach: number }
+        
+      - step: 5
+        tool: social_credit_impact
+        input:
+          toxicity: ${step_3.toxicity_score}
+          virality: ${step_4.viral_probability}
+        output: { credit_delta: number, recommendation: string }
+    
+    implementation:
+      file: src/mcp/chains/SocialImpactChain.ts
+      status: not_implemented
+
+  # CLIMATE ANALYSIS CHAIN
+  climate_action_chain:
+    name: Climate Action Recommendation Chain
+    zone: 400
+    description: Analyze climate data and suggest actions
+    
+    steps:
+      - step: 1
+        tool: fetch_climate_data
+        input: { location: string }
+        output: { temperature: number, co2: number, trends: object }
+        
+      - step: 2
+        tool: calculate_impact
+        input: { data: ${step_1} }
+        output: { severity: string, timeline: string }
+        
+      - step: 3
+        tool: identify_causes
+        input: { trends: ${step_1.trends} }
+        output: { primary_causes: Array<string> }
+        
+      - step: 4
+        tool: suggest_actions
+        input:
+          severity: ${step_2.severity}
+          causes: ${step_3.primary_causes}
+          user_context: { location, resources }
+        output: { actions: Array<Action>, impact_potential: number }
+        
+      - step: 5
+        tool: calculate_urgency
+        input:
+          severity: ${step_2.severity}
+          timeline: ${step_2.timeline}
+        output: { urgency_level: string, deadline: string }
+    
+    implementation:
+      file: src/mcp/chains/ClimateActionChain.ts
+      status: not_implemented
+
+chain_execution_engine:
+  description: Generic engine to execute any chain of thought
+  
+  features:
+    - Sequential execution with dependency management
+    - Parallel execution where possible
+    - Error handling and retry logic
+    - Result caching
+    - Progress tracking
+    - Cancellation support
+  
+  implementation:
+    file: src/mcp/ChainExecutor.ts
+    status: not_implemented
+    
+    interface: |
+      interface ChainStep {
+        step: number;
+        tool: string;
+        input: Record<string, unknown>;
+        output: Record<string, unknown>;
+        depends_on?: number[];
+      }
+      
+      interface ChainResult {
+        success: boolean;
+        steps: Array<StepResult>;
+        final_output: unknown;
+        reasoning: Array<string>;
+        execution_time: number;
+      }
+      
+      class ChainExecutor {
+        async execute(chain: Chain): Promise<ChainResult> {
+          const results = new Map<number, unknown>();
+          
+          for (const step of chain.steps) {
+            // Wait for dependencies
+            await this.waitForDependencies(step, results);
+            
+            // Resolve input variables
+            const input = this.resolveVariables(step.input, results);
+            
+            // Execute tool
+            const output = await this.executeTool(step.tool, input);
+            
+            // Store result
+            results.set(step.step, output);
+          }
+          
+          return this.buildResult(results);
+        }
+      }
+
+visualization:
+  description: Show chain execution in UI
+  features:
+    - Step-by-step progress indicator
+    - Show reasoning at each step
+    - Highlight current step
+    - Show dependencies
+    - Display intermediate results
+  
+  implementation:
+    component: src/components/ChainVisualizer.tsx
+    status: not_implemented
+
+integration_with_existing_code:
+  TruthVerificationChain:
+    - Used by: src/pages/100_truth/GlobalWire.tsx
+    - Replaces: Simple NewsService.fetchNews()
+    - Benefit: Adds fact-checking and bias analysis
+    
+  CryptoPredictionChain:
+    - Used by: src/pages/200_system/Stonks.tsx
+    - Enhances: CryptoAgent.analyzeMarketRisk()
+    - Benefit: Adds prediction and reasoning
+    
+  SocialImpactChain:
+    - Used by: src/pages/300_pulse/TheBlast.tsx
+    - Enhances: SocialService.amplifyGossip()
+    - Benefit: Adds virality prediction
+    
+  ClimateActionChain:
+    - Used by: src/pages/400_planet/EcoSense.tsx
+    - Enhances: EnvironmentService.generateAtmosphereData()
+    - Benefit: Adds actionable recommendations
+
+implementation_priority:
+  phase_1:
+    - Build ChainExecutor engine
+    - Implement TruthVerificationChain
+    - Integrate with GlobalWire
+    
+  phase_2:
+    - Implement CryptoPredictionChain
+    - Add ChainVisualizer component
+    - Integrate with Stonks
+    
+  phase_3:
+    - Implement remaining chains
+    - Add chain caching
+    - Optimize performance
