@@ -12,9 +12,8 @@ export default function SOSBeacon() {
       }, 300) // Fast strobe
 
       return () => clearInterval(strobeInterval)
-    } else {
-      setStrobe(false)
     }
+    return () => setStrobe(false)
   }, [isActive])
 
   return (

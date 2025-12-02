@@ -50,7 +50,10 @@ export default function GlitchMode() {
   useEffect(() => {
     // Block escape attempts
     if (trapped && inputBuffer === '100') {
-      setEscapeAttempts(prev => prev + 1)
+      setEscapeAttempts(prev => {
+        const newCount = prev + 1;
+        return newCount;
+      });
     }
   }, [inputBuffer, trapped])
 

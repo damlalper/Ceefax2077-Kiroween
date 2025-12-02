@@ -1,0 +1,12 @@
+{
+  "name": "Build Check",
+  "description": "Verify build succeeds before commit",
+  "trigger": {
+    "type": "onAgentComplete"
+  },
+  "action": {
+    "type": "message",
+    "message": "Remember to run 'npm run build' to verify the build succeeds before committing."
+  },
+  "enabled": true
+}

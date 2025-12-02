@@ -46,7 +46,7 @@ export default function TimeMachine() {
         setError('NO ARCHIVE FOUND FOR THIS URL');
         setLoadingState('error');
       }
-    } catch (err) {
+    } catch {
       setError('CONNECTION FAILED - TRY AGAIN');
       setLoadingState('error');
     }

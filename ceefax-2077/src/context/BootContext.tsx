@@ -57,7 +57,9 @@ export function BootProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem('teletext_boot_mode');
     if (stored === 'CONSUMER' || stored === 'SYSADMIN') {
-      setBootMode(stored as BootMode);
+      setBootModeState(stored as BootMode);
+      setIsBooted(true);
+      applyTheme(stored as BootMode);
     }
   }, []);
 
@@ -74,17 +76,4 @@ export function useBoot() {
     throw new Error('useBoot must be used within a BootProvider');
   }
   return context;
-}
-
-// Helper to check if zone is allowed in current boot mode
-export function isZoneAllowed(zone: number, bootMode: BootMode): boolean {
-  if (!bootMode) return true;
-  
-  if (bootMode === 'SYSADMIN') {
-    // SysAdmin only gets System (200) and Shield (500) zones
-    return zone === 200 || zone === 500 || zone === 666; // Allow glitch for fun
-  }
-  
-  // Consumer gets everything
-  return true;
 }

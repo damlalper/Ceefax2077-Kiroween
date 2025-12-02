@@ -61,7 +61,7 @@ export class CryptoAgent {
     }
 
     // Generate recommendation
-    const recommendation = this.generateRecommendation(riskLevel, btcPrice)
+    const recommendation = this.generateRecommendation(riskLevel)
 
     // Add default factor if none detected
     if (factors.length === 0) {
@@ -80,7 +80,7 @@ export class CryptoAgent {
   /**
    * Generate recommendation based on risk level
    */
-  private static generateRecommendation(riskLevel: string, _btcPrice: number): string {
+  private static generateRecommendation(riskLevel: string): string {
     switch (riskLevel) {
       case 'CRITICAL':
         return '🚨 EXTREME CAUTION - Consider reducing exposure immediately'

@@ -1,5 +1,6 @@
 import { TeletextProvider, useTeletext } from './context/TeletextContext'
-import { BootProvider, useBoot, isZoneAllowed } from './context/BootContext'
+import { BootProvider, useBoot } from './context/BootContext'
+import { isZoneAllowed } from './utils/bootHelpers'
 import { ThemeProvider } from './context/ThemeContext'
 import KeyboardListener from './components/KeyboardListener'
 import BiosBootLoader from './components/BiosBootLoader'

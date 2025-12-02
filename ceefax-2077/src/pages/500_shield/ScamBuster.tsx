@@ -11,7 +11,6 @@ export default function ScamBuster() {
   useEffect(() => {
     // Flash red if scam detected
     if (analysis && (analysis.verdict === 'SCAM' || analysis.verdict === 'CRITICAL_SCAM')) {
-      setFlashRed(true)
       const flashInterval = setInterval(() => {
         setFlashRed(prev => !prev)
       }, 500)
@@ -23,6 +22,7 @@ export default function ScamBuster() {
 
       return () => clearInterval(flashInterval)
     }
+    return () => setFlashRed(false)
   }, [analysis])
 
   const analyzeText = () => {

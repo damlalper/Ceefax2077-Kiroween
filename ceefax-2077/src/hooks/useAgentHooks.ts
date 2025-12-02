@@ -53,7 +53,7 @@ export const useAgentHooks = () => {
   /**
    * Trigger hooks manually
    */
-  const triggerHooks = (type: string, context?: any) => {
+  const triggerHooks = (type: string, context?: Record<string, unknown>) => {
     HookService.triggerHooks(type, context);
   };
 

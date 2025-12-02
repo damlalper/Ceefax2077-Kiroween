@@ -10,7 +10,7 @@ export interface Hook {
   trigger: HookTrigger;
   action: HookAction;
   priority: number;
-  conditions?: any;
+  conditions?: Record<string, unknown>;
 }
 
 export interface HookTrigger {
@@ -20,7 +20,7 @@ export interface HookTrigger {
   interval?: number;
   timeout?: number;
   schedule?: Array<{ time: string; theme: string }>;
-  conditions?: any;
+  conditions?: Record<string, unknown>;
   events?: string[];
   zone?: number;
   sequence?: string[];
@@ -29,7 +29,7 @@ export interface HookTrigger {
 export interface HookAction {
   type: string;
   description: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface HookLog {
@@ -166,7 +166,7 @@ class HookServiceClass {
   /**
    * Trigger hooks by type
    */
-  triggerHooks(type: string, context?: any): void {
+  triggerHooks(type: string, context?: Record<string, unknown>): void {
     this.hooks
       .filter(h => h.trigger.type === type)
       .forEach(hook => {
@@ -177,7 +177,7 @@ class HookServiceClass {
   /**
    * Execute a hook
    */
-  private async executeHook(hook: Hook, context?: any): Promise<void> {
+  private async executeHook(hook: Hook, context?: Record<string, unknown>): Promise<void> {
     try {
       console.log(`🎯 Executing hook: ${hook.name}`);
       
@@ -193,7 +193,7 @@ class HookServiceClass {
   /**
    * Perform hook action
    */
-  private async performAction(action: HookAction, context?: any): Promise<string> {
+  private async performAction(action: HookAction, context?: Record<string, unknown>): Promise<string> {
     switch (action.type) {
       case 'refresh_data':
         return this.refreshData();
@@ -202,25 +202,25 @@ class HookServiceClass {
         return this.measurePerformance();
       
       case 'switch_theme':
-        return this.switchTheme(context?.theme);
+        return this.switchTheme(context?.theme as string);
       
       case 'navigate':
-        return this.navigate(action.target);
+        return this.navigate(action.target as number);
       
       case 'log_analytics':
-        return this.logAnalytics(context);
+        return this.logAnalytics(context || {});
       
       case 'suggest_pages':
-        return this.suggestPages(action.count);
+        return this.suggestPages(action.count as number);
       
       case 'security_check':
-        return this.securityCheck(action.checks);
+        return this.securityCheck(action.checks as string[]);
       
       case 'backup_data':
-        return this.backupData(action.targets);
+        return this.backupData(action.targets as string[]);
       
       case 'toggle_offline_mode':
-        return this.toggleOfflineMode(context?.online);
+        return this.toggleOfflineMode(context?.online as boolean);
       
       default:
         return `Unknown action: ${action.type}`;
@@ -255,7 +255,7 @@ class HookServiceClass {
     return `Navigated to page ${target}`;
   }
 
-  private logAnalytics(context: any): string {
+  private logAnalytics(context: Record<string, unknown>): string {
     const analytics = JSON.parse(localStorage.getItem('analytics') || '[]');
     analytics.push({
       timestamp: Date.now(),

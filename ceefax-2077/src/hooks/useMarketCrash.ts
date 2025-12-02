@@ -19,10 +19,11 @@ export function useMarketCrash(btcPrice: number | null, ethPrice?: number | null
       volatility
     )
 
-    setRiskAnalysis(analysis)
-
     // Determine if crash mode should be activated
     const shouldCrash = CryptoAgent.shouldActivateCrashMode(analysis)
+    
+    // Update state in batch
+    setRiskAnalysis(analysis)
     setCrashMode(shouldCrash)
 
     // Inject/remove global CSS class

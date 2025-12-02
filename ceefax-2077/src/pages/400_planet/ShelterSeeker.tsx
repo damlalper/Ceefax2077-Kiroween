@@ -7,6 +7,12 @@ export default function ShelterSeeker() {
   const [selectedShelter, setSelectedShelter] = useState<ShelterLocation | null>(null)
   const [blink, setBlink] = useState(true)
 
+  const generateMap = () => {
+    const data = EnvironmentService.generateShelterMap()
+    setMapData(data)
+    setSelectedShelter(null)
+  }
+
   useEffect(() => {
     generateMap()
 
@@ -17,12 +23,6 @@ export default function ShelterSeeker() {
 
     return () => clearInterval(blinkInterval)
   }, [])
-
-  const generateMap = () => {
-    const data = EnvironmentService.generateShelterMap()
-    setMapData(data)
-    setSelectedShelter(null)
-  }
 
   const getMarkerColor = (char: string): string => {
     switch (char) {

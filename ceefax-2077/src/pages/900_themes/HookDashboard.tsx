@@ -150,7 +150,7 @@ export default function HookDashboard() {
             ) : (
               recentLogs.map((log, i) => {
                 const hook = hooks.find(h => h.id === log.hookId);
-                const timeAgo = Math.floor((Date.now() - log.timestamp) / 1000);
+                const timeAgo = Math.floor((new Date().getTime() - log.timestamp) / 1000);
                 
                 return (
                   <div

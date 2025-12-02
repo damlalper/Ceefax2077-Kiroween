@@ -44,7 +44,7 @@ export default function PixelGen() {
 
       // Animate line-by-line rendering
       animateRendering(grid.length);
-    } catch (err) {
+    } catch {
       setError('Failed to generate art. Try another prompt.');
       setIsGenerating(false);
     }

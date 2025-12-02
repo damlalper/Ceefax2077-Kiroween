@@ -260,7 +260,7 @@ export class SocialService {
     }
 
     // Default dramatic transformation
-    return `🚨 BREAKING: ${input.toUpperCase()} - BESTIE THIS IS UNHINGED 💀 IT\'S GIVING CHAOTIC ENERGY FR FR 😭✨`
+    return `🚨 BREAKING: ${input.toUpperCase()} - BESTIE THIS IS UNHINGED 💀 IT'S GIVING CHAOTIC ENERGY FR FR 😭✨`
   }
 
   /**

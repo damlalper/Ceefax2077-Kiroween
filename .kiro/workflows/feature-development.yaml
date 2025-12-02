@@ -1,0 +1,185 @@
+# Feature Development Workflow
+# Step-by-step process for adding new features to Teletext 2077
+
+name: "Feature Development Workflow"
+version: "1.0.0"
+description: "Complete workflow for implementing new features"
+
+phases:
+  planning:
+    step: 1
+    tasks:
+      - name: "Define Feature"
+        description: "Write feature specification"
+        output: ".kiro/specs/{feature}-spec.yaml"
+        checklist:
+          - "Feature purpose clear"
+          - "User stories defined"
+          - "Technical requirements listed"
+          - "Success criteria established"
+      
+      - name: "Design Architecture"
+        description: "Plan technical implementation"
+        output: "Architecture diagram + notes"
+        checklist:
+          - "Components identified"
+          - "Services planned"
+          - "Data flow mapped"
+          - "Dependencies listed"
+      
+      - name: "Create Steering"
+        description: "Define AI persona if needed"
+        output: ".kiro/steering/{persona}.md"
+        checklist:
+          - "Personality defined"
+          - "Speaking style documented"
+          - "Example phrases provided"
+
+  implementation:
+    step: 2
+    tasks:
+      - name: "Create Service"
+        description: "Implement business logic"
+        location: "src/services/{Feature}Service.ts"
+        pattern: "Singleton class"
+        checklist:
+          - "TypeScript types defined"
+          - "Methods implemented"
+          - "Error handling added"
+          - "JSDoc comments written"
+      
+      - name: "Create Hook"
+        description: "Create React hook if needed"
+        location: "src/hooks/use{Feature}.ts"
+        pattern: "Custom hook"
+        checklist:
+          - "State management"
+          - "Side effects handled"
+          - "Cleanup implemented"
+          - "Return type defined"
+      
+      - name: "Create Components"
+        description: "Build UI components"
+        location: "src/pages/{zone}/{Feature}.tsx"
+        pattern: "Functional component"
+        checklist:
+          - "TeletextGrid wrapper"
+          - "40x24 grid respected"
+          - "Teletext colors used"
+          - "Responsive design"
+      
+      - name: "Add Routing"
+        description: "Register page routes"
+        location: "src/App.tsx"
+        checklist:
+          - "Route added to App.tsx"
+          - "Page number assigned"
+          - "Zone hub updated"
+          - "Navigation tested"
+
+  testing:
+    step: 3
+    tasks:
+      - name: "Unit Tests"
+        description: "Test individual functions"
+        location: "src/**/*.test.ts"
+        framework: "Jest"
+        checklist:
+          - "Service methods tested"
+          - "Hook behavior tested"
+          - "Edge cases covered"
+          - "80%+ coverage"
+      
+      - name: "Integration Tests"
+        description: "Test feature end-to-end"
+        checklist:
+          - "User flow tested"
+          - "Data flow verified"
+          - "Error scenarios tested"
+          - "Performance checked"
+      
+      - name: "Manual Testing"
+        description: "Test in browser"
+        checklist:
+          - "Feature works as expected"
+          - "No console errors"
+          - "Responsive on all screens"
+          - "Keyboard navigation works"
+
+  documentation:
+    step: 4
+    tasks:
+      - name: "Feature Documentation"
+        description: "Document the feature"
+        location: "docs/{FEATURE}_FEATURE.md"
+        checklist:
+          - "Overview written"
+          - "Technical details documented"
+          - "Usage instructions provided"
+          - "Code examples included"
+      
+      - name: "Test Guide"
+        description: "Create testing guide"
+        location: "docs/TEST_{FEATURE}.md"
+        checklist:
+          - "Test scenarios listed"
+          - "Expected results documented"
+          - "Edge cases covered"
+          - "Screenshots/examples provided"
+      
+      - name: "Update README"
+        description: "Add to main documentation"
+        location: "README.md"
+        checklist:
+          - "Feature listed"
+          - "Page number documented"
+          - "Quick start added"
+
+  deployment:
+    step: 5
+    tasks:
+      - name: "Build"
+        description: "Create production build"
+        command: "npm run build"
+        checklist:
+          - "Build succeeds"
+          - "No TypeScript errors"
+          - "Bundle size acceptable"
+          - "No warnings"
+      
+      - name: "Commit"
+        description: "Commit changes"
+        checklist:
+          - "Descriptive commit message"
+          - "All files staged"
+          - "No debug code"
+          - "No console.logs"
+      
+      - name: "Push"
+        description: "Push to repository"
+        command: "git push origin main"
+        checklist:
+          - "CI/CD passes"
+          - "No conflicts"
+          - "Branch up to date"
+
+best_practices:
+  - "Follow existing patterns"
+  - "Use TypeScript strictly"
+  - "Write tests first (TDD)"
+  - "Document as you code"
+  - "Keep commits atomic"
+  - "Review before pushing"
+
+common_pitfalls:
+  - "Forgetting to update routing"
+  - "Not testing edge cases"
+  - "Missing TypeScript types"
+  - "Incomplete documentation"
+  - "Breaking existing features"
+
+time_estimates:
+  small_feature: "2-4 hours"
+  medium_feature: "1-2 days"
+  large_feature: "3-5 days"
+  complex_feature: "1-2 weeks"

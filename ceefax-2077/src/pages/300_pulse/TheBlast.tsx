@@ -2,13 +2,14 @@ import { useState } from 'react'
 import TeletextGrid from '../../components/TeletextGrid'
 import { SocialService, type GossipPost } from '../../services/SocialService'
 
-export default function TheBlast() {
-  const [posts, setPosts] = useState<GossipPost[]>([
+const getInitialPosts = (): GossipPost[] => {
+  const now = Date.now();
+  return [
     {
       id: 1,
       originalText: 'saw my ex at the store',
       headline: '🚨 BREAKING: TRAGIC EX ENCOUNTER AT LOCAL STORE - BESTIE YOU GOOD??? 💀',
-      timestamp: new Date(Date.now() - 120000),
+      timestamp: new Date(now - 120000),
       trustVotes: 23,
       capVotes: 5,
       category: 'RELATIONSHIP',
@@ -17,7 +18,7 @@ export default function TheBlast() {
       id: 2,
       originalText: 'someone unfollowed me',
       headline: 'EXPOSED: FAKE FRIEND UNFOLLOWED - THE BETRAYAL IS REAL BESTIE 😭🚨',
-      timestamp: new Date(Date.now() - 900000),
+      timestamp: new Date(now - 900000),
       trustVotes: 45,
       capVotes: 12,
       category: 'SOCIAL',
@@ -26,12 +27,16 @@ export default function TheBlast() {
       id: 3,
       originalText: 'got a new job',
       headline: '💼 CORPORATE GIRLIE ERA ACTIVATED - BESTIE SECURED THE BAG NO CAP 💰✨',
-      timestamp: new Date(Date.now() - 3600000),
+      timestamp: new Date(now - 3600000),
       trustVotes: 67,
       capVotes: 3,
       category: 'PERSONAL_W',
     },
-  ])
+  ];
+};
+
+export default function TheBlast() {
+  const [posts, setPosts] = useState<GossipPost[]>(getInitialPosts)
 
   const [newPost, setNewPost] = useState('')
   const [showTransform, setShowTransform] = useState(false)
@@ -77,7 +82,8 @@ export default function TheBlast() {
   }
 
   const getTimeAgo = (date: Date) => {
-    const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
+    const now = new Date().getTime();
+    const seconds = Math.floor((now - date.getTime()) / 1000)
     if (seconds < 60) return `${seconds}s ago`
     const minutes = Math.floor(seconds / 60)
     if (minutes < 60) return `${minutes}m ago`

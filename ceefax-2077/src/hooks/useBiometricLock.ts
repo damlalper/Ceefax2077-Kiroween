@@ -123,8 +123,8 @@ export function useBiometricLock(): UseBiometricLockReturn {
     return new Promise((resolve) => {
       let scanCount = 0;
       const maxScans = 30; // 3 seconds at 10 scans/second
-      let brightnessReadings: number[] = [];
-      let motionReadings: number[] = [];
+      const brightnessReadings: number[] = [];
+      const motionReadings: number[] = [];
 
       setStatus('scanning');
       setProgress(0);

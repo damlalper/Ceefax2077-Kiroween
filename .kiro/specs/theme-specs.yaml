@@ -1,0 +1,52 @@
+# Theme System Specifications
+
+version: "1.0.0"
+description: "Theme engine specifications for Teletext 2077"
+
+themes:
+  cyberpunk:
+    name: "Cyberpunk"
+    colors:
+      primary: "#00FFFF"
+      secondary: "#FF00FF"
+      background: "#000000"
+      text: "#00FFFF"
+    effects:
+      scanlines: true
+      glow: true
+      chromatic: false
+    
+  matrix:
+    name: "Matrix"
+    colors:
+      primary: "#00FF00"
+      secondary: "#003300"
+      background: "#000000"
+      text: "#00FF00"
+    effects:
+      scanlines: true
+      glow: true
+      chromatic: false
+  
+  vaporwave:
+    name: "Vaporwave"
+    colors:
+      primary: "#FF00FF"
+      secondary: "#00FFFF"
+      background: "#1a0033"
+      text: "#FF00FF"
+    effects:
+      scanlines: true
+      glow: true
+      chromatic: true
+
+theme_engine:
+  storage: "LocalStorage"
+  key: "teletext_theme"
+  default: "cyberpunk"
+  persistence: true
+  
+switching:
+  method: "CSS variables"
+  transition: "0.3s ease"
+  scope: "global"

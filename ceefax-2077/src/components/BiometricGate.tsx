@@ -20,11 +20,28 @@ export default function BiometricGate({ children, requiredZone, redirectPage }: 
   const needsAuth = currentZone === requiredZone && !isAuthorized;
 
   useEffect(() => {
+    const performAuth = async () => {
+      const authorized = await startScan();
+      
+      if (authorized) {
+        setIsAuthorized(true);
+        setTimeout(() => {
+          stopScan();
+        }, 1000);
+      } else {
+        // Denied - redirect after showing error
+        setTimeout(() => {
+          stopScan();
+          goToPage(redirectPage);
+        }, 2000);
+      }
+    };
+
     if (needsAuth && status === 'idle') {
       // Start scan automatically when entering zone
       performAuth();
     }
-  }, [needsAuth, status]);
+  }, [needsAuth, status, startScan, stopScan, goToPage, redirectPage]);
 
   useEffect(() => {
     // Blinking eye animation
@@ -35,23 +52,6 @@ export default function BiometricGate({ children, requiredZone, redirectPage }: 
 
     return () => clearInterval(blinkInterval);
   }, []);
-
-  const performAuth = async () => {
-    const authorized = await startScan();
-    
-    if (authorized) {
-      setIsAuthorized(true);
-      setTimeout(() => {
-        stopScan();
-      }, 1000);
-    } else {
-      // Denied - redirect after showing error
-      setTimeout(() => {
-        stopScan();
-        goToPage(redirectPage);
-      }, 2000);
-    }
-  };
 
   const renderASCIIEye = (isOpen: boolean) => {
     if (isOpen) {

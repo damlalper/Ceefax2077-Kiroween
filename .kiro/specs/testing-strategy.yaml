@@ -1,0 +1,192 @@
+name: Testing Strategy
+version: 1.0.0
+description: Comprehensive testing approach for Ceefax 2077
+
+testing_pyramid:
+  unit_tests:
+    percentage: 70
+    focus: Individual functions and utilities
+    tools:
+      - Vitest
+      - React Testing Library
+    examples:
+      - Service methods
+      - Utility functions
+      - Custom hooks
+      - Data transformations
+
+  integration_tests:
+    percentage: 20
+    focus: Component interactions and data flow
+    tools:
+      - Vitest
+      - React Testing Library
+      - MSW (Mock Service Worker)
+    examples:
+      - Page components with services
+      - Context providers
+      - MCP agent integrations
+      - Form submissions
+
+  e2e_tests:
+    percentage: 10
+    focus: Critical user journeys
+    tools:
+      - Playwright
+      - Cypress
+    examples:
+      - Navigation between zones
+      - Theme switching
+      - IoT device control
+      - Biometric authentication
+
+test_coverage_goals:
+  overall: 80%
+  critical_paths: 95%
+  services: 90%
+  components: 75%
+  utilities: 95%
+
+testing_patterns:
+  - name: Arrange-Act-Assert (AAA)
+    description: Structure tests in three clear phases
+    example: |
+      test('should calculate risk score', () => {
+        // Arrange
+        const data = { volatility: 0.8, volume: 1000000 };
+        
+        // Act
+        const score = calculateRiskScore(data);
+        
+        // Assert
+        expect(score).toBeGreaterThan(0.7);
+      });
+
+  - name: Test Doubles
+    description: Use mocks, stubs, and spies appropriately
+    example: |
+      test('should call API on load', () => {
+        const mockFetch = vi.fn();
+        global.fetch = mockFetch;
+        
+        render(<Component />);
+        
+        expect(mockFetch).toHaveBeenCalledWith('/api/data');
+      });
+
+  - name: Snapshot Testing
+    description: Catch unintended UI changes
+    example: |
+      test('renders correctly', () => {
+        const { container } = render(<Component />);
+        expect(container).toMatchSnapshot();
+      });
+
+critical_test_scenarios:
+  zone_100_truth:
+    - News article loading and display
+    - Bias detection accuracy
+    - Credibility score calculation
+    - Error handling for failed API calls
+
+  zone_200_system:
+    - Crypto price updates
+    - Market crash detection
+    - Basilisk threat simulation
+    - Real-time data streaming
+
+  zone_300_pulse:
+    - Viral content amplification
+    - Social credit calculation
+    - User interaction tracking
+    - Content filtering
+
+  zone_400_planet:
+    - Environmental data accuracy
+    - Mars colonization calculations
+    - Shelter location algorithms
+    - NASA API integration
+
+  zone_500_shield:
+    - Biometric authentication flow
+    - Scam detection accuracy
+    - Emergency beacon activation
+    - Legal advice generation
+
+  zone_666_glitch:
+    - Glitch effects rendering
+    - Escape attempt blocking
+    - Corruption simulation
+    - Reality distortion
+
+  zone_800_home:
+    - IoT device discovery
+    - Device control commands
+    - Wayback Machine queries
+    - AI art generation
+
+  zone_900_themes:
+    - Theme switching
+    - VHS playback
+    - Hook execution
+    - Settings persistence
+
+mocking_strategy:
+  external_apis:
+    - Mock all external API calls in tests
+    - Use MSW for realistic API mocking
+    - Provide fixture data for common scenarios
+    - Test error states and edge cases
+
+  mcp_servers:
+    - Mock MCP tool calls
+    - Simulate server unavailability
+    - Test timeout handling
+    - Verify retry logic
+
+  browser_apis:
+    - Mock localStorage
+    - Mock fetch/XMLHttpRequest
+    - Mock geolocation
+    - Mock media devices
+
+test_data_management:
+  fixtures:
+    location: tests/fixtures/
+    format: JSON
+    examples:
+      - news-articles.json
+      - crypto-prices.json
+      - iot-devices.json
+      - nasa-data.json
+
+  factories:
+    location: tests/factories/
+    purpose: Generate test data programmatically
+    examples:
+      - createMockArticle()
+      - createMockDevice()
+      - createMockUser()
+
+continuous_testing:
+  pre_commit:
+    - Run linter
+    - Run type checker
+    - Run unit tests for changed files
+
+  pre_push:
+    - Run all unit tests
+    - Run integration tests
+    - Check test coverage
+
+  ci_pipeline:
+    - Run full test suite
+    - Generate coverage report
+    - Run E2E tests
+    - Performance benchmarks
+
+test_documentation:
+  - Write descriptive test names
+  - Document complex test setups
+  - Explain non-obvious assertions
+  - Keep tests maintainable and readable

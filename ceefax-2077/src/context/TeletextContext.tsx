@@ -17,7 +17,7 @@ const TeletextContext = createContext<TeletextContextType | undefined>(undefined
 export function TeletextProvider({ children }: { children: ReactNode }) {
   const [currentPage, setCurrentPage] = useState<number>(100)
   const [inputBuffer, setInputBuffer] = useState<string>('')
-  const [lastActivity, setLastActivity] = useState<number>(Date.now())
+  const [lastActivity, setLastActivity] = useState<number>(() => Date.now())
   const [currentPersonality, setCurrentPersonality] = useState<Personality>(
     PersonalityService.getPersonalityForPage(100)
   )
@@ -41,7 +41,7 @@ export function TeletextProvider({ children }: { children: ReactNode }) {
   // Track user activity
   useEffect(() => {
     const resetActivity = () => {
-      setLastActivity(Date.now())
+      setLastActivity(() => Date.now())
     }
 
     // Listen for any user interaction
@@ -57,7 +57,7 @@ export function TeletextProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const addDigit = (digit: string) => {
-    setLastActivity(Date.now()) // Reset idle timer on input
+    setLastActivity(() => Date.now()) // Reset idle timer on input
     if (inputBuffer.length < 3 && /^[0-9]$/.test(digit)) {
       const newBuffer = inputBuffer + digit
       setInputBuffer(newBuffer)
@@ -73,7 +73,7 @@ export function TeletextProvider({ children }: { children: ReactNode }) {
   }
 
   const goToPage = (page: number) => {
-    setLastActivity(Date.now()) // Reset idle timer on navigation
+    setLastActivity(() => Date.now()) // Reset idle timer on navigation
     setCurrentPage(page)
     setInputBuffer('')
     

@@ -10,12 +10,6 @@ export default function TeleHome() {
   const [flash, setFlash] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<string>('Checking...');
 
-  useEffect(() => {
-    // Load devices on mount
-    loadDevices();
-    checkConnection();
-  }, []);
-
   const loadDevices = () => {
     const allDevices = IoTAgent.getAllDevices();
     setDevices(allDevices);
@@ -25,6 +19,12 @@ export default function TeleHome() {
     const status = await IoTAgent.checkConnection();
     setConnectionStatus(status.connected ? `Connected: ${status.bridgeIp}` : 'Bridge Unreachable');
   };
+
+  useEffect(() => {
+    // Load devices on mount
+    loadDevices();
+    checkConnection();
+  }, []);
 
   const selectedDevice = devices[selectedIndex];
 

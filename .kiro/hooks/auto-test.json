@@ -1,0 +1,14 @@
+{
+  "name": "Auto Test Runner",
+  "description": "Automatically run tests when code files are saved",
+  "trigger": {
+    "type": "onFileSave",
+    "pattern": "**/*.{ts,tsx}"
+  },
+  "action": {
+    "type": "command",
+    "command": "npm test -- --run",
+    "workingDirectory": "ceefax-2077"
+  },
+  "enabled": false
+}

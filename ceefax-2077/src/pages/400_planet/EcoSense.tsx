@@ -8,6 +8,16 @@ export default function EcoSense() {
   const [blink, setBlink] = useState(true)
   const [flashWarning, setFlashWarning] = useState(false)
 
+  const loadAtmosphereData = () => {
+    setLoading(true)
+    // Simulate sensor delay
+    setTimeout(() => {
+      const atmosphereData = EnvironmentService.generateAtmosphereData()
+      setData(atmosphereData)
+      setLoading(false)
+    }, 800)
+  }
+
   useEffect(() => {
     loadAtmosphereData()
 
@@ -34,16 +44,6 @@ export default function EcoSense() {
       clearInterval(refreshInterval)
     }
   }, [data])
-
-  const loadAtmosphereData = () => {
-    setLoading(true)
-    // Simulate sensor delay
-    setTimeout(() => {
-      const atmosphereData = EnvironmentService.generateAtmosphereData()
-      setData(atmosphereData)
-      setLoading(false)
-    }, 800)
-  }
 
   return (
     <TeletextGrid>

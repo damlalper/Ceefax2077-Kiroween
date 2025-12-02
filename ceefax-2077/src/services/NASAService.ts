@@ -147,13 +147,14 @@ export class NASAService {
         if (brightness > 0.3) return '°'
         return '.'
 
-      case 'Jupiter':
+      case 'Jupiter': {
         // Striped gas giant
         const stripe = Math.floor(y / 2) % 2
         if (stripe === 0) {
           return brightness > 0.5 ? '═' : '─'
         }
         return brightness > 0.5 ? '▓' : '░'
+      }
 
       case 'Titan':
         // Hazy moon

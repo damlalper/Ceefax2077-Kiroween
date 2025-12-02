@@ -1,0 +1,112 @@
+# API Specifications for Teletext 2077
+# Defines all external API integrations and their usage
+
+version: "1.0.0"
+project: "Teletext 2077"
+description: "API endpoint specifications and integration patterns"
+
+apis:
+  hackernews:
+    name: "HackerNews API"
+    base_url: "https://hacker-news.firebaseio.com/v0"
+    endpoints:
+      - path: "/topstories.json"
+        method: GET
+        description: "Get top story IDs"
+        rate_limit: "No limit"
+        auth: "None"
+      - path: "/item/{id}.json"
+        method: GET
+        description: "Get story details"
+        rate_limit: "No limit"
+        auth: "None"
+    usage:
+      - page: 101
+        service: "NewsService.ts"
+        purpose: "Display top tech news"
+
+  coingecko:
+    name: "CoinGecko API"
+    base_url: "https://api.coingecko.com/api/v3"
+    endpoints:
+      - path: "/simple/price"
+        method: GET
+        description: "Get cryptocurrency prices"
+        params:
+          - ids: "bitcoin,ethereum,cardano"
+          - vs_currencies: "usd"
+        rate_limit: "50 calls/minute"
+        auth: "None (free tier)"
+    usage:
+      - page: 201
+        service: "CoinGeckoService.ts"
+        purpose: "Display crypto prices"
+
+  nasa:
+    name: "NASA API"
+    base_url: "https://api.nasa.gov"
+    endpoints:
+      - path: "/planetary/apod"
+        method: GET
+        description: "Astronomy Picture of the Day"
+        params:
+          - api_key: "DEMO_KEY"
+        rate_limit: "1000 calls/hour"
+        auth: "API Key (optional)"
+    usage:
+      - page: 403
+        service: "NASAService.ts"
+        purpose: "Mars colonization data"
+
+  pollinations:
+    name: "Pollinations.ai"
+    base_url: "https://image.pollinations.ai/prompt"
+    endpoints:
+      - path: "/{prompt}"
+        method: GET
+        description: "Generate AI images"
+        params:
+          - width: 400
+          - height: 240
+          - nologo: true
+        rate_limit: "Unlimited"
+        auth: "None"
+    usage:
+      - page: 803
+        service: "GenerativeArtService.ts"
+        purpose: "AI to ASCII art conversion"
+
+  wayback:
+    name: "Internet Archive Wayback Machine"
+    base_url: "https://archive.org/wayback/available"
+    endpoints:
+      - path: "/"
+        method: GET
+        description: "Check archived snapshots"
+        params:
+          - url: "target_url"
+          - timestamp: "19990101"
+        rate_limit: "No official limit"
+        auth: "None"
+    usage:
+      - page: 802
+        service: "WaybackAgent.ts"
+        purpose: "Browse 1999 websites"
+
+error_handling:
+  strategy: "Graceful degradation"
+  fallback: "Cached data or mock data"
+  retry: "3 attempts with exponential backoff"
+  timeout: "5 seconds per request"
+
+caching:
+  strategy: "LocalStorage + Memory"
+  ttl:
+    news: 300 # 5 minutes
+    crypto: 30 # 30 seconds
+    nasa: 3600 # 1 hour
+    ai_images: 86400 # 24 hours
+
+cors:
+  handling: "Proxy or direct (CORS-enabled APIs)"
+  fallback: "Mock data for development"

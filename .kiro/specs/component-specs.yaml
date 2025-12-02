@@ -1,0 +1,102 @@
+# Component Specifications for Teletext 2077
+# Defines component architecture and patterns
+
+version: "1.0.0"
+project: "Teletext 2077"
+description: "React component specifications and design patterns"
+
+component_patterns:
+  layout:
+    - name: "TeletextGrid"
+      type: "Layout Component"
+      purpose: "40x24 character grid with CRT effects"
+      props:
+        - children: ReactNode
+        - pageContent: string (optional)
+      features:
+        - "Dynamic header with zone colors"
+        - "Fastext footer navigation"
+        - "CRT scanlines overlay"
+        - "REC indicator integration"
+      
+  pages:
+    naming: "{ZoneName}{PageType}.tsx"
+    examples:
+      - "TruthHub.tsx" # Zone hub
+      - "GlobalWire.tsx" # Feature page
+      - "LieDetector.tsx" # Tool page
+    structure:
+      - "Import TeletextGrid"
+      - "Define page content"
+      - "Export default component"
+    
+  services:
+    naming: "{Feature}Service.ts"
+    pattern: "Singleton class"
+    examples:
+      - "NewsService.ts"
+      - "VHSService.ts"
+      - "HookService.ts"
+    structure:
+      - "Class with private constructor"
+      - "Public methods for features"
+      - "Export singleton instance"
+
+  hooks:
+    naming: "use{Feature}.ts"
+    pattern: "Custom React hooks"
+    examples:
+      - "useVHS.ts"
+      - "useNarrator.ts"
+      - "useAgentHooks.ts"
+    structure:
+      - "Import dependencies"
+      - "Define hook function"
+      - "Return state and methods"
+
+  contexts:
+    naming: "{Feature}Context.tsx"
+    pattern: "React Context + Provider"
+    examples:
+      - "TeletextContext.tsx"
+      - "ThemeContext.tsx"
+      - "BootContext.tsx"
+    structure:
+      - "Create context"
+      - "Define provider component"
+      - "Export context and provider"
+
+styling:
+  approach: "Tailwind CSS + Custom CSS"
+  teletext_colors:
+    - RED: "#FF0000"
+    - GREEN: "#00FF00"
+    - YELLOW: "#FFFF00"
+    - BLUE: "#0000FF"
+    - CYAN: "#00FFFF"
+    - MAGENTA: "#FF00FF"
+    - WHITE: "#FFFFFF"
+    - BLACK: "#000000"
+  
+  grid:
+    width: "40 characters"
+    height: "24 rows"
+    font: "VT323, monospace"
+    aspect_ratio: "4:3"
+
+state_management:
+  global: "React Context API"
+  local: "useState, useReducer"
+  persistence: "LocalStorage"
+  
+accessibility:
+  keyboard: "Full keyboard navigation"
+  voice: "Narrator service for screen readers"
+  contrast: "High contrast teletext colors"
+  semantic: "Proper HTML semantics"
+
+performance:
+  code_splitting: "Route-based"
+  lazy_loading: "Dynamic imports for pages"
+  memoization: "React.memo for expensive components"
+  optimization: "Vite build optimization"

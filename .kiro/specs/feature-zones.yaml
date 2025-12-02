@@ -1,0 +1,148 @@
+name: Feature Zones Specification
+version: 1.0.0
+description: Complete specification for all 10 feature zones in Ceefax 2077
+
+zones:
+  - number: 100
+    name: TRUTH
+    theme: News & Fact-Checking
+    color: cyan
+    features:
+      - GlobalWire: AI-powered news aggregation
+      - LieDetector: Bias and misinformation detection
+      - TruthHub: Zone navigation hub
+    personality: Professional news anchor
+    steering_file: news_anchor.md
+
+  - number: 200
+    name: SYSTEM
+    theme: Technology & AI
+    color: green
+    features:
+      - Stonks: Cryptocurrency market tracker
+      - TheBasilisk: AI threat simulator
+      - OracleOfDoom: Predictive analytics
+      - SystemHub: Zone navigation hub
+    personality: Crypto trader / Rogue AI
+    steering_files:
+      - crypto_trader.md
+      - rogue_ai.md
+
+  - number: 300
+    name: PULSE
+    theme: Social Media & Culture
+    color: magenta
+    features:
+      - TheBlast: Viral content amplifier
+      - SoulWeight: Social credit simulator
+      - PulseHub: Zone navigation hub
+    personality: Gossip columnist
+    steering_file: gossip_girl.md
+
+  - number: 400
+    name: PLANET
+    theme: Environment & Space
+    color: yellow
+    features:
+      - EcoSense: Environmental monitoring
+      - PlanB: Mars colonization planner
+      - ShelterSeeker: Disaster shelter locator
+      - PlanetHub: Zone navigation hub
+    personality: Climate scientist
+    steering_file: climate_scientist.md
+
+  - number: 500
+    name: SHIELD
+    theme: Security & Safety
+    color: red
+    features:
+      - CrimeWatch: Crime reporting system
+      - ScamBuster: Scam detection tool
+      - PocketLawyer: Legal advice AI
+      - SOSBeacon: Emergency alert system
+      - ShieldHub: Zone navigation hub
+    personality: Security expert
+    steering_file: security_expert.md
+
+  - number: 666
+    name: GLITCH
+    theme: Horror & Corruption
+    color: red-glitch
+    features:
+      - GlitchMode: System corruption experience
+      - Escape attempts blocked
+      - Reality distortion effects
+    personality: Malevolent demon
+    steering_file: demon.md
+
+  - number: 800
+    name: HOME
+    theme: Smart Home & Time Travel
+    color: blue
+    features:
+      - TeleHome: IoT device control (MCP)
+      - TimeMachine: Wayback Machine integration (MCP)
+      - PixelGen: AI to ASCII art generator
+      - HomeHub: Zone navigation hub
+    personality: Helpful assistant
+    mcp_integration: true
+
+  - number: 900
+    name: THEMES
+    theme: Customization & System
+    color: purple
+    features:
+      - ThemeSelector: Visual theme switcher
+      - TapeLibrary: VHS memory playback
+      - HookDashboard: Agent hooks management
+      - ThemesHub: Zone navigation hub
+    personality: System administrator
+    steering_file: sysadmin.md
+
+  - number: 0
+    name: BOOT
+    theme: System Initialization
+    color: white
+    features:
+      - BiosBootLoader: Dual boot mode selector
+      - CONSUMER mode: User-friendly interface
+      - SYSADMIN mode: Technical interface
+    personality: BIOS system
+
+  - number: 404
+    name: ERROR
+    theme: Lost Signals
+    color: gray
+    features:
+      - SignalLostPage: 404 error page
+      - DeadSignalPage: Connection lost
+      - OuijaPage: Spirit communication
+      - GhostWriterPage: AI story generator
+    personality: Ghost writer
+    steering_file: storyteller.md
+
+cross_cutting_concerns:
+  - name: Biometric Security
+    description: Fingerprint authentication for sensitive zones
+    zones: [500, 666]
+    component: BiometricGate.tsx
+
+  - name: Auto Healing
+    description: Automatic error recovery and retry
+    zones: all
+    hook: useAutoHealer.ts
+
+  - name: Narrator System
+    description: Dynamic personality-based narration
+    zones: all
+    service: NarratorService.ts
+
+  - name: VHS Memory
+    description: Session recording and playback
+    zones: [900]
+    service: VHSService.ts
+
+  - name: Theme Engine
+    description: Dynamic visual theming
+    zones: all
+    context: ThemeContext.tsx

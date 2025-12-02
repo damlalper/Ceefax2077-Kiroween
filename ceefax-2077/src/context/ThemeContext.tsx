@@ -167,7 +167,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem('teletext_theme');
     if (saved && saved in themePresets) {
-      setTheme(saved as ThemePreset);
+      setCurrentTheme(saved as ThemePreset);
+      applyTheme(saved as ThemePreset);
     } else {
       applyTheme('classic');
     }

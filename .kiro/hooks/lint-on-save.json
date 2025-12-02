@@ -1,0 +1,14 @@
+{
+  "name": "Lint on Save",
+  "description": "Run ESLint when TypeScript files are saved",
+  "trigger": {
+    "type": "onFileSave",
+    "pattern": "**/*.{ts,tsx}"
+  },
+  "action": {
+    "type": "command",
+    "command": "npm run lint -- --fix",
+    "workingDirectory": "ceefax-2077"
+  },
+  "enabled": true
+}

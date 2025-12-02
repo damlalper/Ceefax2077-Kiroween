@@ -111,7 +111,7 @@ export class SecurityService {
     const confidence = Math.min(75 + redFlags.length * 5, 99)
 
     // Generate recommendation
-    const recommendation = this.generateScamRecommendation(verdict, dangerLevel)
+    const recommendation = this.generateScamRecommendation(verdict)
 
     // Add default if no flags
     if (redFlags.length === 0) {
@@ -131,7 +131,7 @@ export class SecurityService {
   /**
    * Generate scam recommendation
    */
-  private static generateScamRecommendation(verdict: string, _danger: number): string {
+  private static generateScamRecommendation(verdict: string): string {
     switch (verdict) {
       case 'CRITICAL_SCAM':
         return '🚨 DO NOT RESPOND - Delete immediately - Report to authorities - Block sender'

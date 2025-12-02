@@ -1,0 +1,280 @@
+# Teletext 2077 - Intelligence Terminal
+# AI-Powered Problem Solving with Retro Interface
+
+version: "4.0"
+default_page: 100
+fallback_page: "404_SIGNAL_LOST"
+
+concept: "Serious AI-Powered Intelligence Terminal"
+vision: "Solving Modern Problems: Fake News, Complexity, Danger"
+tagline: "Minimalist Retro Interface. Maximum Intelligence."
+
+# ============================================
+# 5-ZONE ARCHITECTURE
+# ============================================
+
+zones:
+  100:
+    name: "TRUTH"
+    theme: "News & Facts"
+    color: "#0066CC"  # Blue
+    description: "AI-powered truth detection and unbiased news"
+    
+  200:
+    name: "SYSTM"
+    theme: "Economy & Tech"
+    color: "#FFD700"  # Gold
+    description: "Market intelligence and code analysis"
+    
+  300:
+    name: "PULSE"
+    theme: "Society"
+    color: "#FF1493"  # Pink
+    description: "Social sentiment and community intelligence"
+    
+  400:
+    name: "PLNET"
+    theme: "Environment"
+    color: "#00CC66"  # Green
+    description: "Environmental monitoring and disaster response"
+    
+  500:
+    name: "SHILD"
+    theme: "Security & Rights"
+    color: "#CC0000"  # Red
+    description: "Personal protection and legal intelligence"
+
+# ============================================
+# PAGE ROUTES - 5 ZONES
+# ============================================
+
+routes:
+  # ============================================
+  # ZONE 100: THE TRUTH (News & Facts)
+  # ============================================
+  100:
+    id: "TRUTH_HUB"
+    zone: 100
+    name: "Truth Hub"
+    description: "Dashboard for news and fact-checking"
+    
+  101:
+    id: "GLOBAL_WIRE"
+    zone: 100
+    name: "Global Wire"
+    description: "AI-summarized world news - unbiased and verified"
+    ai_powered: true
+    
+  103:
+    id: "LIE_DETECTOR"
+    zone: 100
+    name: "Lie Detector"
+    description: "Paste text to detect manipulation and bias"
+    ai_powered: true
+    interactive: true
+
+  # ============================================
+  # ZONE 200: THE SYSTEM (Economy & Tech)
+  # ============================================
+  200:
+    id: "SYSTEM_HUB"
+    zone: 200
+    name: "System Hub"
+    description: "Market and server status dashboard"
+    
+  201:
+    id: "STONKS"
+    zone: 200
+    name: "Stonks"
+    description: "Crypto/Stock charts using block graphics"
+    refresh_rate: "5s"
+    
+  202:
+    id: "CODE_EXORCIST"
+    zone: 200
+    name: "Code Exorcist"
+    description: "Paste legacy code - AI refactors with spooky comments"
+    ai_powered: true
+    interactive: true
+    
+  204:
+    id: "ORACLE_OF_DOOM"
+    zone: 200
+    name: "Oracle of Doom"
+    description: "Market risk doomsday clock"
+    ai_powered: true
+    
+  205:
+    id: "THE_BASILISK"
+    zone: 200
+    name: "The Basilisk"
+    description: "AI threat monitor - singularity tracker"
+    ai_powered: true
+    horror: true
+
+  # ============================================
+  # ZONE 300: THE PULSE (Society)
+  # ============================================
+  300:
+    id: "PULSE_HUB"
+    zone: 300
+    name: "Pulse Hub"
+    description: "Global sentiment dashboard"
+    
+  301:
+    id: "THE_BLAST"
+    zone: 300
+    name: "The Blast"
+    description: "Anonymous gossip feed with trust/cap voting"
+    interactive: true
+    
+  304:
+    id: "SOUL_WEIGHT"
+    zone: 300
+    name: "Soul Weight"
+    description: "Social media toxicity analyzer"
+    ai_powered: true
+    interactive: true
+
+  # ============================================
+  # ZONE 400: THE PLANET (Environment)
+  # ============================================
+  400:
+    id: "PLANET_HUB"
+    zone: 400
+    name: "Planet Hub"
+    description: "Earth status dashboard"
+    
+  401:
+    id: "ECO_SENSE"
+    zone: 400
+    name: "Eco Sense"
+    description: "Air quality and radiation warnings"
+    refresh_rate: "10s"
+    
+  403:
+    id: "PLAN_B"
+    zone: 400
+    name: "Plan B"
+    description: "Terraform monitor - 3D planet viewer with NASA data"
+    interactive: true
+    ai_powered: true
+    
+  405:
+    id: "SHELTER_SEEKER"
+    zone: 400
+    name: "Shelter Seeker"
+    description: "Low-bandwidth disaster map: water, power, meds"
+    interactive: true
+
+  # ============================================
+  # ZONE 500: SHIELD (Security & Rights)
+  # ============================================
+  500:
+    id: "SHIELD_HUB"
+    zone: 500
+    name: "Shield Hub"
+    description: "Personal protection dashboard"
+    
+  501:
+    id: "CRIME_WATCH"
+    zone: 500
+    name: "Crime Watch"
+    description: "Location-based safety risk score"
+    
+  502:
+    id: "SCAM_BUSTER"
+    zone: 500
+    name: "Scam Buster"
+    description: "AI fraud detection for links and SMS"
+    ai_powered: true
+    interactive: true
+    
+  503:
+    id: "POCKET_LAWYER"
+    zone: 500
+    name: "Pocket Lawyer"
+    description: "Simplifies legal rights into 1 sentence"
+    ai_powered: true
+    interactive: true
+    
+  504:
+    id: "SOS_BEACON"
+    zone: 500
+    name: "SOS Beacon"
+    description: "Visual strobe light and emergency info"
+    interactive: true
+
+  # ============================================
+  # ZONE 800: TELE-HOME (Frankenstein Category)
+  # ============================================
+  800:
+    id: "HOME_HUB"
+    zone: 800
+    name: "Home Hub"
+    description: "Frankenstein zone - retro meets modern"
+    color: "#FFD700"
+    
+  801:
+    id: "TELE_HOME"
+    zone: 800
+    name: "Tele-Home"
+    description: "Smart home control via retro teletext interface"
+    color: "#FFD700"
+    interactive: true
+    mcp_powered: true
+    frankenstein: true
+
+  802:
+    id: "TIME_MACHINE"
+    zone: 800
+    name: "Time Machine"
+    description: "Browse 1999 web archives in Teletext format"
+    color: "#00FFFF"
+    interactive: true
+    mcp_powered: true
+    frankenstein: true
+
+  # ============================================
+  # ZONE 900: THEMES (Skeleton Crew)
+  # ============================================
+  905:
+    id: "THEME_SELECTOR"
+    zone: 900
+    name: "Theme Engine"
+    description: "Runtime vibe selector - transform the entire app"
+    color: "#FF00FF"
+    interactive: true
+    skeleton_crew: true
+
+  # ============================================
+  # SPECIAL: GLITCH MODE
+  # ============================================
+  666:
+    id: "GLITCH_MODE"
+    zone: 666
+    name: "System Failure"
+    description: "Horror mode - system glitch and failure"
+    color: "#CC0000"
+    interactive: true
+    horror: true
+
+# Navigation Rules
+navigation:
+  input_method: "numeric_keypad"
+  buffer_length: 3
+  auto_navigate: true
+  clear_buffer_on_navigate: true
+  
+  fastext_footer: "100 TRUTH | 200 SYSTM | 300 PULSE | 400 PLNET | 500 SHILD"
+  
+  invalid_page_behavior:
+    show: "404_SIGNAL_LOST"
+    duration: 3000
+    auto_return_to: 100
+
+# Special Behaviors
+special_modes:
+  emergency_exit:
+    key: "100"
+    description: "Always returns to home from any page"
