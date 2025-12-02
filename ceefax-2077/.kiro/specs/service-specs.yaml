@@ -1,0 +1,105 @@
+# Service Layer Specifications
+# Defines business logic and data management patterns
+
+version: "1.0.0"
+project: "Teletext 2077"
+description: "Service layer architecture and patterns"
+
+services:
+  data_services:
+    - name: "NewsService"
+      purpose: "Fetch and process news data"
+      methods:
+        - getTopStories()
+        - getStoryDetails(id)
+        - analyzeForBias(content)
+      storage: "Memory cache"
+      
+    - name: "CoinGeckoService"
+      purpose: "Cryptocurrency price tracking"
+      methods:
+        - getCryptoPrices()
+        - formatPriceData()
+        - detectCrash()
+      storage: "LocalStorage + Memory"
+      
+    - name: "NASAService"
+      purpose: "Space and climate data"
+      methods:
+        - getAPOD()
+        - getMarsData()
+        - getClimateData()
+      storage: "LocalStorage cache"
+
+  feature_services:
+    - name: "VHSService"
+      purpose: "Analog tape recording system"
+      methods:
+        - recordToTape(page, content)
+        - playTape(tapeId)
+        - getAllTapes()
+        - eraseTape(tapeId)
+        - getDegradationLevel(tape)
+      storage: "LocalStorage (vhs_tape_library)"
+      
+    - name: "NarratorService"
+      purpose: "Voice synthesis for accessibility"
+      methods:
+        - speak(text, personality)
+        - stop()
+        - setVoiceProfile(zone)
+        - toggle()
+      storage: "LocalStorage (narrator_enabled)"
+      
+    - name: "HookService"
+      purpose: "Agent hooks automation"
+      methods:
+        - initialize()
+        - executeHook(hook)
+        - triggerHooks(type)
+        - getLogs()
+        - toggleHook(id, enabled)
+      storage: "Memory + LocalStorage"
+
+  ai_services:
+    - name: "AIAnalysisService"
+      purpose: "AI-powered content analysis"
+      methods:
+        - analyzeBias(text)
+        - detectManipulation(content)
+        - scoreCredibility(article)
+      algorithm: "Heuristic + pattern matching"
+      
+    - name: "GenerativeArtService"
+      purpose: "AI image to ASCII conversion"
+      methods:
+        - generateTeletextArt(prompt)
+        - convertToTeletextGrid(imageData)
+        - getNearestTeletextColor(rgb)
+        - getBlockChar(brightness)
+      algorithm: "Euclidean distance + brightness mapping"
+
+  security_services:
+    - name: "SecurityService"
+      purpose: "Biometric authentication"
+      methods:
+        - authenticate(fingerprint)
+        - verifyAccess(zone)
+        - logAccess(user, zone)
+      storage: "LocalStorage (encrypted)"
+
+patterns:
+  singleton: "All services use singleton pattern"
+  error_handling: "Try-catch with graceful fallback"
+  caching: "Multi-layer (memory + localStorage)"
+  async: "Async/await for all API calls"
+  
+data_flow:
+  direction: "Unidirectional"
+  flow: "Component → Service → API → Service → Component"
+  state: "Managed by React Context"
+  
+testing:
+  unit: "Jest for service methods"
+  integration: "Test service + API interaction"
+  mocking: "Mock API responses"
