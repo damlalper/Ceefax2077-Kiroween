@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import KeyboardListener from './components/KeyboardListener'
 import BiosBootLoader from './components/BiosBootLoader'
 import BiometricGate from './components/BiometricGate'
+import TeletextGrid from './components/TeletextGrid'
 import { VHSPlayback } from './components/VHSPlayback'
 import { useVHS } from './hooks/useVHS'
 import { useAgentHooks } from './hooks/useAgentHooks'
@@ -147,7 +148,9 @@ function TeletextRouter() {
       {isPlaybackMode && currentTape ? (
         <VHSPlayback tape={currentTape} onStop={stopPlayback} />
       ) : (
-        renderPage()
+        <TeletextGrid>
+          {renderPage()}
+        </TeletextGrid>
       )}
     </>
   )
