@@ -9,6 +9,17 @@ import { VHSPlayback } from './components/VHSPlayback'
 import { useVHS } from './hooks/useVHS'
 import { useAgentHooks } from './hooks/useAgentHooks'
 
+// Expose services to window for testing
+import { PersonalityService } from './services/PersonalityService'
+import { SteeringLoader } from './services/SteeringLoader'
+import { HookService } from './services/HookService'
+
+if (typeof window !== 'undefined') {
+  (window as any).PersonalityService = PersonalityService;
+  (window as any).SteeringLoader = SteeringLoader;
+  (window as any).HookService = HookService;
+}
+
 // ZONE 100: TRUTH
 import TruthHub from './pages/100_truth/TruthHub'
 import GlobalWire from './pages/100_truth/GlobalWire'
