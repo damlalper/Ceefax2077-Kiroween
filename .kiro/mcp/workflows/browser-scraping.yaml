@@ -1,0 +1,87 @@
+name: Browser Scraping Workflow
+version: 1.0.0
+description: Web scraping and content extraction chain
+
+trigger:
+  type: scheduled
+  interval: 3600 # Every hour
+  pages:
+    - P100 (GlobalWire)
+    - P101 (LieDetector)
+    - P604 (Trending)
+
+workflow:
+  - step: 1
+    name: URL Fetch
+    agent: browser-automation
+    tool: fetch_url
+    input: ${target_urls}
+    description: Fetch web pages
+    output: raw_html
+
+  - step: 2
+    name: HTML Parse
+    agent: browser-automation
+    tool: parse_html
+    input: ${raw_html}
+    description: Extract structured data
+    output: parsed_data
+
+  - step: 3
+    name: Content Filter
+    agent: browser-automation
+    tool: filter_content
+    input: ${parsed_data}
+    description: Remove ads and noise
+    output: clean_content
+
+  - step: 4
+    name: AI Analysis
+    agent: browser-automation
+    tool: analyze_sentiment
+    input: ${clean_content}
+    description: Analyze content sentiment
+    output: analysis
+
+  - step: 5
+    name: Cache Storage
+    agent: memory-vault
+    tool: write_memory
+    input:
+      content: ${clean_content}
+      metadata: ${analysis}
+    description: Store for offline access
+    output: cache_id
+
+error_handling:
+  - condition: fetch_failed
+    action: retry
+    max_attempts: 3
+    backoff: exponential
+  
+  - condition: parse_error
+    action: fallback
+    fallback_mode: raw_text
+
+  - condition: rate_limit
+    action: delay
+    delay_seconds: 60
+
+caching:
+  raw_html:
+    ttl: 300 # 5 minutes
+  
+  parsed_data:
+    ttl: 3600 # 1 hour
+
+integration:
+  pages:
+    - P100 (GlobalWire)
+    - P101 (LieDetector)
+    - P604 (Trending)
+  
+  services:
+    - BrowserAgent
+    - NewsService
+    - HackerNewsService
+    - GitHubTrendingService

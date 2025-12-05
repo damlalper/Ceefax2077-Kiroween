@@ -1,0 +1,78 @@
+name: IoT Automation Workflow
+version: 1.0.0
+description: Smart home automation chain for TeleHome feature
+
+trigger:
+  type: user_action
+  page: P800 (TeleHome)
+  action: device_control
+
+workflow:
+  - step: 1
+    name: Device Discovery
+    agent: iot-control
+    tool: list_devices
+    description: Scan network for available IoT devices
+    output: device_list
+
+  - step: 2
+    name: Status Check
+    agent: iot-control
+    tool: get_status
+    input: ${device_list}
+    description: Get current status of all devices
+    output: device_status
+
+  - step: 3
+    name: Execute Command
+    agent: iot-control
+    tool: send_command
+    input:
+      device_id: ${selected_device}
+      command: ${user_command}
+    description: Send control command to device
+    output: command_result
+
+  - step: 4
+    name: Verify State
+    agent: iot-control
+    tool: get_status
+    input: ${selected_device}
+    description: Verify command execution
+    output: new_status
+
+error_handling:
+  - condition: device_not_found
+    action: return_error
+    message: "Device not available"
+  
+  - condition: command_failed
+    action: retry
+    max_attempts: 3
+    backoff: exponential
+
+  - condition: network_error
+    action: fallback
+    fallback_mode: cached_status
+
+caching:
+  device_list:
+    ttl: 300 # 5 minutes
+    invalidate_on: device_change
+  
+  device_status:
+    ttl: 10 # 10 seconds
+    invalidate_on: command_execution
+
+integration:
+  pages:
+    - P800 (TeleHome)
+  
+  hooks:
+    - on_device_change
+    - on_command_success
+    - on_command_failure
+
+  services:
+    - IoTAgent
+    - SecurityService (for device authentication)

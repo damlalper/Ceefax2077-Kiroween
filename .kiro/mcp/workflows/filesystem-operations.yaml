@@ -1,0 +1,83 @@
+name: Filesystem Operations Workflow
+version: 1.0.0
+description: Extended file system operations for LocalGhost
+
+trigger:
+  type: user_action
+  page: P907 (LocalGhost)
+  action: file_operation
+
+workflow:
+  - step: 1
+    name: Directory Scan
+    agent: filesystem-extended
+    tool: list_directory
+    input: ${target_path}
+    description: List files and directories
+    output: file_list
+
+  - step: 2
+    name: File Metadata
+    agent: filesystem-extended
+    tool: get_metadata
+    input: ${file_list}
+    description: Get file sizes, dates, types
+    output: metadata
+
+  - step: 3
+    name: File Read
+    agent: filesystem-extended
+    tool: read_file
+    input: ${selected_file}
+    description: Read file content
+    output: file_content
+
+  - step: 4
+    name: Content Analysis
+    agent: browser-automation
+    tool: analyze_content
+    input: ${file_content}
+    description: Analyze file content
+    output: analysis
+
+  - step: 5
+    name: Teletext Format
+    agent: filesystem-extended
+    tool: format_for_teletext
+    input: ${file_content}
+    description: Convert to 40x24 format
+    output: teletext_view
+
+error_handling:
+  - condition: permission_denied
+    action: return_error
+    message: "Access denied"
+  
+  - condition: file_not_found
+    action: return_empty
+    message: "File not found"
+
+  - condition: file_too_large
+    action: truncate
+    max_size: 1048576 # 1MB
+
+caching:
+  file_list:
+    ttl: 60 # 1 minute
+    invalidate_on: file_change
+  
+  file_content:
+    ttl: 300 # 5 minutes
+    invalidate_on: file_modified
+
+integration:
+  pages:
+    - P907 (LocalGhost)
+  
+  hooks:
+    - on_file_accessed
+    - on_directory_changed
+
+  services:
+    - FileSystemAgent
+    - PersonalityService

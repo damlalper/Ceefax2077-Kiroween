@@ -26,6 +26,48 @@
       "description": "Web search for research and documentation",
       "disabled": true,
       "autoApprove": []
+    },
+    "wayback-machine": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/WaybackAgent.ts"],
+      "description": "Internet Archive Wayback Machine integration for TimeMachine",
+      "disabled": false,
+      "autoApprove": ["get_snapshot", "search_history"]
+    },
+    "iot-control": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/IoTAgent.ts"],
+      "description": "Smart home IoT device control for TeleHome",
+      "disabled": false,
+      "autoApprove": ["list_devices", "get_status"]
+    },
+    "crypto-intelligence": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/CryptoAgent.ts"],
+      "description": "Cryptocurrency market data and analysis for Stonks",
+      "disabled": false,
+      "autoApprove": ["get_price", "get_market_data"]
+    },
+    "memory-vault": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/MemoryAgent.ts"],
+      "description": "Persistent memory storage for MemoryVault",
+      "disabled": false,
+      "autoApprove": ["read_memory", "list_memories"]
+    },
+    "browser-automation": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/BrowserAgent.ts"],
+      "description": "Web scraping and browser automation",
+      "disabled": false,
+      "autoApprove": ["fetch_url", "parse_html"]
+    },
+    "filesystem-extended": {
+      "command": "node",
+      "args": ["ceefax-2077/src/mcp/FileSystemAgent.ts"],
+      "description": "Extended file system operations for LocalGhost",
+      "disabled": false,
+      "autoApprove": ["read_file", "list_directory", "get_metadata"]
     }
   },
   "globalSettings": {
