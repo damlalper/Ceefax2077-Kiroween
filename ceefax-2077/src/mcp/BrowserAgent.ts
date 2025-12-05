@@ -33,27 +33,186 @@ export class BrowserAgent {
 
   /**
    * Fetch and convert a URL to Teletext format
-   * In production, this would use a real HTTP client or MCP fetch server
+   * Uses CORS proxy to fetch real web pages
    */
   async fetchPage(url: string): Promise<TeletextPage> {
     // Check cache
     if (this.cache.has(url)) {
       const cached = this.cache.get(url)!;
       if (Date.now() - cached.timestamp < 300000) { // 5 min cache
+        console.log('📦 Using cached page:', url);
         return cached;
       }
     }
 
-    // Simulate network delay
-    await this.delay(800);
+    console.log('🌐 Fetching page:', url);
 
-    // For demo, return simulated content based on URL
-    const page = this.simulateFetch(url);
+    try {
+      // Try to fetch real page via CORS proxy
+      const page = await this.fetchRealPage(url);
+      
+      // Cache result
+      this.cache.set(url, page);
+      
+      return page;
+    } catch (error) {
+      console.error('❌ Failed to fetch real page, using simulation:', error);
+      
+      // Fallback to simulation
+      const page = this.simulateFetch(url);
+      this.cache.set(url, page);
+      return page;
+    }
+  }
+  
+  /**
+   * Fetch real web page via CORS proxy
+   */
+  private async fetchRealPage(url: string): Promise<TeletextPage> {
+    // Ensure URL has protocol
+    const fullUrl = url.startsWith('http') ? url : `https://${url}`;
     
-    // Cache result
-    this.cache.set(url, page);
+    // Use CORS proxy
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(fullUrl)}`;
     
-    return page;
+    console.log('🔄 Using CORS proxy:', proxyUrl);
+    
+    const response = await fetch(proxyUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const html = await response.text();
+    console.log('✅ Page fetched, converting to Teletext...');
+    
+    // Parse HTML and convert to Teletext
+    return this.parseHtmlToTeletext(html, fullUrl);
+  }
+  
+  /**
+   * Parse HTML and convert to Teletext format
+   */
+  private parseHtmlToTeletext(html: string, url: string): TeletextPage {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Remove unwanted elements
+    const unwanted = doc.querySelectorAll('script, style, nav, footer, iframe, noscript, header');
+    unwanted.forEach(el => el.remove());
+    
+    // Extract title
+    const titleEl = doc.querySelector('title');
+    let title = titleEl?.textContent?.trim() || 'UNTITLED PAGE';
+    title = this.cleanText(title).toUpperCase();
+    title = title.substring(0, 38); // Max 38 chars
+    
+    // Extract content
+    const content: string[] = [];
+    
+    // Try to find main content
+    const mainContent = doc.querySelector('main, article, .content, #content, body');
+    const contentEl = mainContent || doc.body;
+    
+    if (contentEl) {
+      // Extract paragraphs and headers
+      const elements = contentEl.querySelectorAll('h1, h2, h3, p');
+      
+      elements.forEach((el, index) => {
+        if (index >= 15) return; // Limit to 15 elements
+        
+        const text = this.cleanText(el.textContent || '');
+        if (text.length > 0) {
+          // Headers in uppercase
+          if (el.tagName.startsWith('H')) {
+            content.push('');
+            content.push(text.toUpperCase().substring(0, 40));
+            content.push('─'.repeat(Math.min(text.length, 40)));
+          } else {
+            // Wrap paragraphs
+            const lines = this.wrapText(text, 40);
+            lines.forEach(line => content.push(line));
+            content.push('');
+          }
+        }
+      });
+    }
+    
+    // Extract links
+    const links: TeletextLink[] = [];
+    const linkEls = contentEl?.querySelectorAll('a[href]') || [];
+    
+    linkEls.forEach((link, index) => {
+      if (index >= 10) return; // Max 10 links
+      
+      const text = this.cleanText(link.textContent || '');
+      const href = link.getAttribute('href') || '';
+      
+      if (text.length > 0 && href.length > 0) {
+        links.push({
+          id: index + 1,
+          text: text.toUpperCase().substring(0, 30),
+          url: this.resolveUrl(href, url)
+        });
+      }
+    });
+    
+    return {
+      url,
+      title,
+      content: content.slice(0, 20), // Max 20 lines
+      links,
+      timestamp: Date.now()
+    };
+  }
+  
+  /**
+   * Clean text: remove extra whitespace
+   */
+  private cleanText(text: string): string {
+    return text
+      .replace(/\s+/g, ' ')
+      .replace(/[^\x20-\x7E]/g, '') // ASCII only
+      .trim();
+  }
+  
+  /**
+   * Wrap text to fit line width
+   */
+  private wrapText(text: string, width: number): string[] {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+    
+    words.forEach(word => {
+      if ((currentLine + ' ' + word).trim().length <= width) {
+        currentLine = (currentLine + ' ' + word).trim();
+      } else {
+        if (currentLine.length > 0) {
+          lines.push(currentLine);
+        }
+        currentLine = word.substring(0, width);
+      }
+    });
+    
+    if (currentLine.length > 0) {
+      lines.push(currentLine);
+    }
+    
+    return lines;
+  }
+  
+  /**
+   * Resolve relative URLs
+   */
+  private resolveUrl(href: string, baseUrl: string): string {
+    try {
+      if (href.startsWith('http')) return href;
+      const base = new URL(baseUrl);
+      return new URL(href, base.origin).toString();
+    } catch {
+      return href;
+    }
   }
 
   /**
@@ -268,11 +427,12 @@ export class BrowserAgent {
    */
   getBookmarks(): Array<{ name: string; url: string }> {
     return [
-      { name: 'WIKIPEDIA', url: 'https://en.wikipedia.org/wiki/Artificial_intelligence' },
-      { name: 'BBC NEWS', url: 'https://bbc.com/news/technology' },
-      { name: 'GITHUB', url: 'https://github.com/ceefax-2077' },
+      { name: 'WIKIPEDIA', url: 'https://en.wikipedia.org/wiki/Teletext' },
+      { name: 'BBC NEWS', url: 'https://www.bbc.com/news/technology' },
       { name: 'HACKER NEWS', url: 'https://news.ycombinator.com' },
-      { name: 'REDDIT', url: 'https://reddit.com/r/programming' }
+      { name: 'GITHUB', url: 'https://github.com' },
+      { name: 'EXAMPLE', url: 'https://example.com' },
+      { name: 'ARCHIVE.ORG', url: 'https://archive.org' }
     ];
   }
 
@@ -281,10 +441,6 @@ export class BrowserAgent {
    */
   clearCache(): void {
     this.cache.clear();
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 

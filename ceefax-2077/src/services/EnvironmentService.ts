@@ -24,12 +24,14 @@ export interface ShelterLocation {
   type: 'WATER' | 'POWER' | 'MEDICAL' | 'SHELTER'
   status: 'ACTIVE' | 'LIMITED' | 'OFFLINE'
   distance: number // km
+  name: string // Display name for the shelter
 }
 
 export class EnvironmentService {
   /**
    * Generate simulated atmosphere data
    * Includes random variations to simulate real conditions
+   * Note: In production, this could fetch from OpenWeatherMap API
    */
   static generateAtmosphereData(): AtmosphereData {
     // Simulate varying conditions
@@ -213,6 +215,7 @@ export class EnvironmentService {
         type: 'WATER',
         status: Math.random() > 0.2 ? 'ACTIVE' : 'LIMITED',
         distance: Math.random() * 5,
+        name: `WATER-${i + 1}`
       })
     }
 
@@ -227,6 +230,7 @@ export class EnvironmentService {
           type: 'POWER',
           status: Math.random() > 0.3 ? 'ACTIVE' : 'OFFLINE',
           distance: Math.random() * 5,
+          name: `POWER-${i + 1}`
         })
       }
     }
@@ -242,6 +246,7 @@ export class EnvironmentService {
           type: 'MEDICAL',
           status: Math.random() > 0.15 ? 'ACTIVE' : 'LIMITED',
           distance: Math.random() * 5,
+          name: `MEDICAL-${i + 1}`
         })
       }
     }
@@ -257,6 +262,7 @@ export class EnvironmentService {
           type: 'SHELTER',
           status: 'ACTIVE',
           distance: Math.random() * 5,
+          name: `SHELTER-${i + 1}`
         })
       }
     }

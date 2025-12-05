@@ -35,11 +35,21 @@ class WaybackAgentService {
       const targetDate = '19990615'; // Mid-1999
       const apiUrl = `${this.WAYBACK_API}?url=${encodeURIComponent(cleanUrl)}&timestamp=${targetDate}`;
       
+      console.log('🔍 Querying Wayback API:', apiUrl);
+      
       const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        console.error('Wayback API HTTP error:', response.status);
+        return null;
+      }
+      
       const data = await response.json();
+      console.log('📦 Wayback API response:', data);
 
       if (data.archived_snapshots?.closest) {
         const snapshot = data.archived_snapshots.closest;
+        console.log('✅ Found snapshot:', snapshot);
         return {
           url: snapshot.url,
           timestamp: snapshot.timestamp,
@@ -48,23 +58,49 @@ class WaybackAgentService {
         };
       }
 
+      console.warn('⚠️ No snapshots found for:', cleanUrl);
       return null;
     } catch (error) {
-      console.error('Wayback API error:', error);
+      console.error('❌ Wayback API error:', error);
       return null;
     }
   }
 
   /**
    * Fetch and parse archived HTML
+   * Note: Direct fetch may fail due to CORS. Using a CORS proxy for demo.
    */
   async fetchArchive(snapshotUrl: string): Promise<string> {
     try {
-      const response = await fetch(snapshotUrl);
+      console.log('📥 Fetching archive:', snapshotUrl);
+      
+      // Try direct fetch first
+      try {
+        const response = await fetch(snapshotUrl);
+        if (response.ok) {
+          const html = await response.text();
+          console.log('✅ Archive fetched successfully');
+          return html;
+        }
+      } catch (corsError) {
+        console.warn('⚠️ CORS error, trying proxy...', corsError);
+      }
+      
+      // Fallback: Use CORS proxy
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(snapshotUrl)}`;
+      console.log('🔄 Using CORS proxy:', proxyUrl);
+      
+      const response = await fetch(proxyUrl);
+      if (!response.ok) {
+        console.error('❌ Proxy fetch failed:', response.status);
+        return '';
+      }
+      
       const html = await response.text();
+      console.log('✅ Archive fetched via proxy');
       return html;
     } catch (error) {
-      console.error('Archive fetch error:', error);
+      console.error('❌ Archive fetch error:', error);
       return '';
     }
   }

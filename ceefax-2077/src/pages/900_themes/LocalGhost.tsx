@@ -11,7 +11,6 @@ import FileSystemAgent, { type FileNode, type LogEntry } from '../../mcp/FileSys
 export default function LocalGhost() {
   const [fileTree, setFileTree] = useState<FileNode | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [selectedPath, setSelectedPath] = useState<string>('/');
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'tree' | 'logs'>('tree');
 

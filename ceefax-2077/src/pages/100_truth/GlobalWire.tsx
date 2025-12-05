@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextPage, { TeletextListItem } from '../../components/TeletextPage'
+import TeletextPage from '../../components/TeletextPage'
 import { HackerNewsService, type HNStory } from '../../services/HackerNewsService'
 import { useAutoHealer } from '../../hooks/useAutoHealer'
 import HealerNotifications from '../../components/HealerNotifications'

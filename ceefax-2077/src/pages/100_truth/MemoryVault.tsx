@@ -34,7 +34,7 @@ export default function MemoryVault() {
     setLoading(true);
 
     try {
-      const { answer, usedMemories } = await MemoryAgent.ask(userQuestion);
+      await MemoryAgent.ask(userQuestion);
       
       // Update conversation
       setConversation(MemoryAgent.getConversation());

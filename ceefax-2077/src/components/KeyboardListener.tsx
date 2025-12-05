@@ -5,11 +5,15 @@ export default function KeyboardListener() {
   const { addDigit, clearBuffer } = useTeletext()
 
   useEffect(() => {
+    console.log('⌨️ KeyboardListener mounted')
+    
     const handleKeyPress = (event: KeyboardEvent) => {
       const key = event.key
+      console.log('🎹 Key pressed:', key)
 
       // Handle numeric keys (0-9)
       if (/^[0-9]$/.test(key)) {
+        console.log('✅ Numeric key detected:', key)
         event.preventDefault()
         addDigit(key)
       }
@@ -28,11 +32,14 @@ export default function KeyboardListener() {
     }
 
     window.addEventListener('keydown', handleKeyPress)
+    console.log('✅ Keyboard event listener added')
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
+      console.log('❌ Keyboard event listener removed')
     }
-  }, [addDigit, clearBuffer])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Empty dependency array - only mount once
 
   return null // This component doesn't render anything
 }

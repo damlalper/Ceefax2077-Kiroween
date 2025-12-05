@@ -8,6 +8,7 @@ interface TeletextContextType {
   currentPersonality: Personality
   addDigit: (digit: string) => void
   goToPage: (page: number) => void
+  navigateToPage: (page: number) => void
   clearBuffer: () => void
   transformText: (text: string) => string
 }
@@ -57,19 +58,31 @@ export function TeletextProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const addDigit = (digit: string) => {
+    console.log('🔢 addDigit called:', digit)
     setLastActivity(() => Date.now()) // Reset idle timer on input
-    if (inputBuffer.length < 3 && /^[0-9]$/.test(digit)) {
-      const newBuffer = inputBuffer + digit
-      setInputBuffer(newBuffer)
+    
+    // Use functional update to get current buffer value
+    setInputBuffer((prevBuffer) => {
+      console.log('📋 Previous buffer:', prevBuffer)
+      
+      if (prevBuffer.length < 3 && /^[0-9]$/.test(digit)) {
+        const newBuffer = prevBuffer + digit
+        console.log('📝 New buffer:', newBuffer)
 
-      // Auto-navigate when 3 digits are entered
-      if (newBuffer.length === 3) {
-        const pageNumber = parseInt(newBuffer, 10)
-        setTimeout(() => {
-          goToPage(pageNumber)
-        }, 300) // Small delay for visual feedback
+        // Auto-navigate when 3 digits are entered
+        if (newBuffer.length === 3) {
+          const pageNumber = parseInt(newBuffer, 10)
+          console.log('🚀 Navigating to page:', pageNumber)
+          setTimeout(() => {
+            goToPage(pageNumber)
+          }, 300) // Small delay for visual feedback
+        }
+
+        return newBuffer
       }
-    }
+      
+      return prevBuffer
+    })
   }
 
   const goToPage = (page: number) => {
@@ -98,6 +111,7 @@ export function TeletextProvider({ children }: { children: ReactNode }) {
         currentPersonality,
         addDigit,
         goToPage,
+        navigateToPage: goToPage, // Alias for compatibility
         clearBuffer,
         transformText,
       }}

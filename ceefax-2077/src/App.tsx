@@ -100,7 +100,7 @@ function TeletextRouter() {
     // ZONE 100: THE TRUTH (News & Facts)
     if (currentPage === 100) return <TruthHub />
     if (currentPage === 101) return <GlobalWire />
-    if (currentPage === 103) return <LieDetector />
+    if (currentPage === 102) return <LieDetector />
     if (currentPage === 105) return <MemoryVault />
 
     // ZONE 200: THE SYSTEM (Economy & Tech)
@@ -139,8 +139,8 @@ function TeletextRouter() {
     if (currentPage === 805) return <TheRenderer />
 
     // ZONE 900: THEMES (Skeleton Crew)
-    if (currentPage === 904) return <LocalGhost />
-    if (currentPage === 905) return <ThemeSelector />
+    if (currentPage === 905) return <LocalGhost />
+    if (currentPage === 904) return <ThemeSelector />
     if (currentPage === 906) return <TapeLibrary onPlayTape={playTape} />
     if (currentPage === 907) return <HookDashboard />
 
