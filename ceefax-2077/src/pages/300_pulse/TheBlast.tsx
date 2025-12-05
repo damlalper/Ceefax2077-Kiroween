@@ -1,46 +1,69 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TeletextPage from '../../components/TeletextPage'
 import { SocialService, type GossipPost } from '../../services/SocialService'
-
-const getInitialPosts = (): GossipPost[] => {
-  const now = Date.now();
-  return [
-    {
-      id: 1,
-      originalText: 'saw my ex at the store',
-      headline: '🚨 BREAKING: TRAGIC EX ENCOUNTER AT LOCAL STORE - BESTIE YOU GOOD??? 💀',
-      timestamp: new Date(now - 120000),
-      trustVotes: 23,
-      capVotes: 5,
-      category: 'RELATIONSHIP',
-    },
-    {
-      id: 2,
-      originalText: 'someone unfollowed me',
-      headline: 'EXPOSED: FAKE FRIEND UNFOLLOWED - THE BETRAYAL IS REAL BESTIE 😭🚨',
-      timestamp: new Date(now - 900000),
-      trustVotes: 45,
-      capVotes: 12,
-      category: 'SOCIAL',
-    },
-    {
-      id: 3,
-      originalText: 'got a new job',
-      headline: '💼 CORPORATE GIRLIE ERA ACTIVATED - BESTIE SECURED THE BAG NO CAP 💰✨',
-      timestamp: new Date(now - 3600000),
-      trustVotes: 67,
-      capVotes: 3,
-      category: 'PERSONAL_W',
-    },
-  ];
-};
+import { RedditService } from '../../services/RedditService'
 
 export default function TheBlast() {
-  const [posts, setPosts] = useState<GossipPost[]>(getInitialPosts)
-
+  const [posts, setPosts] = useState<GossipPost[]>([])
+  const [loading, setLoading] = useState(true)
   const [newPost, setNewPost] = useState('')
   const [showTransform, setShowTransform] = useState(false)
   const [transformedHeadline, setTransformedHeadline] = useState('')
+
+  // Fetch real Reddit posts on mount
+  useEffect(() => {
+    const fetchRedditPosts = async () => {
+      try {
+        const redditPosts = await RedditService.getDramaPosts(10)
+        
+        // Transform Reddit posts to gossip format
+        const gossipPosts: GossipPost[] = redditPosts.map((post, index) => ({
+          id: Date.now() + index,
+          originalText: post.title,
+          headline: SocialService.generateGossipHeadline(post.title),
+          timestamp: new Date(post.created_utc * 1000),
+          trustVotes: Math.floor(post.score / 10),
+          capVotes: Math.floor(Math.random() * 5),
+          category: SocialService.categorizePost(post.title),
+        }))
+
+        setPosts(gossipPosts)
+      } catch (error) {
+        console.error('Failed to fetch Reddit posts:', error)
+        // Fallback to sample posts
+        setPosts(getFallbackPosts())
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchRedditPosts()
+  }, [])
+
+  // Fallback posts if Reddit API fails
+  const getFallbackPosts = (): GossipPost[] => {
+    const now = Date.now()
+    return [
+      {
+        id: 1,
+        originalText: 'saw my ex at the store',
+        headline: '🚨 BREAKING: TRAGIC EX ENCOUNTER AT LOCAL STORE - BESTIE YOU GOOD??? 💀',
+        timestamp: new Date(now - 120000),
+        trustVotes: 23,
+        capVotes: 5,
+        category: 'RELATIONSHIP',
+      },
+      {
+        id: 2,
+        originalText: 'someone unfollowed me',
+        headline: 'EXPOSED: FAKE FRIEND UNFOLLOWED - THE BETRAYAL IS REAL BESTIE 😭🚨',
+        timestamp: new Date(now - 900000),
+        trustVotes: 45,
+        capVotes: 12,
+        category: 'SOCIAL',
+      },
+    ]
+  }
 
   const submitPost = () => {
     if (newPost.trim()) {
@@ -171,9 +194,18 @@ export default function TheBlast() {
         </div>
       )}
 
+      {/* Loading State */}
+      {loading && (
+        <div style={{ textAlign: 'center', color: '#00FFFF', padding: '2rem' }}>
+          <div style={{ fontSize: 'clamp(12px, 2vmin, 16px)' }}>
+            ⏳ FETCHING FRESH TEA FROM REDDIT...
+          </div>
+        </div>
+      )}
+
       {/* Posts Feed */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '16rem', overflowY: 'auto' }}>
-        {posts.map((post) => (
+        {!loading && posts.map((post) => (
           <div key={post.id} style={{ border: '2px solid #FF1493', padding: '0.5rem', backgroundColor: '#000000' }}>
             {/* Category Badge */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>

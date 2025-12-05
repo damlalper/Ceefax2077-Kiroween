@@ -280,11 +280,13 @@
 
 ## 🎯 Summary
 
-### Real APIs (4 pages):
+### Real APIs (6 pages):
 1. ✅ P101 - Global Wire (Hacker News API)
 2. ✅ P201 - Stonks (CoinGecko API)
-3. ✅ P802 - Time Machine (Wayback Machine API) - **NEWLY FIXED**
-4. ✅ P805 - The Renderer (CORS Proxy + Real Web) - **NEWLY FIXED**
+3. ✅ P204 - Oracle of Doom (CoinGecko API - BTC/ETH prices for risk analysis)
+4. ✅ P205 - The Basilisk (Hacker News API - AI threat monitoring)
+5. ✅ P802 - Time Machine (Wayback Machine API) - **NEWLY FIXED**
+6. ✅ P805 - The Renderer (CORS Proxy + Real Web) - **NEWLY FIXED**
 
 ### Acceptable Mock/Local (6 pages):
 1. ✅ P105 - Memory Vault (localStorage)
@@ -294,8 +296,8 @@
 5. ✅ P906 - Tape Library (localStorage)
 6. ✅ P907 - Hook Dashboard (real feature)
 
-### Mock Data for Demo (18 pages):
-- P102, P202, P204, P205, P301, P304, P401, P403, P405, P501-504, P905
+### Mock Data for Demo (16 pages):
+- P102, P202, P301, P304, P401, P403, P405, P501-504, P905
 - These use high-quality mock data
 - Some are intentionally fictional (dystopian narrative)
 - Some would require expensive APIs or authentication

@@ -28,14 +28,129 @@ export interface ShelterLocation {
 }
 
 export class EnvironmentService {
+  // OpenWeatherMap API (free tier: 1000 calls/day)
+  private static WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY || ''
+  private static WEATHER_API = 'https://api.openweathermap.org/data/2.5'
+  
+  // Default location (can be changed)
+  private static DEFAULT_LAT = 51.5074 // London
+  private static DEFAULT_LON = -0.1278
+
   /**
-   * Generate simulated atmosphere data
-   * Includes random variations to simulate real conditions
-   * Note: In production, this could fetch from OpenWeatherMap API
+   * Fetch real atmosphere data from OpenWeatherMap
    */
-  static generateAtmosphereData(): AtmosphereData {
-    // Simulate varying conditions
-    const baseAQI = 50 + Math.random() * 150 // 50-200 range
+  static async generateAtmosphereData(): Promise<AtmosphereData> {
+    // If API key is available, fetch real data
+    if (this.WEATHER_API_KEY) {
+      try {
+        return await this.fetchRealWeatherData()
+      } catch (error) {
+        console.error('Failed to fetch real weather data:', error)
+        // Fall back to simulated data
+      }
+    }
+
+    // Fallback: Simulate data
+    return this.generateSimulatedData()
+  }
+
+  /**
+   * Fetch real weather and air quality data
+   */
+  private static async fetchRealWeatherData(): Promise<AtmosphereData> {
+    try {
+      // Fetch weather and air pollution in parallel
+      const [weatherRes, airRes] = await Promise.all([
+        fetch(`${this.WEATHER_API}/weather?lat=${this.DEFAULT_LAT}&lon=${this.DEFAULT_LON}&appid=${this.WEATHER_API_KEY}&units=metric`),
+        fetch(`${this.WEATHER_API}/air_pollution?lat=${this.DEFAULT_LAT}&lon=${this.DEFAULT_LON}&appid=${this.WEATHER_API_KEY}`)
+      ])
+
+      if (!weatherRes.ok || !airRes.ok) {
+        throw new Error('Weather API error')
+      }
+
+      const weatherData = await weatherRes.json()
+      const airData = await airRes.json()
+
+      // Extract data
+      const temp = Math.round(weatherData.main.temp)
+      const humidity = weatherData.main.humidity
+      const pressure = weatherData.main.pressure
+
+      // Air quality index (1-5 scale from API, convert to 0-500)
+      const apiAqi = airData.list[0].main.aqi
+      const aqi = this.convertAQI(apiAqi)
+
+      // Pollutants
+      const components = airData.list[0].components
+      const pm25 = Math.round(components.pm2_5 || 0)
+      const pm10 = Math.round(components.pm10 || 0)
+      const ozone = Math.round(components.o3 || 0)
+      const no2 = Math.round(components.no2 || 0)
+
+      // Determine AQI level
+      let aqiLevel: AtmosphereData['aqiLevel']
+      if (aqi <= 50) aqiLevel = 'GOOD'
+      else if (aqi <= 100) aqiLevel = 'MODERATE'
+      else if (aqi <= 150) aqiLevel = 'UNHEALTHY_SENSITIVE'
+      else if (aqi <= 200) aqiLevel = 'UNHEALTHY'
+      else if (aqi <= 300) aqiLevel = 'VERY_UNHEALTHY'
+      else aqiLevel = 'HAZARDOUS'
+
+      // Radiation (simulated - no free API for this)
+      const radiation = 0.08 + Math.random() * 0.12
+      const radiationLevel: AtmosphereData['radiationLevel'] = 
+        radiation < 0.20 ? 'SAFE' : radiation < 0.50 ? 'ELEVATED' : 'HIGH'
+
+      // UV index (if available)
+      const uvIndex = weatherData.uvi || Math.floor(Math.random() * 12)
+
+      const hazardous = aqiLevel === 'HAZARDOUS' || aqiLevel === 'VERY_UNHEALTHY'
+      const warning = this.generateWarning(aqiLevel, radiationLevel)
+
+      return {
+        aqi,
+        aqiLevel,
+        pm25,
+        pm10,
+        ozone,
+        no2,
+        radiation: Math.round(radiation * 100) / 100,
+        radiationLevel,
+        temperature: temp,
+        humidity,
+        pressure,
+        uvIndex,
+        warning,
+        hazardous,
+      }
+    } catch (error) {
+      console.error('Error fetching real weather:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Convert OpenWeatherMap AQI (1-5) to US AQI (0-500)
+   */
+  private static convertAQI(apiAqi: number): number {
+    // OpenWeatherMap uses 1-5 scale
+    // 1 = Good, 2 = Fair, 3 = Moderate, 4 = Poor, 5 = Very Poor
+    const conversion: Record<number, number> = {
+      1: 25,   // Good
+      2: 75,   // Fair
+      3: 125,  // Moderate
+      4: 175,  // Poor
+      5: 250,  // Very Poor
+    }
+    return conversion[apiAqi] || 100
+  }
+
+  /**
+   * Generate simulated data (fallback)
+   */
+  private static generateSimulatedData(): AtmosphereData {
+    const baseAQI = 50 + Math.random() * 150
     const aqi = Math.floor(baseAQI)
     
     // Determine AQI level
@@ -47,13 +162,13 @@ export class EnvironmentService {
     else if (aqi <= 300) aqiLevel = 'VERY_UNHEALTHY'
     else aqiLevel = 'HAZARDOUS'
 
-    // Generate related pollutants
+    // Generate related pollutants (simulated)
     const pm25 = Math.floor(aqi * 0.4 + Math.random() * 20)
     const pm10 = Math.floor(pm25 * 1.5 + Math.random() * 30)
     const ozone = Math.floor(20 + Math.random() * 80)
     const no2 = Math.floor(10 + Math.random() * 50)
 
-    // Radiation levels (normal background is 0.05-0.20 μSv/h)
+    // Radiation levels (simulated - no free API)
     const baseRadiation = 0.08 + Math.random() * 0.15
     const radiation = Math.round(baseRadiation * 100) / 100
     
@@ -63,11 +178,11 @@ export class EnvironmentService {
     else if (radiation < 1.00) radiationLevel = 'HIGH'
     else radiationLevel = 'DANGEROUS'
 
-    // Weather data
-    const temperature = Math.floor(15 + Math.random() * 20) // 15-35°C
-    const humidity = Math.floor(30 + Math.random() * 60) // 30-90%
-    const pressure = Math.floor(1000 + Math.random() * 30) // 1000-1030 hPa
-    const uvIndex = Math.floor(Math.random() * 12) // 0-11
+    // Weather data (simulated)
+    const temperature = Math.floor(15 + Math.random() * 20)
+    const humidity = Math.floor(30 + Math.random() * 60)
+    const pressure = Math.floor(1000 + Math.random() * 30)
+    const uvIndex = Math.floor(Math.random() * 12)
 
     // Generate warning
     const hazardous = aqiLevel === 'HAZARDOUS' || aqiLevel === 'VERY_UNHEALTHY' || radiationLevel === 'DANGEROUS'

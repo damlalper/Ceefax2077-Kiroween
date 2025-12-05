@@ -1,0 +1,30 @@
+# Environment variables (API keys)
+.env
+.env.local
+.env.*.local
+ceefax-2077/.env 
+
+# Dependencies
+node_modules/
+ceefax-2077/node_modules/
+
+# Build outputs
+dist/
+ceefax-2077/dist/
+build/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+.cache/
