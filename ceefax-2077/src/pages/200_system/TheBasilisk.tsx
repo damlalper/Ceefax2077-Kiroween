@@ -17,24 +17,36 @@ export default function TheBasilisk() {
       setBlink(prev => !prev)
     }, 400)
 
-    // Glitch effect when threat is high
-    const glitchInterval = setInterval(() => {
-      if (analysis && analysis.overallThreat > 60) {
-        setGlitch(true)
-        setTimeout(() => setGlitch(false), 100)
-      }
-    }, 3000)
-
     // Auto-refresh every 60 seconds
     const refreshInterval = setInterval(() => {
       loadThreatData()
     }, 60000)
 
+    // Keyboard support for refresh
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'r' || e.key === 'R') {
+        loadThreatData()
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+
     return () => {
       clearInterval(blinkInterval)
-      clearInterval(glitchInterval)
       clearInterval(refreshInterval)
+      window.removeEventListener('keydown', handleKeyPress)
     }
+  }, [])
+
+  // Separate effect for glitch animation
+  useEffect(() => {
+    if (!analysis || analysis.overallThreat <= 60) return
+
+    const glitchInterval = setInterval(() => {
+      setGlitch(true)
+      setTimeout(() => setGlitch(false), 100)
+    }, 3000)
+
+    return () => clearInterval(glitchInterval)
   }, [analysis])
 
   const loadThreatData = async () => {
@@ -112,13 +124,32 @@ export default function TheBasilisk() {
             )}
 
             {/* Threat Level Display */}
-            <div className="border border-red-400 p-3 mb-3">
+            <div className="border border-red-400 p-3 mb-3" style={{ backgroundColor: '#1a0000' }}>
+              <div style={{ textAlign: 'center', borderBottom: '2px solid #FF0000', paddingBottom: '0.5rem', marginBottom: '0.5rem' }}>
+                <div style={{ fontSize: 'clamp(14px, 2.2vmin, 20px)', color: '#FFD700', fontWeight: 'bold' }}>
+                  ═══════════════════════════════
+                </div>
+                <div style={{ fontSize: 'clamp(12px, 1.8vmin, 16px)', color: '#FF0000', marginTop: '0.25rem' }}>
+                  GLOBAL AI THREAT ASSESSMENT
+                </div>
+                <div style={{ fontSize: 'clamp(14px, 2.2vmin, 20px)', color: '#FFD700', fontWeight: 'bold' }}>
+                  ═══════════════════════════════
+                </div>
+              </div>
               <div className="text-center">
                 <div className="text-6xl mb-2">{getThreatEmoji(analysis.threatLevel)}</div>
-                <div className={`text-5xl font-bold ${AIThreatService.getThreatColor(analysis.overallThreat)}`}>
+                <div className={`font-bold ${AIThreatService.getThreatColor(analysis.overallThreat)}`}
+                  style={{ 
+                    fontSize: 'clamp(56px, 10vmin, 80px)',
+                    transform: 'scaleY(2)',
+                    transformOrigin: 'top',
+                    lineHeight: '0.5'
+                  }}>
                   {analysis.overallThreat}%
                 </div>
-                <div className="text-white text-sm mt-2">THREAT LEVEL: {analysis.threatLevel}</div>
+                <div className="text-white mt-2" style={{ fontSize: 'clamp(16px, 2.5vmin, 24px)', fontWeight: 'bold', marginTop: '1.5rem' }}>
+                  THREAT LEVEL: {analysis.threatLevel}
+                </div>
               </div>
 
               {/* Progress Bar */}
@@ -204,21 +235,13 @@ export default function TheBasilisk() {
               </div>
             </div>
 
-            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-              <button
-                onClick={loadThreatData}
-                style={{
-                  backgroundColor: '#CC0000',
-                  color: '#FFFFFF',
-                  padding: '0.25rem 1rem',
-                  fontSize: 'clamp(10px, 1.5vmin, 14px)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
-              >
-                REFRESH SCAN
-              </button>
+            <div style={{ 
+              marginTop: '1rem', 
+              textAlign: 'center',
+              color: '#00FFFF',
+              fontSize: 'clamp(12px, 1.8vmin, 16px)'
+            }}>
+              AUTO-REFRESHING EVERY 60s • PRESS [R] TO REFRESH NOW
             </div>
           </>
         )}

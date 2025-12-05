@@ -19,7 +19,7 @@
 
 **🏆 Built for Kiroween Hackathon**  
 **🎯 Showcasing Kiro AI's Advanced Features**  
-**⚡ 28 Interactive Pages | 17 AI Personas | 10 Agent Hooks | 6 MCP Agents**
+**⚡ 36 Interactive Pages | 17 AI Personas | 10 Agent Hooks | 6 MCP Agents | 9 Zones**
 
 ---
 
@@ -283,6 +283,28 @@ ceefax-2077/
 
 ---
 
+---
+
+## 🎨 ZONE 600 — CREATOR (Content & Media)
+
+**Problem:** Content discovery overload, algorithm manipulation  
+**Solution:** Curated content feeds with real APIs
+
+| Page | Name | Description | Tech |
+|------|------|-------------|------|
+| **P600** | Creator Hub | Zone navigation | Static |
+| **P601** | Trending | GitHub trending repos | GitHub API |
+| **P602** | PodCast | iTunes podcast directory | iTunes API |
+| **P603** | StreamHub | Live stream aggregator | Simulated |
+
+**Key Files:**
+- `src/pages/600_creator/Trending.tsx` — GitHub trending
+- `src/services/GitHubTrendingService.ts` — GitHub API (no key required)
+- `src/pages/600_creator/PodCast.tsx` — Podcast discovery
+- `src/services/PodcastService.ts` — iTunes API (free)
+
+---
+
 ## 🟡 ZONE 200 — THE SYSTEM (Tech & Finance)
 
 **Problem:** Information overload, complex systems  
@@ -364,6 +386,28 @@ ceefax-2077/
 - `src/services/SecurityService.ts` — Threat detection
 - `src/components/BiometricGate.tsx` — Auth layer
 - `.kiro/steering/security_expert.md` — Guardian persona
+
+---
+
+---
+
+## 🌍 ZONE 700 — NOMAD (Travel & Lifestyle)
+
+**Problem:** Digital nomad information scattered  
+**Solution:** Centralized travel, dating, and NFT marketplace
+
+| Page | Name | Description | Tech |
+|------|------|-------------|------|
+| **P700** | Nomad Hub | Zone navigation | Static |
+| **P701** | NomadLife | Travel destinations & cost of living | Simulated data |
+| **P702** | BlindDate | AI-powered matchmaking | Algorithm |
+| **P703** | DropZone | NFT marketplace browser | OpenSea API |
+
+**Key Files:**
+- `src/pages/700_nomad/NomadLife.tsx` — Travel guide
+- `src/pages/700_nomad/BlindDate.tsx` — Dating algorithm
+- `src/pages/700_nomad/DropZone.tsx` — NFT browser
+- `src/services/NFTService.ts` — OpenSea API (free)
 
 ---
 
@@ -1447,8 +1491,18 @@ P500 → Shield Hub
   ├─ P503 → Pocket Lawyer
   └─ P504 → SOS Beacon
 
+P600 → Creator Hub
+  ├─ P601 → Trending (GitHub repos)
+  ├─ P602 → PodCast (iTunes podcasts)
+  └─ P603 → StreamHub (Live streams)
+
 P666 → Glitch Mode (Horror)
   └─ Type "100" to escape
+
+P700 → Nomad Hub
+  ├─ P701 → NomadLife (Travel destinations)
+  ├─ P702 → BlindDate (AI matchmaking)
+  └─ P703 → DropZone (NFT marketplace)
 
 P800 → Home Hub
   ├─ P801 → TeleHome (IoT)
@@ -1458,6 +1512,7 @@ P800 → Home Hub
   └─ P805 → The Renderer (Browser)
 
 P900 → Themes Hub
+  ├─ P900 → Themes Hub (Index)
   ├─ P904 → Theme Selector
   ├─ P905 → Local Ghost (Files)
   ├─ P906 → Tape Library (VHS)
@@ -1750,7 +1805,7 @@ Type "↑↑↓↓←→←→BA" → Secret page
 ## Why This Project Demonstrates Kiro's Power
 
 ### 1. **Vibe Coding at Scale**
-Built 28 interactive pages through natural conversation with Kiro AI — no traditional coding workflow needed.
+Built 36 interactive pages across 9 zones through natural conversation with Kiro AI — no traditional coding workflow needed.
 
 ### 2. **Spec-Driven Architecture**
 13 YAML specifications guided the entire build:
@@ -1874,11 +1929,11 @@ Reusable templates ensured code quality:
 - **Memory:** < 100MB
 
 ### Scale
-- **28 Pages** — Full application
+- **36 Pages** — Full application across 9 zones
 - **6 MCP Agents** — Real integrations
 - **17 AI Personas** — Unique voices
 - **10 Agent Hooks** — Automation
-- **6 Real APIs** — Live data
+- **9 Real APIs** — Live data (HackerNews, CoinGecko, Wayback, GitHub, iTunes, OpenSea, CORS proxy)
 
 ### Documentation
 - **README.md** — Comprehensive guide

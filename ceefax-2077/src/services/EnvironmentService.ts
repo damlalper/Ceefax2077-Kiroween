@@ -235,27 +235,27 @@ export class EnvironmentService {
   }
 
   /**
-   * Get AQI color
+   * Get AQI color (returns hex color for inline styles)
    */
   static getAQIColor(aqi: number): string {
-    if (aqi <= 50) return 'text-green-400'
-    if (aqi <= 100) return 'text-yellow-400'
-    if (aqi <= 150) return 'text-orange-400'
-    if (aqi <= 200) return 'text-red-400'
-    if (aqi <= 300) return 'text-red-600'
-    return 'text-red-800'
+    if (aqi <= 50) return '#00CC66'
+    if (aqi <= 100) return '#FFD700'
+    if (aqi <= 150) return '#FF8800'
+    if (aqi <= 200) return '#FF0000'
+    if (aqi <= 300) return '#CC0000'
+    return '#8B0000'
   }
 
   /**
-   * Get radiation color
+   * Get radiation color (returns hex color for inline styles)
    */
   static getRadiationColor(level: string): string {
     switch (level) {
-      case 'SAFE': return 'text-green-400'
-      case 'ELEVATED': return 'text-yellow-400'
-      case 'HIGH': return 'text-orange-400'
-      case 'DANGEROUS': return 'text-red-600'
-      default: return 'text-white'
+      case 'SAFE': return '#00CC66'
+      case 'ELEVATED': return '#FFD700'
+      case 'HIGH': return '#FF8800'
+      case 'DANGEROUS': return '#CC0000'
+      default: return '#FFFFFF'
     }
   }
 

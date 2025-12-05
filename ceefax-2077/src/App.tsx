@@ -52,15 +52,21 @@ import ScamBuster from './pages/500_shield/ScamBuster'
 import PocketLawyer from './pages/500_shield/PocketLawyer'
 import SOSBeacon from './pages/500_shield/SOSBeacon'
 
+// ZONE 600: CREATOR
+import { CreatorHub, Trending, PodCast, StreamHub } from './pages/600_creator'
+
 // ZONE 666: GLITCH
 import GlitchMode from './pages/666_glitch/GlitchMode'
+
+// ZONE 700: NOMAD
+import { NomadHub, NomadLife, BlindDate, DropZone } from './pages/700_nomad'
 
 // ZONE 800: TELE-HOME (Frankenstein)
 import { HomeHub, TeleHome, TimeMachine, PixelGen } from './pages/800_home'
 import TheRenderer from './pages/800_home/TheRenderer'
 
 // ZONE 900: THEMES (Skeleton Crew)
-import { ThemeSelector, TapeLibrary, HookDashboard } from './pages/900_themes'
+import { ThemesHub, ThemeSelector, TapeLibrary, HookDashboard } from './pages/900_themes'
 import LocalGhost from './pages/900_themes/LocalGhost'
 
 // Fallback
@@ -128,8 +134,20 @@ function TeletextRouter() {
     if (currentPage === 503) return <PocketLawyer />
     if (currentPage === 504) return <SOSBeacon />
 
+    // ZONE 600: CREATOR (Media & Content)
+    if (currentPage === 600) return <CreatorHub />
+    if (currentPage === 601) return <Trending />
+    if (currentPage === 602) return <PodCast />
+    if (currentPage === 603) return <StreamHub />
+
     // ZONE 666: GLITCH MODE
     if (currentPage === 666) return <GlitchMode />
+
+    // ZONE 700: NOMAD (Digital Lifestyle)
+    if (currentPage === 700) return <NomadHub />
+    if (currentPage === 701) return <NomadLife />
+    if (currentPage === 702) return <BlindDate />
+    if (currentPage === 703) return <DropZone />
 
     // ZONE 800: TELE-HOME (Frankenstein)
     if (currentPage === 800) return <HomeHub />
@@ -139,8 +157,9 @@ function TeletextRouter() {
     if (currentPage === 805) return <TheRenderer />
 
     // ZONE 900: THEMES (Skeleton Crew)
-    if (currentPage === 905) return <LocalGhost />
+    if (currentPage === 900) return <ThemesHub />
     if (currentPage === 904) return <ThemeSelector />
+    if (currentPage === 905) return <LocalGhost />
     if (currentPage === 906) return <TapeLibrary onPlayTape={playTape} />
     if (currentPage === 907) return <HookDashboard />
 

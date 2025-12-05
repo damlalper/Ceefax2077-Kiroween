@@ -8,14 +8,17 @@ export default function EcoSense() {
   const [blink, setBlink] = useState(true)
   const [flashWarning, setFlashWarning] = useState(false)
 
-  const loadAtmosphereData = () => {
+  const loadAtmosphereData = async () => {
     setLoading(true)
-    // Simulate sensor delay
-    setTimeout(() => {
-      const atmosphereData = EnvironmentService.generateAtmosphereData()
+    try {
+      // Fetch real atmosphere data (with fallback to simulated)
+      const atmosphereData = await EnvironmentService.generateAtmosphereData()
       setData(atmosphereData)
+    } catch (error) {
+      console.error('Failed to load atmosphere data:', error)
+    } finally {
       setLoading(false)
-    }, 800)
+    }
   }
 
   useEffect(() => {
@@ -26,13 +29,6 @@ export default function EcoSense() {
       setBlink(prev => !prev)
     }, 500)
 
-    // Flash warning if hazardous
-    const flashInterval = setInterval(() => {
-      if (data?.hazardous) {
-        setFlashWarning(prev => !prev)
-      }
-    }, 1000)
-
     // Auto-refresh every 10 seconds
     const refreshInterval = setInterval(() => {
       loadAtmosphereData()
@@ -40,10 +36,23 @@ export default function EcoSense() {
 
     return () => {
       clearInterval(blinkInterval)
-      clearInterval(flashInterval)
       clearInterval(refreshInterval)
     }
-  }, [data])
+  }, []) // Empty dependency - run once on mount
+
+  // Separate effect for flash warning
+  useEffect(() => {
+    if (!data?.hazardous) {
+      setFlashWarning(false)
+      return
+    }
+
+    const flashInterval = setInterval(() => {
+      setFlashWarning(prev => !prev)
+    }, 1000)
+
+    return () => clearInterval(flashInterval)
+  }, [data?.hazardous])
 
   return (
     <TeletextPage 
@@ -120,7 +129,7 @@ export default function EcoSense() {
                   fontSize: 'clamp(12px, 2vmin, 16px)',
                   color: EnvironmentService.getAQIColor(data.aqi)
                 }}>
-                  {data.aqiLevel.replace(/_/g, ' ')}
+                  {data.aqiLevel?.replace(/_/g, ' ') || 'UNKNOWN'}
                 </div>
               </div>
 

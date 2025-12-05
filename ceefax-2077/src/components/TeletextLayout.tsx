@@ -99,6 +99,36 @@ function getZoneTheme(page: number) {
     }
   }
   
+  // ZONE 600: CREATOR (Magenta/White - Media)
+  if (page >= 600 && page < 700) {
+    return {
+      headerBg: '#FF00FF',
+      headerText: '#FFFFFF',
+      zoneName: 'CREAT',
+      fastext: {
+        red: { page: 600, label: 'HUB' },
+        green: { page: 601, label: 'TREND' },
+        yellow: { page: 602, label: 'PODCAST' },
+        cyan: { page: 603, label: 'STREAM' }
+      }
+    }
+  }
+  
+  // ZONE 700: NOMAD (Yellow/Black - Travel)
+  if (page >= 700 && page < 800) {
+    return {
+      headerBg: '#FFFF00',
+      headerText: '#000000',
+      zoneName: 'NOMAD',
+      fastext: {
+        red: { page: 700, label: 'HUB' },
+        green: { page: 701, label: 'TRAVEL' },
+        yellow: { page: 702, label: 'DATE' },
+        cyan: { page: 703, label: 'NFT' }
+      }
+    }
+  }
+  
   // ZONE 666: GLITCH (Dark Red/Glitching)
   if (page === 666) {
     return {

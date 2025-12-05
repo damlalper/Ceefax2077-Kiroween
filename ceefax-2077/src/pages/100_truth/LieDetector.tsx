@@ -7,21 +7,43 @@ export default function LieDetector() {
   const [analysis, setAnalysis] = useState<BiasAnalysis | null>(null)
   const [loading, setLoading] = useState(false)
   const [blink, setBlink] = useState(true)
+  const [scanProgress, setScanProgress] = useState(0)
+  const [highlightedText, setHighlightedText] = useState('')
 
   const analyzeText = async () => {
     if (!inputText.trim()) return
 
     setLoading(true)
     setAnalysis(null)
+    setScanProgress(0)
+    setHighlightedText('')
 
     // Start blink animation
     const blinkInterval = setInterval(() => {
       setBlink(prev => !prev)
     }, 400)
 
+    // Animate progress bar
+    const progressInterval = setInterval(() => {
+      setScanProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressInterval)
+          return 100
+        }
+        return prev + 5
+      })
+    }, 100)
+
     try {
       const result = await AIAnalysisService.analyzeText(inputText)
+      
+      // Wait for progress to complete
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
       setAnalysis(result)
+      
+      // Highlight trigger words in red
+      highlightTriggerWords(inputText, result)
     } catch (error) {
       console.error('Analysis failed:', error)
       // Show error state
@@ -36,7 +58,26 @@ export default function LieDetector() {
     } finally {
       setLoading(false)
       clearInterval(blinkInterval)
+      clearInterval(progressInterval)
+      setScanProgress(100)
     }
+  }
+
+  const highlightTriggerWords = (text: string, analysis: BiasAnalysis) => {
+    // Trigger words to highlight
+    const triggerWords = [
+      'shocking', 'outrageous', 'unbelievable', 'devastating', 'horrific', 
+      'amazing', 'incredible', 'urgent', 'breaking', 'must', 'always', 
+      'never', 'everyone', 'nobody', 'terrorist', 'radical', 'extremist'
+    ]
+    
+    let highlighted = text
+    triggerWords.forEach(word => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi')
+      highlighted = highlighted.replace(regex, `<span style="color: #FF0000; font-weight: bold;">$&</span>`)
+    })
+    
+    setHighlightedText(highlighted)
   }
 
   const getVerdictColor = (verdict: string) => {
@@ -99,17 +140,69 @@ export default function LieDetector() {
         </button>
 
         {loading && (
-          <div style={{ border: '2px solid #FFD700', padding: '1rem', textAlign: 'center' }}>
+          <div style={{ border: '2px solid #FFD700', padding: '1rem' }}>
             <div style={{ 
               color: '#FFD700', 
               fontSize: 'clamp(16px, 2.5vmin, 24px)',
               opacity: blink ? 1 : 0,
-              transition: 'opacity 0.3s'
+              transition: 'opacity 0.3s',
+              textAlign: 'center',
+              marginBottom: '1rem'
             }}>
-              🔍 AI PROCESSING...
+              🔍 SCANNING...
             </div>
-            <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
-              Analyzing for bias and manipulation
+            
+            {/* Progress Bar */}
+            <div style={{ marginBottom: '0.5rem' }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                color: '#FFD700',
+                fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                marginBottom: '0.25rem'
+              }}>
+                <span>ANALYSIS PROGRESS:</span>
+                <span>{scanProgress}%</span>
+              </div>
+              <div style={{ 
+                backgroundColor: '#333333', 
+                height: '20px', 
+                position: 'relative',
+                border: '1px solid #FFD700'
+              }}>
+                <div
+                  style={{
+                    height: '100%',
+                    width: `${scanProgress}%`,
+                    backgroundColor: '#FFD700',
+                    transition: 'width 0.1s linear',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {scanProgress > 20 && (
+                    <div style={{ 
+                      color: '#000000', 
+                      fontSize: 'clamp(8px, 1.2vmin, 12px)',
+                      fontWeight: 'bold'
+                    }}>
+                      {'█'.repeat(Math.floor(scanProgress / 10))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ 
+              color: '#888888', 
+              fontSize: 'clamp(10px, 1.5vmin, 14px)',
+              textAlign: 'center'
+            }}>
+              {scanProgress < 30 && 'Detecting emotional language...'}
+              {scanProgress >= 30 && scanProgress < 60 && 'Analyzing bias patterns...'}
+              {scanProgress >= 60 && scanProgress < 90 && 'Checking factual claims...'}
+              {scanProgress >= 90 && 'Finalizing verdict...'}
             </div>
           </div>
         )}
@@ -171,6 +264,28 @@ export default function LieDetector() {
                 <div style={{ color: '#FF0000', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', fontWeight: 'bold' }}>
                   ⚠ HIGH RISK - Verify sources independently
                 </div>
+              </div>
+            )}
+            
+            {/* Highlighted Text with Trigger Words */}
+            {highlightedText && (
+              <div style={{ borderTop: '2px solid #666666', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
+                <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.25rem' }}>
+                  📝 TEXT ANALYSIS (Trigger words in RED):
+                </div>
+                <div 
+                  style={{ 
+                    color: '#CCCCCC', 
+                    fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                    lineHeight: '1.5',
+                    padding: '0.5rem',
+                    backgroundColor: '#000000',
+                    border: '1px solid #333333',
+                    maxHeight: '150px',
+                    overflow: 'auto'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: highlightedText }}
+                />
               </div>
             )}
           </div>

@@ -1,21 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import TeletextPage from '../../components/TeletextPage'
-import { useAutoHealer } from '../../hooks/useAutoHealer'
-import HealerNotifications from '../../components/HealerNotifications'
 
 export default function CodeExorcist() {
   const [inputCode, setInputCode] = useState('')
   const [refactoredCode, setRefactoredCode] = useState('')
-  const { notifications, autoRefactorText } = useAutoHealer()
-
-  // Auto-clean dirty code as user types
-  useEffect(() => {
-    if (inputCode.trim()) {
-      autoRefactorText(inputCode, (cleaned) => {
-        setInputCode(cleaned);
-      });
-    }
-  }, [inputCode, autoRefactorText])
 
   const exorciseCode = () => {
     // Simulated AI refactoring with spooky comments
@@ -50,50 +38,38 @@ async function fetchUserData(userId) {
   }
 
   return (
-    <>
-      <HealerNotifications notifications={notifications} />
-      <TeletextPage 
+    <TeletextPage 
         title="CODE EXORCIST" 
         subtitle="AI Refactoring with Spooky Comments"
         footer="🕯️ Casting out code demons"
         zone={202}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ border: '2px solid #FFD700', padding: '0.5rem' }}>
-            <label style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Paste Legacy Code:</label>
+          <div style={{ border: '2px solid #FFD700', padding: '0.5rem', backgroundColor: '#1a1a00' }}>
+            <label style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)', display: 'block', marginBottom: '0.25rem' }}>
+              PASTE LEGACY CODE:
+            </label>
             <textarea
-              style={{
-                width: '100%',
-                backgroundColor: '#000000',
-                color: '#FFFFFF',
-                border: '2px solid #666666',
-                padding: '0.5rem',
-                marginTop: '0.25rem',
-                fontFamily: 'monospace',
-                fontSize: 'clamp(10px, 1.5vmin, 14px)'
-              }}
               rows={4}
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value)}
-              placeholder="Paste your cursed legacy code here..."
+              placeholder="PASTE CURSED CODE HERE..."
             />
           </div>
 
-          <button
-            onClick={exorciseCode}
-            style={{
-              width: '100%',
-              backgroundColor: '#FFD700',
-              color: '#000000',
-              padding: '0.5rem',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: 'clamp(12px, 2vmin, 16px)'
-            }}
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '0.5rem',
+            backgroundColor: '#FFD700',
+            color: '#000000',
+            fontWeight: 'bold',
+            fontSize: 'clamp(14px, 2.2vmin, 20px)',
+            cursor: 'pointer'
+          }}
+          onClick={exorciseCode}
           >
-            🕯️ EXORCISE CODE 🕯️
-          </button>
+            PRESS [ENTER] TO EXORCISE CODE
+          </div>
 
           {refactoredCode && (
             <div style={{ border: '2px solid #00FF00', padding: '0.5rem' }}>
@@ -113,6 +89,5 @@ async function fetchUserData(userId) {
           )}
         </div>
       </TeletextPage>
-    </>
   )
 }

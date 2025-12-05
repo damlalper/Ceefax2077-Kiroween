@@ -59,8 +59,12 @@ export default function TeletextPage({
         </div>
       )}
       
-      {/* Main Content - Strictly contained */}
-      <div className="teletext-page-content">
+      {/* Main Content - Strictly contained, NO SCROLLING */}
+      <div className="teletext-page-content" style={{ 
+        overflow: 'hidden',
+        maxHeight: '70vh',
+        padding: '0.5rem 1rem'
+      }}>
         {children}
       </div>
       

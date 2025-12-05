@@ -1,389 +1,366 @@
-import { useState } from 'react';
-import { WaybackAgent } from '../../mcp/WaybackAgent';
-import type { TeletextPage } from '../../mcp/WaybackAgent';
+import { useState, useEffect } from 'react'
+import TeletextPage from '../../components/TeletextPage'
+import { WaybackService, type ArchivedSite, type WaybackSnapshot } from '../../services/WaybackService'
 
-type LoadingState = 'idle' | 'dialing' | 'loading' | 'success' | 'error';
+type ViewMode = 'menu' | 'search' | 'results' | 'loading'
 
 export default function TimeMachine() {
-  const [url, setUrl] = useState('');
-  const [loadingState, setLoadingState] = useState<LoadingState>('idle');
-  const [page, setPage] = useState<TeletextPage | null>(null);
-  const [error, setError] = useState('');
-  const [dialingProgress, setDialingProgress] = useState(0);
+  const [viewMode, setViewMode] = useState<ViewMode>('menu')
+  const [url, setUrl] = useState('')
+  const [archivedSite, setArchivedSite] = useState<ArchivedSite | null>(null)
+  const [selectedYear, setSelectedYear] = useState<number | null>(null)
+  const [blink, setBlink] = useState(true)
 
-  const popularSites = WaybackAgent.getPopularSites();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBlink(prev => !prev)
+    }, 500)
+    return () => clearInterval(interval)
+  }, [])
 
-  const dialUpAnimation = async () => {
-    setLoadingState('dialing');
-    setDialingProgress(0);
+  const searchArchive = async (targetUrl: string) => {
+    if (!targetUrl.trim()) return
 
-    // Simulate dial-up connection with progress
-    for (let i = 0; i <= 100; i += 5) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      setDialingProgress(i);
+    setViewMode('loading')
+    
+    const data = await WaybackService.searchArchive(targetUrl)
+    setArchivedSite(data)
+    
+    if (data.totalSnapshots > 0) {
+      setViewMode('results')
+    } else {
+      setViewMode('search')
     }
-  };
+  }
 
-  const loadWebsite = async (targetUrl: string) => {
-    if (!targetUrl.trim()) return;
+  const loadPopularSite = (site: { name: string; url: string; year: number }) => {
+    setUrl(site.url)
+    searchArchive(site.url)
+  }
 
-    setError('');
-    setPage(null);
+  const openArchive = (snapshot: WaybackSnapshot) => {
+    window.open(snapshot.archiveUrl, '_blank')
+  }
 
-    // Dial-up animation
-    await dialUpAnimation();
+  const popularSites = WaybackService.getPopularSites()
 
-    // Loading state
-    setLoadingState('loading');
-
-    try {
-      const result = await WaybackAgent.loadUrl(targetUrl);
-
-      if (result) {
-        setPage(result);
-        setLoadingState('success');
-      } else {
-        setError('NO ARCHIVE FOUND FOR THIS URL');
-        setLoadingState('error');
-      }
-    } catch {
-      setError('CONNECTION FAILED - TRY AGAIN');
-      setLoadingState('error');
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    loadWebsite(url);
-  };
-
-  const loadPopularSite = (siteUrl: string) => {
-    setUrl(siteUrl);
-    loadWebsite(siteUrl);
-  };
-
-  const renderDialingAnimation = () => {
-    const modemSounds = [
-      '♪ BEEP BEEP BEEP ♪',
-      '♫ SCREECH SCREECH ♫',
-      '♪ KSHHHHH KSHHHHH ♪',
-      '♫ BONG BONG BONG ♫'
-    ];
-
-    const currentSound = modemSounds[Math.floor(dialingProgress / 25) % modemSounds.length];
-
+  if (viewMode === 'loading') {
     return (
-      <div style={{ textAlign: 'center', color: '#00FFFF' }}>
-        <div style={{ fontSize: '1.5em', marginBottom: '20px' }}>
-          DIALING UP...
-        </div>
-
-        <div style={{ marginBottom: '20px', fontSize: '1.2em', color: '#FFFF00' }}>
-          {currentSound}
-        </div>
-
-        <div style={{ marginBottom: '10px' }}>
-          <pre style={{ margin: 0 }}>
-{`
-    ╔════════════════════════════╗
-    ║  📞 MODEM CONNECTION 📞   ║
-    ╚════════════════════════════╝
-`}
-          </pre>
-        </div>
-
-        {/* Progress bar */}
-        <div style={{ marginBottom: '10px' }}>
-          {'█'.repeat(Math.floor(dialingProgress / 5))}
-          {'░'.repeat(20 - Math.floor(dialingProgress / 5))}
-        </div>
-
-        <div style={{ color: '#00FF00' }}>
-          {dialingProgress}% CONNECTED
-        </div>
-
-        <div style={{ marginTop: '20px', fontSize: '0.8em', color: '#666' }}>
-          <div>Connecting to Internet Archive...</div>
-          <div>Searching for 1999 snapshot...</div>
-          <div>Please wait, this may take a moment...</div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderLoadingAnimation = () => {
-    return (
-      <div style={{ textAlign: 'center', color: '#FFFF00' }}>
-        <div style={{ fontSize: '1.3em', marginBottom: '15px' }}>
-          DOWNLOADING PAGE...
-        </div>
-        <div style={{ animation: 'blink 0.5s infinite' }}>
-          ⟳ PARSING HTML ⟳
-        </div>
-        <div style={{ marginTop: '15px', fontSize: '0.9em', color: '#00FFFF' }}>
-          Converting to Teletext format...
-        </div>
-      </div>
-    );
-  };
-
-  const renderPage = () => {
-    if (!page) return null;
-
-    return (
-      <div>
-        {/* Page Title */}
-        <div style={{
-          color: '#FFD700',
-          fontSize: '1.2em',
-          marginBottom: '10px',
-          textAlign: 'center',
-          borderBottom: '2px solid #FFD700',
-          paddingBottom: '5px'
-        }}>
-          {page.title}
-        </div>
-
-        {/* Archive Info */}
-        <div style={{
-          color: '#00FFFF',
-          fontSize: '0.75em',
-          marginBottom: '15px',
-          textAlign: 'center'
-        }}>
-          ARCHIVED FROM: {page.originalUrl}
-        </div>
-
-        {/* Content */}
-        <div style={{
-          color: '#FFFFFF',
-          fontSize: '0.85em',
-          marginBottom: '15px',
-          maxHeight: '300px',
-          overflowY: 'auto',
-          padding: '10px',
-          border: '1px solid #666',
-          fontFamily: 'monospace',
-          lineHeight: '1.4'
-        }}>
-          {page.content.map((line, index) => (
-            <div key={index}>
-              {line || '\u00A0'}
-            </div>
-          ))}
-        </div>
-
-        {/* Links */}
-        {page.links.length > 0 && (
-          <div style={{ marginTop: '15px' }}>
-            <div style={{
-              color: '#FFD700',
-              marginBottom: '5px',
-              fontSize: '0.9em'
-            }}>
-              LINKS FOUND ({page.links.length}):
-            </div>
-            <div style={{ fontSize: '0.8em' }}>
-              {page.links.map((link, index) => (
-                <div
-                  key={index}
-                  style={{
-                    color: '#00FFFF',
-                    padding: '2px 5px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => loadWebsite(link.url)}
-                >
-                  [{index + 1}] {link.text}
-                </div>
-              ))}
-            </div>
+      <TeletextPage 
+        title="TIME MACHINE" 
+        subtitle="Searching Internet Archive..."
+        footer="Please wait..."
+        zone={802}
+      >
+        <div style={{ textAlign: 'center', padding: '2rem', color: '#00FFFF' }}>
+          <div style={{ fontSize: 'clamp(16px, 3vmin, 24px)', marginBottom: '1rem' }}>
+            {blink ? '⟳' : ' '} ACCESSING WAYBACK MACHINE {blink ? '⟳' : ' '}
           </div>
-        )}
-
-        {/* Back Button */}
-        <div style={{ marginTop: '15px', textAlign: 'center' }}>
-          <button
-            onClick={() => {
-              setLoadingState('idle');
-              setPage(null);
-            }}
-            style={{
-              background: '#333',
-              color: '#00FF00',
-              border: '1px solid #00FF00',
-              padding: '5px 15px',
-              cursor: 'pointer',
-              fontFamily: 'monospace'
-            }}
-          >
-            ← BACK TO TIME MACHINE
-          </button>
+          <div style={{ fontSize: 'clamp(12px, 2vmin, 16px)' }}>
+            Searching archive.org database...
+          </div>
         </div>
-      </div>
-    );
-  };
+      </TeletextPage>
+    )
+  }
 
-  return (
-    <div>
-      {/* Header */}
-      <div style={{
-        color: '#00FFFF',
-        fontSize: '1.3em',
-        marginBottom: '15px',
-        textAlign: 'center'
-      }}>
-        <pre style={{ lineHeight: '1.2', margin: 0 }}>
-{`
-╔════════════════════════════════════╗
-║      🕰️  THE TIME MACHINE  🕰️     ║
-║    WAYBACK TO 1999 INTERNET       ║
-╚════════════════════════════════════╝
-`}
-        </pre>
-      </div>
+  if (viewMode === 'results' && archivedSite) {
+    const yearGroups = WaybackService.groupByYear(archivedSite.snapshots)
+    const years = Array.from(yearGroups.keys()).sort((a, b) => a - b)
+    const snapshots90s = WaybackService.get90sSnapshots(archivedSite)
 
-      {loadingState === 'idle' && (
-        <>
-          {/* Description */}
+    return (
+      <TeletextPage 
+        title="ARCHIVE FOUND" 
+        subtitle={`${archivedSite.url} • ${archivedSite.totalSnapshots} snapshots`}
+        footer="Click snapshot to view • Press [BACK] to search again"
+        zone={802}
+      >
+        <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.3' }}>
+          
+          {/* Stats */}
           <div style={{
-            color: '#FFFFFF',
-            marginBottom: '15px',
-            textAlign: 'center',
-            fontSize: '0.85em'
+            marginBottom: '1rem',
+            padding: '0.75rem',
+            border: '2px solid #00FFFF',
+            backgroundColor: 'rgba(0, 255, 255, 0.1)'
           }}>
-            Browse archived websites from 1999
-            <br />
-            Converted to Teletext format
+            <div style={{ color: '#00FFFF', fontSize: 'clamp(12px, 2vmin, 16px)', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              📊 ARCHIVE STATISTICS
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', color: '#FFFFFF' }}>
+              <div>Total Snapshots: <span style={{ color: '#00FF00' }}>{archivedSite.totalSnapshots}</span></div>
+              <div>Years Covered: <span style={{ color: '#00FF00' }}>{years.length}</span></div>
+              <div>Oldest: <span style={{ color: '#FFD700' }}>{archivedSite.oldestSnapshot?.year}</span></div>
+              <div>Newest: <span style={{ color: '#FFD700' }}>{archivedSite.newestSnapshot?.year}</span></div>
+            </div>
           </div>
 
-          {/* Address Bar */}
-          <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+          {/* 1990s Snapshots (Featured) */}
+          {snapshots90s.length > 0 && (
             <div style={{
-              color: '#FFD700',
-              marginBottom: '5px',
-              fontSize: '0.9em'
+              marginBottom: '1rem',
+              padding: '0.75rem',
+              border: '2px solid #FFD700',
+              backgroundColor: 'rgba(255, 215, 0, 0.1)'
             }}>
-              ENTER URL:
+              <div style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                🕰️ 1990s SNAPSHOTS ({snapshots90s.length})
+              </div>
+              <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                {snapshots90s.slice(0, 10).map((snapshot, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => openArchive(snapshot)}
+                    style={{
+                      padding: '0.5rem',
+                      marginBottom: '0.25rem',
+                      border: '1px solid #FFD700',
+                      backgroundColor: 'rgba(255, 215, 0, 0.05)',
+                      cursor: 'pointer',
+                      color: '#FFFFFF',
+                      fontSize: 'clamp(10px, 1.5vmin, 14px)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 215, 0, 0.2)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 215, 0, 0.05)'}
+                  >
+                    📅 {WaybackService.formatDate(snapshot.timestamp)} → <span style={{ color: '#00FFFF' }}>VIEW</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="example.com"
-                style={{
-                  flex: 1,
-                  background: '#000',
-                  color: '#00FF00',
-                  border: '1px solid #00FF00',
-                  padding: '8px',
-                  fontFamily: 'monospace',
-                  fontSize: '1em'
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  background: '#00FF00',
-                  color: '#000',
-                  border: 'none',
-                  padding: '8px 15px',
-                  cursor: 'pointer',
-                  fontFamily: 'monospace',
-                  fontWeight: 'bold'
-                }}
-              >
-                GO
-              </button>
-            </div>
-          </form>
+          )}
 
-          {/* Popular Sites */}
-          <div>
-            <div style={{
-              color: '#FFD700',
-              marginBottom: '10px',
-              fontSize: '1em'
-            }}>
-              POPULAR 1999 SITES:
+          {/* Browse by Year */}
+          <div style={{
+            marginBottom: '1rem',
+            padding: '0.75rem',
+            border: '2px solid #00FF00',
+            backgroundColor: 'rgba(0, 255, 0, 0.05)'
+          }}>
+            <div style={{ color: '#00FF00', fontSize: 'clamp(12px, 2vmin, 16px)', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              📆 BROWSE BY YEAR
             </div>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '5px',
-              fontSize: '0.85em'
+              gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))',
+              gap: '0.5rem'
             }}>
-              {popularSites.map((site, index) => (
-                <div
-                  key={index}
-                  onClick={() => loadPopularSite(site.url)}
-                  style={{
-                    background: '#333',
-                    color: '#00FFFF',
-                    padding: '8px',
-                    cursor: 'pointer',
-                    border: '1px solid #666',
-                    textAlign: 'center'
-                  }}
-                >
-                  {site.name}
-                </div>
-              ))}
+              {years.map((year) => {
+                const count = yearGroups.get(year)?.length || 0
+                return (
+                  <div
+                    key={year}
+                    onClick={() => setSelectedYear(year)}
+                    style={{
+                      padding: '0.5rem',
+                      textAlign: 'center',
+                      border: selectedYear === year ? '2px solid #00FF00' : '1px solid #00FF00',
+                      backgroundColor: selectedYear === year ? 'rgba(0, 255, 0, 0.2)' : 'rgba(0, 255, 0, 0.05)',
+                      color: '#00FF00',
+                      cursor: 'pointer',
+                      fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                      fontWeight: 'bold'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 255, 0, 0.2)'}
+                    onMouseLeave={(e) => {
+                      if (selectedYear !== year) {
+                        e.currentTarget.style.backgroundColor = 'rgba(0, 255, 0, 0.05)'
+                      }
+                    }}
+                  >
+                    {year}
+                    <div style={{ fontSize: 'clamp(8px, 1.2vmin, 11px)', color: '#FFFFFF' }}>
+                      {count} snap{count !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
-          {/* Instructions */}
-          <div style={{
-            marginTop: '20px',
-            padding: '10px',
-            border: '1px solid #666',
-            color: '#00FFFF',
-            fontSize: '0.8em'
-          }}>
-            <div style={{ color: '#FFD700', marginBottom: '5px' }}>
-              HOW IT WORKS:
+          {/* Selected Year Snapshots */}
+          {selectedYear && (
+            <div style={{
+              marginBottom: '1rem',
+              padding: '0.75rem',
+              border: '2px solid #FF00FF',
+              backgroundColor: 'rgba(255, 0, 255, 0.05)'
+            }}>
+              <div style={{ color: '#FF00FF', fontSize: 'clamp(12px, 2vmin, 16px)', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                📸 {selectedYear} SNAPSHOTS ({yearGroups.get(selectedYear)?.length || 0})
+              </div>
+              <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                {yearGroups.get(selectedYear)?.slice(0, 20).map((snapshot, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => openArchive(snapshot)}
+                    style={{
+                      padding: '0.5rem',
+                      marginBottom: '0.25rem',
+                      border: '1px solid #FF00FF',
+                      backgroundColor: 'rgba(255, 0, 255, 0.05)',
+                      cursor: 'pointer',
+                      color: '#FFFFFF',
+                      fontSize: 'clamp(10px, 1.5vmin, 14px)'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 0, 255, 0.2)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 0, 255, 0.05)'}
+                  >
+                    🔗 {WaybackService.formatDate(snapshot.timestamp)} → <span style={{ color: '#00FFFF' }}>OPEN ARCHIVE</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div>• Enter any website URL</div>
-            <div>• We fetch it from Internet Archive</div>
-            <div>• HTML is stripped and converted</div>
-            <div>• Displayed in pure Teletext format</div>
-            <div>• Experience the web like it's 1999!</div>
-          </div>
-        </>
-      )}
+          )}
 
-      {loadingState === 'dialing' && renderDialingAnimation()}
-      {loadingState === 'loading' && renderLoadingAnimation()}
-      {loadingState === 'success' && renderPage()}
-      
-      {loadingState === 'error' && (
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            color: '#FF0000',
-            fontSize: '1.3em',
-            marginBottom: '15px'
-          }}>
-            ✗ ERROR ✗
+          {/* Back Button */}
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={() => {
+                setViewMode('menu')
+                setArchivedSite(null)
+                setSelectedYear(null)
+              }}
+              style={{
+                backgroundColor: '#00FFFF',
+                color: '#000000',
+                padding: '0.5rem 1.5rem',
+                fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: 'VT323, monospace'
+              }}
+            >
+              ← NEW SEARCH
+            </button>
           </div>
-          <div style={{ color: '#FFFFFF', marginBottom: '20px' }}>
-            {error}
-          </div>
-          <button
-            onClick={() => setLoadingState('idle')}
-            style={{
-              background: '#333',
-              color: '#00FF00',
-              border: '1px solid #00FF00',
-              padding: '8px 20px',
-              cursor: 'pointer',
-              fontFamily: 'monospace'
-            }}
-          >
-            TRY AGAIN
-          </button>
         </div>
-      )}
-    </div>
-  );
+      </TeletextPage>
+    )
+  }
+
+  // Main menu / Search
+  return (
+    <TeletextPage 
+      title="TIME MACHINE" 
+      subtitle="Wayback Machine • Internet Archive"
+      footer="Enter URL to explore archived versions"
+      zone={802}
+    >
+      <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.3' }}>
+        
+        {/* Header */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          border: '2px solid #00FFFF',
+          backgroundColor: 'rgba(0, 255, 255, 0.1)'
+        }}>
+          <div style={{ color: '#00FFFF', fontSize: 'clamp(14px, 2.5vmin, 20px)', fontWeight: 'bold' }}>
+            {blink ? '🕰️' : '  '} WAYBACK MACHINE {blink ? '🕰️' : '  '}
+          </div>
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+            Browse archived websites from the past
+          </div>
+        </div>
+
+        {/* Search Box */}
+        <form onSubmit={(e) => { e.preventDefault(); searchArchive(url); }} style={{ marginBottom: '1.5rem' }}>
+          <div style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            🔍 ENTER WEBSITE URL:
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="example.com"
+              style={{
+                flex: 1,
+                background: '#000',
+                color: '#00FF00',
+                border: '2px solid #00FF00',
+                padding: '0.75rem',
+                fontFamily: 'VT323, monospace',
+                fontSize: 'clamp(12px, 2vmin, 16px)'
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                background: '#00FF00',
+                color: '#000',
+                border: 'none',
+                padding: '0.75rem 1.5rem',
+                cursor: 'pointer',
+                fontFamily: 'VT323, monospace',
+                fontSize: 'clamp(12px, 2vmin, 16px)',
+                fontWeight: 'bold'
+              }}
+            >
+              SEARCH
+            </button>
+          </div>
+        </form>
+
+        {/* Popular Sites */}
+        <div style={{
+          padding: '1rem',
+          border: '2px solid #FFD700',
+          backgroundColor: 'rgba(255, 215, 0, 0.05)',
+          marginBottom: '1rem'
+        }}>
+          <div style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)', fontWeight: 'bold', marginBottom: '0.75rem' }}>
+            🌟 POPULAR 90s SITES:
+          </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.5rem'
+          }}>
+            {popularSites.map((site, idx) => (
+              <div
+                key={idx}
+                onClick={() => loadPopularSite(site)}
+                style={{
+                  padding: '0.75rem',
+                  border: '1px solid #FFD700',
+                  backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                  color: '#FFD700',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 215, 0, 0.3)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 215, 0, 0.1)'}
+              >
+                {site.name}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Info */}
+        <div style={{
+          padding: '0.75rem',
+          border: '1px solid #666',
+          fontSize: 'clamp(9px, 1.3vmin, 12px)',
+          color: '#888'
+        }}>
+          <div style={{ color: '#00FFFF', marginBottom: '0.25rem' }}>HOW IT WORKS:</div>
+          <div>• Enter any website URL (e.g., google.com)</div>
+          <div>• We search Internet Archive's database</div>
+          <div>• Browse snapshots from different years</div>
+          <div>• Click to view archived version</div>
+          <div>• All data from archive.org (free API)</div>
+        </div>
+
+      </div>
+    </TeletextPage>
+  )
 }

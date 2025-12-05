@@ -168,8 +168,20 @@ Type 3-digit page numbers to navigate:
 - `501` - Crime Watch
 - `504` - SOS Beacon
 
+**Zone 600 - Creator (Content & Media):**
+- `600` - Creator Hub
+- `601` - Trending (GitHub repos)
+- `602` - PodCast (iTunes podcasts)
+- `603` - StreamHub (Live streams)
+
 **Zone 666 - Glitch:**
 - `666` - Glitch Mode (Horror trap!)
+
+**Zone 700 - Nomad (Travel & Lifestyle):**
+- `700` - Nomad Hub
+- `701` - NomadLife (Destinations)
+- `702` - BlindDate (AI matchmaking)
+- `703` - DropZone (NFT marketplace)
 
 **Zone 800 - Tele-Home (Frankenstein):**
 - `800` - Home Hub
@@ -178,8 +190,11 @@ Type 3-digit page numbers to navigate:
 - `803` - PixelGen (AI to ASCII)
 
 **Zone 900 - Themes:**
-- `905` - Theme Selector
+- `900` - Themes Hub
+- `904` - Theme Selector
+- `905` - Local Ghost (File browser)
 - `906` - VHS Tape Library
+- `907` - Hook Dashboard
 
 ### Keyboard Controls
 

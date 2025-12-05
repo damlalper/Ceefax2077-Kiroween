@@ -43,14 +43,18 @@ export default function PlanB() {
   const loadMarsData = async () => {
     setLoadingMars(true)
     try {
+      console.log('🚀 Fetching Mars photo from NASA API...')
       const photo = await NASAService.getLatestMarsPhoto()
       if (photo) {
+        console.log('✓ Mars photo received:', photo)
         setMarsPhoto(photo)
         const ascii = await NASAService.imageToAscii(photo.img_src, 40, 15)
         setMarsAscii(ascii)
+      } else {
+        console.warn('⚠️ No Mars photo available')
       }
     } catch (error) {
-      console.error('Failed to load Mars data:', error)
+      console.error('❌ Failed to load Mars data:', error)
     } finally {
       setLoadingMars(false)
     }
@@ -211,6 +215,21 @@ export default function PlanB() {
                 fontSize: '0.75em'
               }}>
                 <div style={{ color: '#FF6666' }}>📡 NASA API...</div>
+              </div>
+            )}
+
+            {!loadingMars && !marsPhoto && (
+              <div style={{
+                border: '1px solid #666666',
+                padding: '0.5rem',
+                marginBottom: '0.5rem',
+                textAlign: 'center',
+                fontSize: '0.75em'
+              }}>
+                <div style={{ color: '#888888' }}>⚠️ NASA API unavailable</div>
+                <div style={{ color: '#666666', fontSize: '0.6em', marginTop: '0.25rem' }}>
+                  Using simulated data
+                </div>
               </div>
             )}
 

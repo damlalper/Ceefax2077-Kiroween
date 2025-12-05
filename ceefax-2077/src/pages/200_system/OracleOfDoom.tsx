@@ -119,17 +119,28 @@ export default function OracleOfDoom() {
           )}
 
           {/* Doomsday Clock */}
-          <div style={{ border: '2px solid #FF0000', padding: '1rem', marginBottom: '1rem' }}>
+          <div style={{ border: '2px solid #FF0000', padding: '1rem', marginBottom: '1rem', backgroundColor: '#1a0000' }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 'clamp(40px, 8vmin, 60px)', marginBottom: '0.5rem' }}>⏰</div>
+              <pre className="ascii-art" style={{ fontSize: 'clamp(12px, 2vmin, 16px)', color: getClockColor(doomLevel), marginBottom: '0.5rem' }}>
+{`   ___
+  /   \\
+ | XII |
+ |  |  |
+  \\_|_/`}
+              </pre>
               <div style={{ 
-                fontSize: 'clamp(32px, 6vmin, 48px)', 
+                fontSize: 'clamp(48px, 8vmin, 72px)', 
                 fontWeight: 'bold',
-                color: getClockColor(doomLevel)
+                color: getClockColor(doomLevel),
+                transform: 'scaleY(2)',
+                transformOrigin: 'top',
+                lineHeight: '0.5'
               }}>
                 {doomLevel}%
               </div>
-              <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)', marginTop: '0.5rem' }}>{getDoomMessage(doomLevel)}</div>
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(14px, 2.2vmin, 20px)', marginTop: '1.5rem', fontWeight: 'bold' }}>
+                {getDoomMessage(doomLevel)}
+              </div>
             </div>
 
             <div style={{ marginTop: '1rem', backgroundColor: '#333333', height: '24px', position: 'relative' }}>

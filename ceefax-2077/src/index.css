@@ -49,6 +49,8 @@ body {
   text-transform: uppercase;
   line-height: 1;
   letter-spacing: 0;
+  /* CRT Phosphor Glow - ALL TEXT */
+  text-shadow: 0 0 2px currentColor;
 }
 
 /* ============================================
@@ -126,12 +128,14 @@ body {
   font-weight: bold;
 }
 
-/* Double Height Text Effect */
+/* Double Height Text Effect - AUTHENTIC TELETEXT */
 .double-height {
   display: inline-block;
   transform: scaleY(2);
-  transform-origin: center;
+  transform-origin: top;
   line-height: 0.5;
+  margin-bottom: 0.5em;
+  font-weight: bold;
 }
 
 /* ============================================
@@ -564,8 +568,16 @@ body {
 
 
 /* ============================================
-   TEXT VISIBILITY FIX
+   TEXT VISIBILITY FIX - LARGER READABLE SIZES
    ============================================ */
+
+/* Base font size increase for all teletext content - CHUNKY TV STYLE */
+.teletext-main-content {
+  font-size: clamp(22px, 3.2vmin, 36px) !important;
+  font-weight: bold !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.3 !important;
+}
 
 /* Ensure all text is visible with proper colors */
 .text-teletext-white {
@@ -2090,3 +2102,491 @@ a:focus {
     border: 1px solid black;
   }
 }
+
+
+/* ============================================
+   AUTHENTIC TELETEXT VISUAL OVERHAUL
+   Chunky, Blocky, TV Broadcast Aesthetic
+   ============================================ */
+
+/* Remove ALL thin modern borders - use color blocks instead */
+* {
+  border-width: 0 !important;
+}
+
+/* Sections separated by BACKGROUND COLOR, not borders */
+.teletext-section {
+  padding: 1rem;
+  margin: 0.5rem 0;
+}
+
+/* Input fields - NO BORDERS, just background */
+input, textarea {
+  border: none !important;
+  background-color: #000000 !important;
+  color: #FFFF00 !important;
+  padding: 1rem !important;
+  font-size: clamp(20px, 3vmin, 32px) !important;
+  font-weight: bold !important;
+  font-family: 'VT323', monospace !important;
+  letter-spacing: 0.1em !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #FFFF00 !important;
+  opacity: 0.5 !important;
+}
+
+/* Blinking cursor for inputs */
+@keyframes blink-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+input:focus::after, textarea:focus::after {
+  content: '█';
+  animation: blink-cursor 1s infinite;
+  color: #FFFF00;
+}
+
+/* Buttons - CHUNKY and BLOCKY */
+button {
+  padding: 1rem 2rem !important;
+  font-size: clamp(20px, 3vmin, 32px) !important;
+  font-weight: bold !important;
+  font-family: 'VT323', monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  cursor: pointer !important;
+  transition: all 0.1s !important;
+}
+
+/* Color block sections - like real Teletext */
+.color-block-red {
+  background-color: #FF0000 !important;
+  color: #FFFFFF !important;
+  padding: 1rem !important;
+}
+
+.color-block-green {
+  background-color: #00FF00 !important;
+  color: #000000 !important;
+  padding: 1rem !important;
+}
+
+.color-block-yellow {
+  background-color: #FFFF00 !important;
+  color: #000000 !important;
+  padding: 1rem !important;
+}
+
+.color-block-blue {
+  background-color: #0000FF !important;
+  color: #FFFFFF !important;
+  padding: 1rem !important;
+}
+
+.color-block-cyan {
+  background-color: #00FFFF !important;
+  color: #000000 !important;
+  padding: 1rem !important;
+}
+
+.color-block-magenta {
+  background-color: #FF00FF !important;
+  color: #FFFFFF !important;
+  padding: 1rem !important;
+}
+
+/* Grid-based layout - STRICT 40x24 character grid */
+.teletext-grid-container {
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
+  grid-template-rows: repeat(24, 1fr);
+  width: 100%;
+  height: 100%;
+  gap: 0;
+}
+
+/* Each cell in the grid */
+.teletext-cell {
+  aspect-ratio: 1 / 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(18px, 2.8vmin, 32px);
+  font-weight: bold;
+}
+
+/* Typography - BOLDER and CHUNKIER */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold !important;
+  letter-spacing: 0.1em !important;
+  line-height: 1.2 !important;
+}
+
+h1 {
+  font-size: clamp(32px, 5vmin, 56px) !important;
+}
+
+h2 {
+  font-size: clamp(28px, 4.5vmin, 48px) !important;
+}
+
+h3 {
+  font-size: clamp(24px, 4vmin, 40px) !important;
+}
+
+/* All text should be UPPERCASE and BOLD */
+.teletext-text {
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* Scaling - Make pixels look BIG on modern screens */
+.teletext-container {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Remove smooth transitions - instant changes like real TV */
+* {
+  transition: none !important;
+}
+
+/* Hover effects - instant color flip */
+button:hover, .clickable:hover {
+  filter: invert(1) !important;
+}
+
+
+/* ============================================
+   AUTHENTIC TELETEXT INPUT STYLING
+   Black void inputs with bright text
+   ============================================ */
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+textarea {
+  background-color: #000000 !important;
+  color: #FFFF00 !important;
+  border: none !important;
+  outline: none !important;
+  font-family: 'VT323', monospace !important;
+  font-size: clamp(14px, 2vmin, 20px) !important;
+  padding: 0.5rem !important;
+  text-shadow: 0 0 2px currentColor !important;
+  letter-spacing: 0.05em !important;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="email"]::placeholder,
+input[type="url"]::placeholder,
+textarea::placeholder {
+  color: #666600 !important;
+  opacity: 1 !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+  background-color: #000000 !important;
+  color: #FFFF00 !important;
+  outline: 2px solid #FFFF00 !important;
+  outline-offset: -2px !important;
+}
+
+/* Blinking Block Cursor Animation */
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.blink-cursor {
+  animation: blink 1s infinite;
+}
+
+/* ============================================
+   REMOVE MODERN UI ARTIFACTS
+   ============================================ */
+
+/* Remove all box shadows except CRT glow */
+button:not(.crt-glow),
+div:not(.crt-glow) {
+  box-shadow: none !important;
+}
+
+/* Buttons should be chunky blocks */
+button {
+  font-family: 'VT323', monospace !important;
+  font-size: clamp(16px, 2.2vmin, 24px) !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  text-shadow: 0 0 2px currentColor !important;
+  transition: filter 0.1s !important;
+}
+
+button:hover:not(:disabled) {
+  filter: invert(1) !important;
+}
+
+button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* ============================================
+   DENSITY ADJUSTMENTS
+   Reduce whitespace for cramped Teletext feel
+   ============================================ */
+
+.teletext-main-content > * {
+  margin: 0 !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+/* List items should be tight */
+ul, ol {
+  margin: 0 !important;
+  padding-left: 1rem !important;
+}
+
+li {
+  margin: 0.125rem 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* Paragraphs should be compact */
+p {
+  margin: 0.25rem 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* ============================================
+   ASCII ART SUPPORT
+   Preserve spacing for ASCII graphics
+   ============================================ */
+
+.ascii-art {
+  font-family: 'VT323', monospace !important;
+  white-space: pre !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 0 2px currentColor !important;
+}
+
+/* ============================================
+   PIXELATED RENDERING
+   Force crisp pixel edges on all elements
+   ============================================ */
+
+* {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* ============================================
+   INSTANT TRANSITIONS
+   No smooth animations - instant changes only
+   ============================================ */
+
+* {
+  transition: none !important;
+}
+
+/* Exception: Allow filter transitions for hover effects */
+button {
+  transition: filter 0.05s !important;
+}
+
+/* Exception: Allow opacity for blink effects */
+.blink-cursor,
+.pulse-red,
+.glitch-effect {
+  transition: opacity 0.1s !important;
+}
+
+
+/* ============================================
+   STRICT TELETEXT TV BROADCAST RULES
+   NO SCROLLING • NO TERMINAL VIBE
+   ============================================ */
+
+/* Main content MUST NOT SCROLL - strict 40x24 grid */
+.teletext-main-content {
+  overflow: hidden !important;
+  max-height: 100% !important;
+}
+
+/* Kill all scrollbars everywhere */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* DOUBLE HEIGHT TEXT - Signature Teletext Effect */
+.teletext-double-height {
+  display: inline-block;
+  transform: scaleY(2) !important;
+  transform-origin: top !important;
+  line-height: 0.5 !important;
+  margin-bottom: 1em !important;
+  font-weight: bold !important;
+}
+
+/* Page titles MUST be double height */
+.teletext-header-center {
+  transform: scaleY(2) !important;
+  transform-origin: top !important;
+  line-height: 0.5 !important;
+}
+
+/* CHUNKY TYPOGRAPHY - Not thin terminal fonts */
+body, * {
+  font-weight: 700 !important; /* Force bold everywhere */
+  letter-spacing: 0.1em !important; /* Wide character spacing */
+}
+
+/* COLOR BLOCK SEPARATORS - Not thin lines */
+.teletext-separator {
+  width: 100%;
+  height: 2rem;
+  background-color: currentColor;
+  margin: 0.5rem 0;
+  display: block;
+}
+
+/* INPUT FIELDS - TV Style (Color blocks, not terminal prompts) */
+input[type="text"]:focus,
+textarea:focus {
+  background-color: #00FFFF !important;
+  color: #000000 !important;
+  outline: none !important;
+  border: none !important;
+}
+
+/* Remove ALL thin borders - use color blocks instead */
+hr {
+  display: none !important;
+}
+
+/* Interaction prompts - TV remote style */
+.teletext-prompt {
+  background-color: #0066CC;
+  color: #FFFF00;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  font-size: clamp(16px, 2.5vmin, 24px);
+  font-weight: bold;
+  letter-spacing: 0.15em;
+}
+
+/* Page numbers - TV style */
+.teletext-page-number {
+  font-size: clamp(20px, 3vmin, 32px);
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+/* Kill terminal-style elements */
+.terminal-style,
+.cli-style,
+.command-prompt {
+  display: none !important;
+}
+
+/* Force block-level color backgrounds */
+.teletext-block {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  display: block;
+}
+
+/* Ensure no smooth scrolling anywhere */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* TV broadcast grid - strict positioning */
+.teletext-grid-item {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+
+/* ============================================
+   TELETEXT PAGE COMPONENT STYLING
+   ============================================ */
+
+.teletext-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.teletext-page-title {
+  text-align: center;
+  font-size: clamp(24px, 4vmin, 40px);
+  font-weight: bold;
+  color: #FFFF00;
+  margin-bottom: 0.5rem;
+  transform: scaleY(2);
+  transform-origin: top;
+  line-height: 0.5;
+}
+
+.teletext-subtitle {
+  text-align: center;
+  font-size: clamp(14px, 2vmin, 20px);
+  color: #00FFFF;
+  margin-bottom: 1rem;
+}
+
+.teletext-page-content {
+  flex: 1;
+  overflow: hidden !important;
+  font-size: clamp(14px, 2vmin, 20px);
+}
+
+.teletext-page-footer {
+  text-align: center;
+  font-size: clamp(12px, 1.8vmin, 16px);
+  color: #00FFFF;
+  padding: 0.5rem 0;
+  border-top: 2px solid #0066CC;
+  margin-top: 0.5rem;
+}
+
+/* Zone-specific content styling */
+.zone-100-content { color: #FFFFFF; }
+.zone-200-content { color: #FFD700; }
+.zone-300-content { color: #FF1493; }
+.zone-400-content { color: #00FF00; }
+.zone-500-content { color: #FF0000; }
+.zone-666-content { color: #FF0000; filter: brightness(0.8); }
+.zone-800-content { color: #CCCCCC; }
+.zone-900-content { color: #00FFFF; }

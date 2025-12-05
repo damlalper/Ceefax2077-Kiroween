@@ -13,6 +13,8 @@ export default function MemoryVault() {
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [recentMemories, setRecentMemories] = useState<MemoryEntry[]>([]);
+  const [typingText, setTypingText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,15 +36,37 @@ export default function MemoryVault() {
     setLoading(true);
 
     try {
-      await MemoryAgent.ask(userQuestion);
+      const result = await MemoryAgent.ask(userQuestion);
       
-      // Update conversation
-      setConversation(MemoryAgent.getConversation());
+      // Update conversation with user message immediately
+      const currentConvo = MemoryAgent.getConversation();
+      setConversation(currentConvo.slice(0, -1)); // Show all except AI response
+      
+      // Typewriter effect for AI response
+      setIsTyping(true);
+      setTypingText('');
+      
+      const aiResponse = result.answer;
+      let currentIndex = 0;
+      
+      const typeInterval = setInterval(() => {
+        if (currentIndex < aiResponse.length) {
+          setTypingText(aiResponse.substring(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(typeInterval);
+          setIsTyping(false);
+          // Show full conversation
+          setConversation(MemoryAgent.getConversation());
+          setTypingText('');
+        }
+      }, 30); // 30ms per character for smooth typing
       
       // Update recent memories
       setRecentMemories(MemoryAgent.getRecentMemories(5));
     } catch (error) {
       console.error('Failed to get answer:', error);
+      setIsTyping(false);
     } finally {
       setLoading(false);
     }
@@ -93,6 +117,34 @@ export default function MemoryVault() {
     );
   };
 
+  const renderTypingMessage = () => {
+    return (
+      <div
+        style={{
+          marginBottom: '0.5rem',
+          paddingLeft: '0.5rem',
+          borderLeft: '2px solid #00FFFF'
+        }}
+      >
+        <div style={{
+          color: '#00FFFF',
+          fontSize: '0.7em',
+          marginBottom: '0.125rem',
+          fontWeight: 'bold'
+        }}>
+          {'> VAULT:'}
+        </div>
+        <div style={{
+          color: '#FFFFFF',
+          fontSize: '0.7em',
+          lineHeight: '1.3'
+        }}>
+          {typingText}<span style={{ animation: 'blink 1s infinite' }}>█</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <TeletextPage
       title="MEMORY VAULT"
@@ -100,7 +152,7 @@ export default function MemoryVault() {
       footer="MCP MEMORY AGENT • ASK ANYTHING"
       zone={105}
     >
-      <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.2' }}>
+      <div style={{ fontSize: 'clamp(14px, 2vmin, 20px)', lineHeight: '1.3' }}>
         
         {/* Chat Area */}
         <div style={{
@@ -113,9 +165,17 @@ export default function MemoryVault() {
           overflow: 'auto'
         }}>
           {conversation.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem 0', color: '#666666' }}>
-              <div style={{ fontSize: '2em', marginBottom: '0.5rem' }}>🧠</div>
-              <div>I REMEMBER EVERYTHING</div>
+            <div style={{ textAlign: 'center', padding: '1rem 0', color: '#666666' }}>
+              <pre className="ascii-art" style={{ fontSize: '0.6em', color: '#0066CC', marginBottom: '0.5rem' }}>
+{`   ___
+  /   \\
+ | @ @ |
+ |  >  |
+  \\___/
+   |||
+  /   \\`}
+              </pre>
+              <div style={{ fontSize: '0.9em' }}>I REMEMBER EVERYTHING</div>
               <div style={{ fontSize: '0.7em', marginTop: '0.5rem' }}>
                 ASK ME ABOUT YOUR ACTIVITY
               </div>
@@ -123,6 +183,7 @@ export default function MemoryVault() {
           ) : (
             <>
               {conversation.slice(-6).map((msg, i) => renderMessage(msg, i))}
+              {isTyping && renderTypingMessage()}
               <div ref={chatEndRef} />
             </>
           )}
@@ -138,7 +199,7 @@ export default function MemoryVault() {
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleAsk()}
+              onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
               placeholder="What did I do in Zone 200?"
               style={{
                 flex: 1,

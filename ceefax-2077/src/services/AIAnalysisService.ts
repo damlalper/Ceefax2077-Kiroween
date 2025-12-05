@@ -18,8 +18,8 @@ export class AIAnalysisService {
   private static OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
   private static OPENAI_ENDPOINT = 'https://api.openai.com/v1/chat/completions'
   
-  // Hugging Face API (fallback)
-  private static HF_API_KEY = import.meta.env.VITE_HF_API_KEY || ''
+  // Hugging Face API (fallback) - reserved for future use
+  // private static HF_API_KEY = import.meta.env.VITE_HF_API_KEY || ''
 
   /**
    * Analyze text for manipulation and bias
@@ -145,7 +145,9 @@ export class AIAnalysisService {
 
   /**
    * @deprecated Use analyzeWithGroq or analyzeWithOpenAI instead
+   * Kept for reference only - not used in production
    */
+  /*
   private static async analyzeLLM(text: string): Promise<BiasAnalysis> {
     const response = await fetch(this.LLM_ENDPOINT, {
       method: 'POST',
@@ -181,6 +183,7 @@ export class AIAnalysisService {
       factualClaims: result.factualClaims,
     }
   }
+  */
 
   /**
    * Heuristic-based analysis (fallback when no LLM available)
