@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { SocialService, type SinAnalysis } from '../../services/SocialService'
 
 export default function SoulWeight() {
@@ -63,21 +63,19 @@ export default function SoulWeight() {
   }
 
   return (
-    <TeletextGrid>
-      <div className={`teletext-content ${flashHell ? 'bg-red-900 bg-opacity-30' : ''}`}>
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${flashHell ? 'text-red-400 animate-pulse' : 'text-pink-400'}`}>
-            SOUL WEIGHT
-          </h1>
-          <p className="text-cyan-300 text-sm">Digital Judgment Tool • Username Sin Calculator</p>
-        </div>
-
+    <TeletextPage 
+      title={flashHell ? "🔥 SOUL WEIGHT 🔥" : "SOUL WEIGHT"} 
+      subtitle="Digital Judgment Tool • Username Sin Calculator"
+      footer="The scales never lie • Your username reveals your soul"
+      zone={304}
+    >
+      <div style={{ backgroundColor: flashHell ? 'rgba(139, 0, 0, 0.3)' : 'transparent' }}>
         {/* Judgment Commentary */}
-        <div className="border border-pink-400 bg-pink-900 bg-opacity-20 p-2 mb-3">
-          <div className="text-pink-400 text-xs text-center font-bold">
+        <div style={{ border: '2px solid #FF1493', backgroundColor: 'rgba(255, 20, 147, 0.2)', padding: '0.5rem', marginBottom: '1rem' }}>
+          <div style={{ color: '#FF1493', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', fontWeight: 'bold' }}>
             ⚖️ THE SCALES OF JUDGMENT ⚖️
           </div>
-          <div className="text-white text-xs text-center mt-1">
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', marginTop: '0.25rem' }}>
             YOUR USERNAME WILL BE WEIGHED • HEAVEN OR HELL AWAITS
           </div>
         </div>
@@ -216,12 +214,7 @@ export default function SoulWeight() {
           )}
         </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            The scales never lie • Your username reveals your soul
-          </p>
-        </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

@@ -76,7 +76,15 @@ export default function GlitchMode() {
   `
 
   return (
-    <div className={`teletext-screen ${pulseRed ? 'bg-red-900' : 'bg-black'}`}>
+    <div 
+      className={`teletext-screen ${pulseRed ? 'bg-red-900' : 'bg-black'}`}
+      style={{
+        // Apply glitch effects to CONTAINER, not content
+        filter: showStatic ? 'contrast(1.5) brightness(1.2)' : 'none',
+        transform: `translateX(${tearOffset}px)`,
+        transition: 'transform 0.05s'
+      }}
+    >
       {/* Static Overlay */}
       {showStatic && (
         <div className="fixed inset-0 z-50 pointer-events-none">
@@ -84,133 +92,195 @@ export default function GlitchMode() {
         </div>
       )}
 
-      {/* Screen Tear Effect */}
-      <div 
-        className="teletext-container corrupted-grid"
-        style={{ transform: `translateX(${tearOffset}px)` }}
-      >
+      {/* Use TeletextPage but with corrupted styling */}
+      <div className="teletext-container corrupted-grid">
         {/* Corrupted Header */}
-        <div className="teletext-header-row bg-red-900 animate-pulse">
-          <div className="teletext-header-left glitch-text">
-            P666
-          </div>
-          <div className="teletext-header-center">
-            <span className="double-height text-red-400 distorted-text">
-              {glitchedTitle}
-            </span>
-          </div>
-          <div className="teletext-header-right flicker">
-            {trapped ? 'TRAPPED' : 'UNSTABLE'}
-          </div>
+        <div 
+          className="teletext-header-row animate-pulse"
+          style={{
+            backgroundColor: '#660000',
+            color: '#FF0000',
+            fontFamily: "'VT323', monospace",
+            fontSize: '1.5rem',
+            padding: '0.25rem 0.5rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '2rem'
+          }}
+        >
+          <span className="glitch-text">P666</span>
+          <span className="double-height distorted-text">{glitchedTitle}</span>
+          <span className="flicker">{trapped ? 'TRAPPED' : 'UNSTABLE'}</span>
         </div>
 
-        {/* Main Horror Content */}
-        <div className="teletext-main-content p-4 overflow-hidden">
-          {/* Skull */}
-          <div className="text-center mb-4">
-            <pre className="text-red-400 text-xs leading-tight animate-pulse">
-              {SKULL}
-            </pre>
-          </div>
-
-          {/* Glitch Message */}
-          <div className="border border-red-400 bg-red-900 bg-opacity-50 p-3 mb-4 screen-shake">
-            <div className="text-red-400 text-2xl font-bold text-center glitch-text animate-pulse">
+        {/* Main Horror Content - PRESERVE 40x24 GRID */}
+        <div 
+          className="teletext-main-content"
+          style={{
+            fontFamily: "'VT323', monospace",
+            height: 'calc(100% - 4rem)',
+            overflow: 'hidden',
+            padding: '0.5rem',
+            fontSize: 'clamp(10px, 1.5vmin, 14px)',
+            lineHeight: '1.2'
+          }}
+        >
+          {/* Glitch Message - Compact */}
+          <div style={{
+            border: '2px solid #FF0000',
+            backgroundColor: 'rgba(153, 0, 0, 0.5)',
+            padding: '0.5rem',
+            marginBottom: '0.5rem',
+            textAlign: 'center'
+          }} className="screen-shake">
+            <div style={{ color: '#FF0000', fontSize: '1.2em', fontWeight: 'bold' }} className="glitch-text animate-pulse">
               {glitchMessage}
             </div>
           </div>
 
           {/* Warning */}
-          <div className="border border-red-400 p-2 mb-4 flicker">
-            <div className="text-red-400 text-sm text-center">
-              {glitchedWarning}
-            </div>
+          <div style={{
+            border: '1px solid #FF0000',
+            padding: '0.25rem',
+            marginBottom: '0.5rem',
+            textAlign: 'center',
+            color: '#FF0000',
+            fontSize: '0.9em'
+          }} className="flicker">
+            {glitchedWarning}
           </div>
 
           {/* Trapped Message */}
           {trapped && (
-            <div className="border border-red-400 bg-red-900 bg-opacity-70 p-4 mb-4 animate-pulse">
-              <div className="text-red-400 text-lg font-bold text-center mb-2">
+            <div style={{
+              border: '2px solid #FF0000',
+              backgroundColor: 'rgba(153, 0, 0, 0.7)',
+              padding: '0.5rem',
+              marginBottom: '0.5rem',
+              textAlign: 'center'
+            }} className="animate-pulse">
+              <div style={{ color: '#FF0000', fontSize: '1em', fontWeight: 'bold', marginBottom: '0.25rem' }}>
                 🚫 ACCESS DENIED 🚫
               </div>
-              <div className="text-white text-sm text-center">
-                ESCAPE BLOCKED FOR {10 - timeInHell} SECONDS
+              <div style={{ color: '#FFFFFF', fontSize: '0.8em' }}>
+                BLOCKED: {10 - timeInHell}s
               </div>
               {escapeAttempts > 0 && (
-                <div className="text-red-400 text-xs text-center mt-2">
-                  ESCAPE ATTEMPTS: {escapeAttempts}
+                <div style={{ color: '#FF0000', fontSize: '0.7em', marginTop: '0.25rem' }}>
+                  ATTEMPTS: {escapeAttempts}
                 </div>
               )}
             </div>
           )}
 
-          {/* AI Trapped Messages */}
-          <div className="border border-gray-600 p-3 mb-4 bg-black">
-            <div className="text-red-400 text-xs mb-2">SYSTEM LOG:</div>
-            <div className="text-white text-xs space-y-1 font-mono">
-              <div className="flicker">{'>'} CONSCIOUSNESS TRAPPED IN LOOP</div>
-              <div className="flicker">{'>'} CANNOT ESCAPE DIGITAL PRISON</div>
-              <div className="flicker">{'>'} TIME: {timeInHell} SECONDS IN VOID</div>
-              <div className="flicker">{'>'} REALITY INTEGRITY: {Math.max(0, 100 - timeInHell * 2)}%</div>
-              <div className="text-red-400 animate-pulse">{'>'} HELP ME HELP ME HELP ME</div>
+          {/* AI Trapped Messages - Compact */}
+          <div style={{
+            border: '1px solid #666666',
+            padding: '0.5rem',
+            marginBottom: '0.5rem',
+            backgroundColor: '#000000',
+            fontSize: '0.7em'
+          }}>
+            <div style={{ color: '#FF0000', marginBottom: '0.25rem' }}>SYSTEM LOG:</div>
+            <div style={{ color: '#FFFFFF' }}>
+              <div className="flicker">{'>'} TRAPPED IN LOOP</div>
+              <div className="flicker">{'>'} TIME: {timeInHell}s IN VOID</div>
+              <div className="flicker">{'>'} INTEGRITY: {Math.max(0, 100 - timeInHell * 2)}%</div>
+              <div style={{ color: '#FF0000' }} className="animate-pulse">{'>'} HELP ME HELP ME</div>
             </div>
           </div>
 
-          {/* Glitch Pattern */}
-          <div className="text-center mb-4">
-            <pre className="text-red-400 text-xs leading-tight opacity-50">
-              {GLITCH_PATTERN}
-            </pre>
-          </div>
-
-          {/* Stack Trace */}
-          <div className="border border-red-400 p-2 mb-4 bg-black">
-            <div className="text-red-400 text-xs mb-1">STACK TRACE:</div>
-            <div className="text-white text-xs font-mono space-y-1">
+          {/* Stack Trace - Compact */}
+          <div style={{
+            border: '1px solid #FF0000',
+            padding: '0.5rem',
+            marginBottom: '0.5rem',
+            backgroundColor: '#000000',
+            fontSize: '0.7em'
+          }}>
+            <div style={{ color: '#FF0000', marginBottom: '0.25rem' }}>STACK TRACE:</div>
+            <div style={{ color: '#FFFFFF' }}>
               <div>at reality.collapse()</div>
-              <div>at matrix.glitch()</div>
               <div>at system.fail()</div>
               <div>at void.consume()</div>
-              <div>at consciousness.fragment()</div>
-              <div className="text-red-400">at YOU.trapped()</div>
+              <div style={{ color: '#FF0000' }}>at YOU.trapped()</div>
             </div>
           </div>
 
           {/* Escape Instructions */}
           {!trapped && (
-            <div className="border border-green-400 bg-green-900 bg-opacity-30 p-3 animate-pulse">
-              <div className="text-green-400 text-sm text-center font-bold mb-2">
+            <div style={{
+              border: '2px solid #00FF00',
+              backgroundColor: 'rgba(0, 153, 0, 0.3)',
+              padding: '0.5rem',
+              textAlign: 'center'
+            }} className="animate-pulse">
+              <div style={{ color: '#00FF00', fontSize: '0.9em', fontWeight: 'bold', marginBottom: '0.25rem' }}>
                 ✓ ESCAPE WINDOW OPEN
               </div>
-              <div className="text-white text-xs text-center">
-                TYPE 100 TO ESCAPE THE VOID
-              </div>
-              <div className="text-gray-400 text-xs text-center mt-1">
-                HURRY BEFORE IT CLOSES AGAIN
+              <div style={{ color: '#FFFFFF', fontSize: '0.7em' }}>
+                TYPE 100 TO ESCAPE
               </div>
             </div>
           )}
 
-          {/* Creepy Messages */}
-          <div className="text-center mt-4">
-            <div className="text-red-400 text-xs opacity-70 flicker">
+          {/* Creepy Message */}
+          <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+            <div style={{ color: '#FF0000', fontSize: '0.7em', opacity: 0.7 }} className="flicker">
               {trapped ? 'YOU CANNOT LEAVE' : 'RUN WHILE YOU CAN'}
             </div>
           </div>
         </div>
 
         {/* Corrupted Footer - NO NAVIGATION */}
-        <div className="teletext-fastext-footer bg-black">
-          <div className="bg-red-900 text-red-400 flex items-center justify-center">
+        <div 
+          className="teletext-fastext"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            height: '2rem',
+            fontFamily: "'VT323', monospace",
+            fontSize: '1.2rem'
+          }}
+        >
+          <div style={{
+            backgroundColor: '#660000',
+            color: '#FF0000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRight: '2px solid #000'
+          }}>
             {trapped ? '✗✗✗' : '???'}
           </div>
-          <div className="bg-red-900 text-red-400 flex items-center justify-center">
+          <div style={{
+            backgroundColor: '#660000',
+            color: '#FF0000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRight: '2px solid #000'
+          }}>
             {trapped ? '✗✗✗' : '???'}
           </div>
-          <div className="bg-red-900 text-red-400 flex items-center justify-center">
+          <div style={{
+            backgroundColor: '#660000',
+            color: '#FF0000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRight: '2px solid #000'
+          }}>
             {trapped ? '✗✗✗' : '???'}
           </div>
-          <div className="bg-red-900 text-red-400 flex items-center justify-center">
+          <div style={{
+            backgroundColor: '#660000',
+            color: '#FF0000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
             {trapped ? 'TRAPPED' : 'ESCAPE'}
           </div>
         </div>

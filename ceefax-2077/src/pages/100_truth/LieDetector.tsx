@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { AIAnalysisService, type BiasAnalysis } from '../../services/AIAnalysisService'
 
 export default function LieDetector() {
@@ -40,130 +40,150 @@ export default function LieDetector() {
   }
 
   const getVerdictColor = (verdict: string) => {
-    if (verdict === 'HIGHLY BIASED') return 'text-red-400'
-    if (verdict === 'SUSPICIOUS') return 'text-yellow-400'
-    return 'text-green-400'
+    if (verdict === 'HIGHLY BIASED') return '#FF0000'
+    if (verdict === 'SUSPICIOUS') return '#FFD700'
+    return '#00FF00'
   }
 
   const getScoreColor = (score: number) => {
-    if (score > 70) return 'bg-red-500'
-    if (score > 40) return 'bg-yellow-500'
-    return 'bg-green-500'
+    if (score > 70) return '#FF0000'
+    if (score > 40) return '#FFD700'
+    return '#00FF00'
   }
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-blue-400 text-xl">LIE DETECTOR</h1>
-          <p className="text-cyan-300 text-sm">AI Manipulation Analysis</p>
+    <TeletextPage 
+      title="LIE DETECTOR" 
+      subtitle="AI Manipulation Analysis"
+      footer="🔍 AI-powered bias detection"
+      zone={103}
+    >
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ border: '2px solid #0066CC', padding: '0.5rem' }}>
+          <label style={{ color: '#FFFF00', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Paste Text to Analyze:</label>
+          <textarea
+            style={{
+              width: '100%',
+              backgroundColor: '#000000',
+              color: '#FFFFFF',
+              border: '2px solid #666666',
+              padding: '0.5rem',
+              marginTop: '0.25rem',
+              fontFamily: 'monospace',
+              fontSize: 'clamp(10px, 1.5vmin, 14px)'
+            }}
+            rows={4}
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Enter news article, social media post, or any text..."
+            disabled={loading}
+          />
         </div>
 
-        <div className="space-y-3">
-          <div className="border border-blue-400 p-2">
-            <label className="text-yellow-300 text-sm">Paste Text to Analyze:</label>
-            <textarea
-              className="w-full bg-black text-white border border-gray-600 p-2 mt-1 font-mono text-xs"
-              rows={4}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter news article, social media post, or any text..."
-              disabled={loading}
-            />
+        <button
+          onClick={analyzeText}
+          disabled={loading || !inputText.trim()}
+          style={{
+            width: '100%',
+            padding: '0.5rem',
+            fontWeight: 'bold',
+            backgroundColor: loading || !inputText.trim() ? '#666666' : '#0066CC',
+            color: loading || !inputText.trim() ? '#888888' : '#FFFFFF',
+            border: 'none',
+            cursor: loading || !inputText.trim() ? 'not-allowed' : 'pointer',
+            fontSize: 'clamp(12px, 2vmin, 16px)'
+          }}
+        >
+          {loading ? 'ANALYZING...' : 'ANALYZE TEXT'}
+        </button>
+
+        {loading && (
+          <div style={{ border: '2px solid #FFD700', padding: '1rem', textAlign: 'center' }}>
+            <div style={{ 
+              color: '#FFD700', 
+              fontSize: 'clamp(16px, 2.5vmin, 24px)',
+              opacity: blink ? 1 : 0,
+              transition: 'opacity 0.3s'
+            }}>
+              🔍 AI PROCESSING...
+            </div>
+            <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+              Analyzing for bias and manipulation
+            </div>
           </div>
+        )}
 
-          <button
-            onClick={analyzeText}
-            disabled={loading || !inputText.trim()}
-            className={`w-full py-2 font-bold ${
-              loading || !inputText.trim()
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
-          >
-            {loading ? 'ANALYZING...' : 'ANALYZE TEXT'}
-          </button>
-
-          {loading && (
-            <div className="border border-yellow-400 p-3 text-center">
-              <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
-                🔍 AI PROCESSING...
+        {analysis && !loading && (
+          <div style={{ border: '2px solid #FF0000', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                fontSize: 'clamp(20px, 3vmin, 32px)', 
+                fontWeight: 'bold',
+                color: getVerdictColor(analysis.verdict)
+              }}>
+                {analysis.verdict === 'HIGHLY BIASED' ? '⚠' : analysis.verdict === 'SUSPICIOUS' ? '⚡' : '✓'} {analysis.verdict}
               </div>
-              <div className="text-gray-400 text-xs mt-2">
-                Analyzing for bias and manipulation
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Confidence: {analysis.confidence}%</div>
+            </div>
+
+            <div style={{ borderTop: '2px solid #666666', paddingTop: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.25rem' }}>Manipulation Score:</div>
+              <div style={{ backgroundColor: '#333333', height: '16px', position: 'relative' }}>
+                <div
+                  style={{
+                    height: '100%',
+                    transition: 'width 0.3s',
+                    backgroundColor: getScoreColor(analysis.manipulationScore),
+                    width: `${analysis.manipulationScore}%`
+                  }}
+                />
+              </div>
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'right', marginTop: '0.25rem' }}>
+                {analysis.manipulationScore}/100
               </div>
             </div>
-          )}
 
-          {analysis && !loading && (
-            <div className="border border-red-400 p-3 space-y-2">
-              <div className="text-center">
-                <div className={`text-2xl font-bold ${getVerdictColor(analysis.verdict)}`}>
-                  {analysis.verdict === 'HIGHLY BIASED' ? '⚠' : analysis.verdict === 'SUSPICIOUS' ? '⚡' : '✓'} {analysis.verdict}
+            <div style={{ borderTop: '2px solid #666666', paddingTop: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.25rem' }}>
+                <div>
+                  <span style={{ color: '#FFD700' }}>Emotional Language:</span>
+                  <span style={{ color: '#FFFFFF', marginLeft: '0.5rem' }}>{analysis.emotionalLanguage}%</span>
                 </div>
-                <div className="text-white text-sm">Confidence: {analysis.confidence}%</div>
-              </div>
-
-              <div className="border-t border-gray-600 pt-2">
-                <div className="text-yellow-300 text-xs mb-1">Manipulation Score:</div>
-                <div className="bg-gray-800 h-4 relative">
-                  <div
-                    className={`h-full transition-all ${getScoreColor(analysis.manipulationScore)}`}
-                    style={{ width: `${analysis.manipulationScore}%` }}
-                  />
+                <div>
+                  <span style={{ color: '#FFD700' }}>Factual Claims:</span>
+                  <span style={{ color: '#FFFFFF', marginLeft: '0.5rem' }}>{analysis.factualClaims}%</span>
                 </div>
-                <div className="text-white text-xs text-right mt-1">
-                  {analysis.manipulationScore}/100
-                </div>
-              </div>
-
-              <div className="border-t border-gray-600 pt-2">
-                <div className="flex justify-between text-xs mb-1">
-                  <div>
-                    <span className="text-yellow-300">Emotional Language:</span>
-                    <span className="text-white ml-2">{analysis.emotionalLanguage}%</span>
-                  </div>
-                  <div>
-                    <span className="text-yellow-300">Factual Claims:</span>
-                    <span className="text-white ml-2">{analysis.factualClaims}%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-600 pt-2">
-                <div className="text-yellow-300 text-xs mb-1">🚩 Detected Issues:</div>
-                <div className="space-y-1">
-                  {analysis.biasDetected.map((issue, idx) => (
-                    <div key={idx} className="text-white text-xs">• {issue}</div>
-                  ))}
-                </div>
-              </div>
-
-              {analysis.manipulationScore > 70 && (
-                <div className="border-t border-gray-600 pt-2">
-                  <div className="text-red-400 text-xs text-center font-bold">
-                    ⚠ HIGH RISK - Verify sources independently
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {!loading && !analysis && (
-            <div className="border border-gray-600 p-3 text-center">
-              <div className="text-gray-400 text-xs">
-                💡 TIP: Paste news headlines, social media posts, or articles to detect bias and manipulation tactics
               </div>
             </div>
-          )}
-        </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            {import.meta.env.VITE_LLM_API_KEY ? '🤖 AI-powered analysis' : '🔧 Heuristic analysis (configure LLM for enhanced detection)'}
-          </p>
-        </div>
+            <div style={{ borderTop: '2px solid #666666', paddingTop: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.25rem' }}>🚩 Detected Issues:</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                {analysis.biasDetected.map((issue, idx) => (
+                  <div key={idx} style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>• {issue}</div>
+                ))}
+              </div>
+            </div>
+
+            {analysis.manipulationScore > 70 && (
+              <div style={{ borderTop: '2px solid #666666', paddingTop: '0.5rem' }}>
+                <div style={{ color: '#FF0000', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', fontWeight: 'bold' }}>
+                  ⚠ HIGH RISK - Verify sources independently
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {!loading && !analysis && (
+          <div style={{ border: '2px solid #666666', padding: '1rem', textAlign: 'center' }}>
+            <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+              💡 TIP: Paste news headlines, social media posts, or articles to detect bias and manipulation tactics
+            </div>
+          </div>
+        )}
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

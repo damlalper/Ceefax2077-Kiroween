@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { SecurityService, type LegalRight } from '../../services/SecurityService'
 
 export default function PocketLawyer() {
@@ -21,12 +21,12 @@ export default function PocketLawyer() {
   }
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-red-400 text-xl">POCKET LAWYER</h1>
-          <p className="text-cyan-300 text-sm">Legal Rights Simplified • Know Your Rights</p>
-        </div>
+    <TeletextPage 
+      title="POCKET LAWYER" 
+      subtitle="Legal Rights Simplified • Know Your Rights"
+      footer="Know your rights • Consult attorney for legal advice"
+      zone={503}
+    >
 
         <div className="space-y-3">
           <div className="border border-red-400 p-2">
@@ -148,12 +148,6 @@ export default function PocketLawyer() {
           )}
         </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            Know your rights • Consult attorney for legal advice
-          </p>
-        </div>
-      </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

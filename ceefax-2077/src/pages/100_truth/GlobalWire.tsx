@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage, { TeletextListItem } from '../../components/TeletextPage'
 import { HackerNewsService, type HNStory } from '../../services/HackerNewsService'
 import { useAutoHealer } from '../../hooks/useAutoHealer'
 import HealerNotifications from '../../components/HealerNotifications'
@@ -54,73 +54,116 @@ export default function GlobalWire() {
   return (
     <>
       <HealerNotifications notifications={notifications} />
-      <TeletextGrid>
-        <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-blue-400 text-xl">GLOBAL WIRE</h1>
-          <p className="text-cyan-300 text-sm">Live Tech News Feed</p>
-        </div>
+      <TeletextPage 
+        title="GLOBAL WIRE" 
+        subtitle="Live Tech News Feed • HackerNews API"
+        footer="Press [R] to refresh • Auto-update 30s"
+        zone={101}
+      >
 
         {loading && (
-          <div className="text-center py-8">
-            <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
-              ⚡ CONNECTING...
+          <div style={{ textAlign: 'center', padding: '2rem 0', color: '#FFFF00' }}>
+            <div className={blink ? '' : 'opacity-0'} style={{ fontSize: 'clamp(18px, 2.5vmin, 26px)' }}>
+              ⚡ CONNECTING TO WIRE...
             </div>
-            <div className="text-gray-400 text-xs mt-2">Fetching live data from HackerNews</div>
+            <div style={{ color: '#00FFFF', fontSize: 'clamp(14px, 1.8vmin, 20px)', marginTop: '0.5rem' }}>
+              FETCHING LIVE DATA
+            </div>
           </div>
         )}
 
         {error && (
-          <div className="border border-red-400 p-3 text-center">
-            <div className="text-red-400 text-sm">⚠ {error}</div>
+          <div style={{ 
+            border: '2px solid #FF0000', 
+            padding: '1rem', 
+            textAlign: 'center',
+            backgroundColor: '#330000'
+          }}>
+            <div style={{ color: '#FF0000', fontSize: 'clamp(16px, 2.2vmin, 24px)' }}>
+              ⚠ {error}
+            </div>
             <button
               onClick={loadNews}
-              className="mt-2 bg-blue-600 text-white px-4 py-1 text-xs hover:bg-blue-700"
+              style={{
+                marginTop: '1rem',
+                backgroundColor: '#0066CC',
+                color: '#FFFF00',
+                padding: '0.5rem 2rem',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 'clamp(14px, 1.8vmin, 20px)',
+                fontWeight: 'bold'
+              }}
             >
-              RETRY
+              RETRY CONNECTION
             </button>
           </div>
         )}
 
         {!loading && !error && (
-          <>
-            <div className="space-y-3">
-              {news.map((item, idx) => (
-                <div key={item.id} className="border border-blue-300 p-2">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-yellow-300">[{idx + 1}]</span>
-                    <span className="text-green-400">
-                      ↑ {item.score} | {HackerNewsService.formatTimeAgo(item.time)}
-                    </span>
-                  </div>
-                  <div className="text-white text-sm leading-tight">{item.title}</div>
-                  <div className="text-gray-400 text-xs mt-1">
-                    by {item.by} | {item.descendants || 0} comments
-                  </div>
-                  {item.url && (
-                    <div className="text-cyan-300 text-xs mt-1 truncate">
-                      🔗 {new URL(item.url).hostname}
-                    </div>
-                  )}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '0.75rem',
+            fontSize: 'clamp(14px, 1.8vmin, 20px)'
+          }}>
+            {news.map((item, idx) => (
+              <div key={item.id} style={{ 
+                border: '2px solid #0066CC', 
+                padding: '0.5rem',
+                backgroundColor: '#000033'
+              }}>
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between',
+                  marginBottom: '0.25rem',
+                  fontSize: '0.9em'
+                }}>
+                  <span style={{ color: '#FFFF00' }}>[{idx + 1}]</span>
+                  <span style={{ color: '#00FF00' }}>
+                    ↑{item.score} • {HackerNewsService.formatTimeAgo(item.time)}
+                  </span>
                 </div>
-              ))}
-            </div>
+                <div style={{ color: '#FFFFFF', lineHeight: '1.3', marginBottom: '0.25rem' }}>
+                  {item.title}
+                </div>
+                <div style={{ color: '#00FFFF', fontSize: '0.85em' }}>
+                  BY: {item.by} • {item.descendants || 0} COMMENTS
+                </div>
+                {item.url && (
+                  <div style={{ 
+                    color: '#00FFFF', 
+                    fontSize: '0.8em', 
+                    marginTop: '0.25rem',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    🔗 {new URL(item.url).hostname}
+                  </div>
+                )}
+              </div>
+            ))}
 
-            <div className="mt-4 text-center">
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
               <button
                 onClick={loadNews}
-                className="bg-blue-600 text-white px-4 py-1 text-xs hover:bg-blue-700"
+                style={{
+                  backgroundColor: '#0066CC',
+                  color: '#FFFF00',
+                  padding: '0.5rem 2rem',
+                  border: '2px solid #FFFF00',
+                  cursor: 'pointer',
+                  fontSize: 'clamp(14px, 1.8vmin, 20px)',
+                  fontWeight: 'bold'
+                }}
               >
-                REFRESH
+                REFRESH WIRE
               </button>
-              <p className="text-gray-400 text-xs mt-2">
-                Live data from HackerNews API
-              </p>
             </div>
-          </>
+          </div>
         )}
-      </div>
-    </TeletextGrid>
+      </TeletextPage>
     </>
   )
 }

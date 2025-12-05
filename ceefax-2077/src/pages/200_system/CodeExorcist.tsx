@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { useAutoHealer } from '../../hooks/useAutoHealer'
 import HealerNotifications from '../../components/HealerNotifications'
 
@@ -52,18 +52,26 @@ async function fetchUserData(userId) {
   return (
     <>
       <HealerNotifications notifications={notifications} />
-      <TeletextGrid>
-        <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-yellow-400 text-xl">CODE EXORCIST</h1>
-          <p className="text-cyan-300 text-sm">AI Refactoring with Spooky Comments</p>
-        </div>
-
-        <div className="space-y-3">
-          <div className="border border-yellow-400 p-2">
-            <label className="text-yellow-300 text-sm">Paste Legacy Code:</label>
+      <TeletextPage 
+        title="CODE EXORCIST" 
+        subtitle="AI Refactoring with Spooky Comments"
+        footer="🕯️ Casting out code demons"
+        zone={202}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ border: '2px solid #FFD700', padding: '0.5rem' }}>
+            <label style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Paste Legacy Code:</label>
             <textarea
-              className="w-full bg-black text-white border border-gray-600 p-2 mt-1 font-mono text-xs"
+              style={{
+                width: '100%',
+                backgroundColor: '#000000',
+                color: '#FFFFFF',
+                border: '2px solid #666666',
+                padding: '0.5rem',
+                marginTop: '0.25rem',
+                fontFamily: 'monospace',
+                fontSize: 'clamp(10px, 1.5vmin, 14px)'
+              }}
               rows={4}
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value)}
@@ -73,22 +81,38 @@ async function fetchUserData(userId) {
 
           <button
             onClick={exorciseCode}
-            className="w-full bg-yellow-600 text-black py-2 hover:bg-yellow-700 font-bold"
+            style={{
+              width: '100%',
+              backgroundColor: '#FFD700',
+              color: '#000000',
+              padding: '0.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: 'clamp(12px, 2vmin, 16px)'
+            }}
           >
             🕯️ EXORCISE CODE 🕯️
           </button>
 
           {refactoredCode && (
-            <div className="border border-green-400 p-2">
-              <div className="text-green-400 text-sm mb-2">✨ EXORCISED CODE:</div>
-              <pre className="text-white text-xs font-mono overflow-x-auto bg-gray-900 p-2">
+            <div style={{ border: '2px solid #00FF00', padding: '0.5rem' }}>
+              <div style={{ color: '#00FF00', fontSize: 'clamp(12px, 2vmin, 16px)', marginBottom: '0.5rem' }}>✨ EXORCISED CODE:</div>
+              <pre style={{ 
+                color: '#FFFFFF', 
+                fontSize: 'clamp(10px, 1.5vmin, 14px)', 
+                fontFamily: 'monospace', 
+                overflowX: 'auto', 
+                backgroundColor: '#1a1a1a', 
+                padding: '0.5rem',
+                margin: 0
+              }}>
                 {refactoredCode}
               </pre>
             </div>
           )}
         </div>
-      </div>
-    </TeletextGrid>
+      </TeletextPage>
     </>
   )
 }

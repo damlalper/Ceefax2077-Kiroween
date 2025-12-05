@@ -1,287 +1,105 @@
 import { useTheme } from '../../context/ThemeContext';
 import type { ThemePreset } from '../../context/ThemeContext';
+import TeletextPage from '../../components/TeletextPage';
 
 export default function ThemeSelector() {
   const { currentTheme, setTheme, themes } = useTheme();
 
   const themeOrder: ThemePreset[] = ['classic', 'vaporwave', 'noir', 'amber'];
 
-  const renderThemePreview = (themeKey: ThemePreset) => {
-    const theme = themes[themeKey];
-    const isActive = currentTheme === themeKey;
-
-    return (
-      <div
-        key={themeKey}
-        onClick={() => setTheme(themeKey)}
-        style={{
-          padding: '15px',
-          border: isActive ? '3px solid var(--color-accent)' : '2px solid var(--color-border)',
-          background: isActive ? 'var(--color-bg-accent)' : 'var(--color-bg-primary)',
-          cursor: 'pointer',
-          transition: 'all 0.3s',
-          position: 'relative'
-        }}
-      >
-        {/* Theme Name */}
-        <div style={{
-          color: 'var(--color-text-secondary)',
-          fontSize: '1.2em',
-          marginBottom: '10px',
-          fontWeight: 'bold'
-        }}>
-          {isActive && '► '}{theme.name}
-        </div>
-
-        {/* Description */}
-        <div style={{
-          color: 'var(--color-text-accent)',
-          fontSize: '0.85em',
-          marginBottom: '15px',
-          opacity: 0.8
-        }}>
-          {theme.description}
-        </div>
-
-        {/* Color Swatches */}
-        <div style={{
-          display: 'flex',
-          gap: '5px',
-          marginBottom: '10px'
-        }}>
-          <div style={{
-            width: '30px',
-            height: '30px',
-            background: theme.colors.primary,
-            border: '1px solid var(--color-border)'
-          }} title="Primary" />
-          <div style={{
-            width: '30px',
-            height: '30px',
-            background: theme.colors.secondary,
-            border: '1px solid var(--color-border)'
-          }} title="Secondary" />
-          <div style={{
-            width: '30px',
-            height: '30px',
-            background: theme.colors.accent,
-            border: '1px solid var(--color-border)'
-          }} title="Accent" />
-          <div style={{
-            width: '30px',
-            height: '30px',
-            background: theme.colors.textPrimary,
-            border: '1px solid var(--color-border)'
-          }} title="Text" />
-        </div>
-
-        {/* Active Indicator */}
-        {isActive && (
-          <div style={{
-            color: 'var(--color-text-success)',
-            fontSize: '0.9em',
-            marginTop: '10px',
-            animation: 'blink 1s infinite'
-          }}>
-            ✓ ACTIVE
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
-    <div>
-      {/* Header */}
-      <div style={{
-        color: 'var(--color-text-secondary)',
-        fontSize: '1.5em',
-        marginBottom: '20px',
-        textAlign: 'center',
-        borderBottom: '2px solid var(--color-border)',
-        paddingBottom: '10px'
-      }}>
-        <pre style={{ margin: 0 }}>
-{`
-╔════════════════════════════════════╗
-║       THEME ENGINE v1.0           ║
-║     RUNTIME VIBE SELECTOR         ║
-╚════════════════════════════════════╝
-`}
-        </pre>
-      </div>
-
-      {/* Description */}
-      <div style={{
-        color: 'var(--color-text-accent)',
-        marginBottom: '25px',
-        textAlign: 'center',
-        fontSize: '0.9em'
-      }}>
-        <div>Transform the entire application instantly</div>
-        <div>No reload required - Pure CSS magic</div>
-      </div>
-
-      {/* Current Theme Display */}
-      <div style={{
-        padding: '15px',
-        background: 'var(--color-bg-accent)',
-        border: '2px solid var(--color-accent)',
-        marginBottom: '25px',
-        textAlign: 'center'
-      }}>
+    <TeletextPage
+      title="THEME ENGINE"
+      subtitle="> RUNTIME VIBE SELECTOR"
+      footer="SYS > THEME_SELECT: OK"
+      zone={905}
+    >
+      <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.3' }}>
+        
+        {/* Current Theme */}
         <div style={{
-          color: 'var(--color-text-secondary)',
-          fontSize: '1.1em',
-          marginBottom: '5px'
+          textAlign: 'center',
+          padding: '0.5rem',
+          border: '2px solid #00FFFF',
+          marginBottom: '1rem',
+          backgroundColor: '#001a1a'
         }}>
-          CURRENT THEME:
-        </div>
-        <div style={{
-          color: 'var(--color-text-primary)',
-          fontSize: '1.5em',
-          fontWeight: 'bold'
-        }}>
-          {themes[currentTheme].name.toUpperCase()}
-        </div>
-      </div>
-
-      {/* Theme Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '15px',
-        marginBottom: '25px'
-      }}>
-        {themeOrder.map(themeKey => renderThemePreview(themeKey))}
-      </div>
-
-      {/* Live Preview */}
-      <div style={{
-        padding: '20px',
-        border: '2px solid var(--color-border)',
-        background: 'var(--color-bg-secondary)',
-        marginBottom: '20px'
-      }}>
-        <div style={{
-          color: 'var(--color-text-secondary)',
-          fontSize: '1.1em',
-          marginBottom: '15px',
-          textAlign: 'center'
-        }}>
-          LIVE PREVIEW:
-        </div>
-
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px'
-        }}>
-          <div style={{
-            color: 'var(--color-text-primary)',
-            padding: '10px',
-            background: 'var(--color-bg-primary)',
-            border: '1px solid var(--color-border)'
-          }}>
-            Primary Text: The quick brown fox jumps
-          </div>
-
-          <div style={{
-            color: 'var(--color-text-secondary)',
-            padding: '10px',
-            background: 'var(--color-bg-primary)',
-            border: '1px solid var(--color-border)'
-          }}>
-            Secondary Text: Over the lazy dog
-          </div>
-
-          <div style={{
-            color: 'var(--color-text-accent)',
-            padding: '10px',
-            background: 'var(--color-bg-primary)',
-            border: '1px solid var(--color-border)'
-          }}>
-            Accent Text: 1234567890
-          </div>
-
-          <div style={{
-            display: 'flex',
-            gap: '10px',
-            justifyContent: 'center'
-          }}>
-            <div style={{
-              color: 'var(--color-text-success)',
-              padding: '8px 15px',
-              background: 'var(--color-bg-primary)',
-              border: '1px solid var(--color-border)'
-            }}>
-              ✓ SUCCESS
-            </div>
-
-            <div style={{
-              color: 'var(--color-text-warning)',
-              padding: '8px 15px',
-              background: 'var(--color-bg-primary)',
-              border: '1px solid var(--color-border)'
-            }}>
-              ⚠ WARNING
-            </div>
-
-            <div style={{
-              color: 'var(--color-text-danger)',
-              padding: '8px 15px',
-              background: 'var(--color-bg-primary)',
-              border: '1px solid var(--color-border)'
-            }}>
-              ✗ DANGER
-            </div>
+          <div style={{ color: '#666666', fontSize: '0.9em' }}>ACTIVE:</div>
+          <div style={{ color: '#00FFFF', fontSize: '1.2em', fontWeight: 'bold' }}>
+            {themes[currentTheme].name.toUpperCase()}
           </div>
         </div>
-      </div>
 
-      {/* Instructions */}
-      <div style={{
-        padding: '15px',
-        border: '1px solid var(--color-border)',
-        color: 'var(--color-text-accent)',
-        fontSize: '0.85em'
-      }}>
+        {/* Theme Grid */}
         <div style={{
-          color: 'var(--color-text-secondary)',
-          marginBottom: '10px',
-          fontSize: '1.1em'
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '0.5rem',
+          marginBottom: '1rem'
         }}>
-          HOW IT WORKS:
-        </div>
-        <div>• Click any theme to apply instantly</div>
-        <div>• All colors update via CSS variables</div>
-        <div>• Theme persists across sessions</div>
-        <div>• No page reload required</div>
-        <div>• Works in both Consumer & SysAdmin modes</div>
-      </div>
+          {themeOrder.map((themeKey) => {
+            const theme = themes[themeKey];
+            const isActive = currentTheme === themeKey;
 
-      {/* Skeleton Crew Badge */}
-      <div style={{
-        marginTop: '25px',
-        textAlign: 'center',
-        padding: '15px',
-        border: '2px solid var(--color-accent)',
-        background: 'var(--color-bg-accent)'
-      }}>
-        <div style={{
-          color: 'var(--color-text-secondary)',
-          fontSize: '1.2em',
-          marginBottom: '5px'
-        }}>
-          💀 SKELETON CREW 💀
+            return (
+              <div
+                key={themeKey}
+                onClick={() => setTheme(themeKey)}
+                style={{
+                  padding: '0.5rem',
+                  border: isActive ? '2px solid #00FFFF' : '1px solid #666666',
+                  backgroundColor: isActive ? '#001a1a' : '#000000',
+                  cursor: 'pointer',
+                  fontSize: '0.85em'
+                }}
+              >
+                <div style={{ color: '#00FFFF', marginBottom: '0.25rem' }}>
+                  {isActive && '> '}{theme.name.toUpperCase()}
+                </div>
+                <div style={{ color: '#666666', fontSize: '0.8em' }}>
+                  {theme.description}
+                </div>
+                {/* Color Swatches */}
+                <div style={{ display: 'flex', gap: '2px', marginTop: '0.25rem' }}>
+                  <div style={{
+                    width: '12px',
+                    height: '12px',
+                    backgroundColor: theme.colors.primary,
+                    border: '1px solid #333'
+                  }} />
+                  <div style={{
+                    width: '12px',
+                    height: '12px',
+                    backgroundColor: theme.colors.secondary,
+                    border: '1px solid #333'
+                  }} />
+                  <div style={{
+                    width: '12px',
+                    height: '12px',
+                    backgroundColor: theme.colors.accent,
+                    border: '1px solid #333'
+                  }} />
+                </div>
+              </div>
+            );
+          })}
         </div>
+
+        {/* System Info */}
         <div style={{
-          color: 'var(--color-text-accent)',
-          fontSize: '0.85em'
+          padding: '0.5rem',
+          border: '1px solid #666666',
+          fontSize: '0.75em',
+          color: '#666666'
         }}>
-          One codebase. Infinite styles. Runtime magic.
+          <div style={{ color: '#00FFFF', marginBottom: '0.25rem' }}>EXEC: THEME_APPLY</div>
+          <div>• INSTANT SWITCH: OK</div>
+          <div>• CSS VARS: UPDATED</div>
+          <div>• PERSIST: ENABLED</div>
+          <div>• RELOAD: NOT_REQUIRED</div>
         </div>
+
       </div>
-    </div>
+    </TeletextPage>
   );
 }

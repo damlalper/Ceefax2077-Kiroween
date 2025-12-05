@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import TeletextGrid from '../../components/TeletextGrid';
+import TeletextPage from '../../components/TeletextPage';
 import { useAgentHooks } from '../../hooks/useAgentHooks';
 
 export default function HookDashboard() {
@@ -13,127 +13,121 @@ export default function HookDashboard() {
 
   if (!initialized) {
     return (
-      <TeletextGrid>
-        <div className="p-4 text-center">
-          <div className="text-cyan-400 text-xl animate-pulse">
-            🤖 INITIALIZING AGENT HOOKS...
-          </div>
+      <TeletextPage
+        title="AGENT HOOKS"
+        subtitle="> INITIALIZING..."
+        zone={907}
+      >
+        <div style={{ textAlign: 'center', padding: '2rem 0', color: '#00FFFF' }}>
+          <div className="animate-pulse">🤖 INIT_SEQ...</div>
         </div>
-      </TeletextGrid>
+      </TeletextPage>
     );
   }
 
   const activeCount = hooks.filter(h => h.enabled).length;
-  const recentLogs = logs.slice(-10).reverse();
+  const recentLogs = logs.slice(-6).reverse();
 
   return (
-    <TeletextGrid>
-      <div className="p-4 space-y-4">
-        {/* Header */}
-        <div className="border-b border-cyan-500 pb-2">
-          <h1 className="text-2xl font-bold text-cyan-400">
-            🤖 AGENT HOOKS DASHBOARD
-          </h1>
-          <p className="text-sm text-gray-400 mt-1">
-            {activeCount}/{hooks.length} hooks active • {logs.length} total executions
-          </p>
-        </div>
-
+    <TeletextPage
+      title="AGENT HOOKS"
+      subtitle={`> ${activeCount}/${hooks.length} ACTIVE • ${logs.length} EXEC`}
+      footer="SYS > HOOK_MONITOR: OK"
+      zone={907}
+    >
+      <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.2' }}>
+        
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 text-center text-sm">
-          <div className="border border-green-500 bg-gray-900 p-3">
-            <div className="text-green-400 font-bold text-xl">{activeCount}</div>
-            <div className="text-gray-400 text-xs">Active Hooks</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gap: '0.5rem',
+          marginBottom: '1rem',
+          textAlign: 'center'
+        }}>
+          <div style={{ border: '1px solid #00FF00', padding: '0.5rem', backgroundColor: '#001a00' }}>
+            <div style={{ color: '#00FF00', fontSize: '1.5em', fontWeight: 'bold' }}>{activeCount}</div>
+            <div style={{ color: '#666666', fontSize: '0.7em' }}>ACTIVE</div>
           </div>
-          <div className="border border-cyan-500 bg-gray-900 p-3">
-            <div className="text-cyan-400 font-bold text-xl">{logs.length}</div>
-            <div className="text-gray-400 text-xs">Executions</div>
+          <div style={{ border: '1px solid #00FFFF', padding: '0.5rem', backgroundColor: '#001a1a' }}>
+            <div style={{ color: '#00FFFF', fontSize: '1.5em', fontWeight: 'bold' }}>{logs.length}</div>
+            <div style={{ color: '#666666', fontSize: '0.7em' }}>TOTAL</div>
           </div>
-          <div className="border border-yellow-500 bg-gray-900 p-3">
-            <div className="text-yellow-400 font-bold text-xl">
+          <div style={{ border: '1px solid #FFFF00', padding: '0.5rem', backgroundColor: '#1a1a00' }}>
+            <div style={{ color: '#FFFF00', fontSize: '1.5em', fontWeight: 'bold' }}>
               {logs.filter(l => l.result === 'success').length}
             </div>
-            <div className="text-gray-400 text-xs">Successful</div>
+            <div style={{ color: '#666666', fontSize: '0.7em' }}>SUCCESS</div>
           </div>
         </div>
 
         {/* Toggle View */}
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem' }}>
           <button
             onClick={() => setShowLogs(false)}
-            className={`flex-1 px-4 py-2 font-bold transition-colors ${
-              !showLogs
-                ? 'bg-cyan-600 text-white'
-                : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-            }`}
+            style={{
+              flex: 1,
+              padding: '0.5rem',
+              backgroundColor: !showLogs ? '#00CCCC' : '#333333',
+              color: !showLogs ? '#000000' : '#666666',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.9em'
+            }}
           >
-            HOOKS ({hooks.length})
+            HOOKS
           </button>
           <button
             onClick={() => setShowLogs(true)}
-            className={`flex-1 px-4 py-2 font-bold transition-colors ${
-              showLogs
-                ? 'bg-cyan-600 text-white'
-                : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-            }`}
+            style={{
+              flex: 1,
+              padding: '0.5rem',
+              backgroundColor: showLogs ? '#00CCCC' : '#333333',
+              color: showLogs ? '#000000' : '#666666',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.9em'
+            }}
           >
-            LOGS ({recentLogs.length})
+            LOGS
           </button>
         </div>
 
         {/* Hooks List */}
         {!showLogs && (
-          <div className="space-y-2">
-            {hooks.map((hook) => (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {hooks.slice(0, 5).map((hook) => (
               <div
                 key={hook.id}
-                className={`border p-3 ${
-                  hook.enabled
-                    ? 'border-green-500 bg-gray-900'
-                    : 'border-gray-700 bg-gray-800'
-                }`}
+                style={{
+                  border: hook.enabled ? '1px solid #00FF00' : '1px solid #666666',
+                  padding: '0.5rem',
+                  backgroundColor: '#000000',
+                  fontSize: '0.85em'
+                }}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-lg ${
-                          hook.enabled ? 'text-green-400' : 'text-gray-500'
-                        }`}
-                      >
-                        {hook.enabled ? '✅' : '⏸️'}
-                      </span>
-                      <span className="text-cyan-400 font-bold">
-                        {hook.name}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        #{hook.id}
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      {hook.action.description}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Trigger: {hook.trigger.type}
-                      {hook.trigger.interval && ` (${hook.trigger.interval}ms)`}
-                      {hook.trigger.timeout && ` (${hook.trigger.timeout}ms)`}
-                    </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                  <div style={{ color: '#00FFFF' }}>
+                    {hook.enabled ? '✓' : '○'} {hook.name}
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <div className="text-xs text-yellow-400">
-                      Priority: {hook.priority}
-                    </div>
-                    <button
-                      onClick={() => toggleHook(hook.id, !hook.enabled)}
-                      className={`px-3 py-1 text-xs font-bold transition-colors ${
-                        hook.enabled
-                          ? 'bg-red-600 hover:bg-red-700 text-white'
-                          : 'bg-green-600 hover:bg-green-700 text-white'
-                      }`}
-                    >
-                      {hook.enabled ? 'DISABLE' : 'ENABLE'}
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => toggleHook(hook.id, !hook.enabled)}
+                    style={{
+                      padding: '0.125rem 0.5rem',
+                      backgroundColor: hook.enabled ? '#CC0000' : '#00CC00',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '0.8em'
+                    }}
+                  >
+                    {hook.enabled ? 'OFF' : 'ON'}
+                  </button>
+                </div>
+                <div style={{ color: '#666666', fontSize: '0.8em' }}>
+                  {hook.trigger.type} • P{hook.priority}
                 </div>
               </div>
             ))}
@@ -142,10 +136,10 @@ export default function HookDashboard() {
 
         {/* Logs List */}
         {showLogs && (
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             {recentLogs.length === 0 ? (
-              <div className="text-center text-gray-500 py-8">
-                No logs yet. Hooks will execute automatically.
+              <div style={{ textAlign: 'center', padding: '2rem 0', color: '#666666' }}>
+                NO LOGS YET
               </div>
             ) : (
               recentLogs.map((log, i) => {
@@ -155,39 +149,19 @@ export default function HookDashboard() {
                 return (
                   <div
                     key={i}
-                    className={`border p-2 text-xs ${
-                      log.result === 'success'
-                        ? 'border-green-700 bg-gray-900'
-                        : 'border-red-700 bg-gray-900'
-                    }`}
+                    style={{
+                      border: `1px solid ${log.result === 'success' ? '#00FF00' : '#FF0000'}`,
+                      padding: '0.25rem 0.5rem',
+                      backgroundColor: '#000000',
+                      fontSize: '0.75em'
+                    }}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={
-                            log.result === 'success'
-                              ? 'text-green-400'
-                              : 'text-red-400'
-                          }
-                        >
-                          {log.result === 'success' ? '✅' : '❌'}
-                        </span>
-                        <span className="text-cyan-400">
-                          {hook?.name || log.hookId}
-                        </span>
-                      </div>
-                      <span className="text-gray-500">
-                        {timeAgo}s ago
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: log.result === 'success' ? '#00FF00' : '#FF0000' }}>
+                        {log.result === 'success' ? '✓' : '✗'} {hook?.name || log.hookId}
                       </span>
+                      <span style={{ color: '#666666' }}>{timeAgo}s</span>
                     </div>
-                    <div className="text-gray-400 mt-1">
-                      Action: {log.action}
-                    </div>
-                    {log.details && (
-                      <div className="text-gray-500 mt-1">
-                        {log.details}
-                      </div>
-                    )}
                   </div>
                 );
               })
@@ -196,19 +170,20 @@ export default function HookDashboard() {
         )}
 
         {/* Info */}
-        <div className="border border-gray-700 bg-gray-900 p-4 text-sm space-y-2">
-          <div className="text-cyan-400 font-bold">
-            🤖 AGENT HOOKS INFO
-          </div>
-          <ul className="text-gray-400 space-y-1 list-disc list-inside">
-            <li>Hooks run automatically in the background</li>
-            <li>Enable/disable hooks as needed</li>
-            <li>Higher priority hooks execute first</li>
-            <li>Logs show last 100 executions</li>
-            <li>Try Konami code: ↑↑↓↓←→←→BA</li>
-          </ul>
+        <div style={{
+          marginTop: '1rem',
+          padding: '0.5rem',
+          border: '1px solid #666666',
+          fontSize: '0.7em',
+          color: '#666666'
+        }}>
+          <div style={{ color: '#00FFFF', marginBottom: '0.25rem' }}>HOOK_SYS:</div>
+          <div>• AUTO-EXEC: ENABLED</div>
+          <div>• PRIORITY: SORTED</div>
+          <div>• KONAMI: ↑↑↓↓←→←→BA</div>
         </div>
+
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   );
 }

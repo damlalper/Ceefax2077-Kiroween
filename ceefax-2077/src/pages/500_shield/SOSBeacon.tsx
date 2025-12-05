@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 
 export default function SOSBeacon() {
   const [isActive, setIsActive] = useState(false)
@@ -17,16 +17,13 @@ export default function SOSBeacon() {
   }, [isActive])
 
   return (
-    <TeletextGrid>
-      <div className={`teletext-content ${isActive && strobe ? 'bg-white' : 'bg-black'}`}>
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${isActive && strobe ? 'text-black' : 'text-red-400'}`}>
-            SOS BEACON
-          </h1>
-          <p className={`text-sm ${isActive && strobe ? 'text-black' : 'text-cyan-300'}`}>
-            Emergency Strobe Light • Visual Distress Signal
-          </p>
-        </div>
+    <TeletextPage 
+      title="SOS BEACON" 
+      subtitle="Emergency Strobe Light • Visual Distress Signal"
+      footer={isActive ? 'BEACON ACTIVE • HELP IS ON THE WAY' : 'Emergency visual beacon • For serious emergencies only'}
+      zone={504}
+    >
+      <div style={{ backgroundColor: isActive && strobe ? '#FFFFFF' : '#000000', color: isActive && strobe ? '#000000' : '#FFFFFF' }}>
 
         {/* Activation Button */}
         <div className="border border-red-400 p-4 mb-3 text-center">
@@ -160,12 +157,7 @@ export default function SOSBeacon() {
           </div>
         </div>
 
-        <div className="mt-3 text-center">
-          <p className={`text-xs ${isActive && strobe ? 'text-black' : 'text-gray-400'}`}>
-            {isActive ? 'BEACON ACTIVE • HELP IS ON THE WAY' : 'Emergency visual beacon • For serious emergencies only'}
-          </p>
-        </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

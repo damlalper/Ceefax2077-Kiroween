@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { AIThreatService, type AIThreatStory, type ThreatAnalysis } from '../../services/AIThreatService'
 
 export default function TheBasilisk() {
@@ -74,21 +74,26 @@ export default function TheBasilisk() {
   `
 
   return (
-    <TeletextGrid>
-      <div className={`teletext-content ${glitch ? 'glitch-effect' : ''}`}>
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${analysis && analysis.overallThreat > 60 ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`}>
-            THE BASILISK
-          </h1>
-          <p className="text-cyan-300 text-sm">AI Threat Monitor • Singularity Tracker</p>
-        </div>
-
+    <TeletextPage 
+      title={analysis && analysis.overallThreat > 60 ? "🚨 THE BASILISK 🚨" : "THE BASILISK"} 
+      subtitle="AI Threat Monitor • Singularity Tracker"
+      footer="Live AI threat monitoring • Auto-refresh 60s"
+      zone={205}
+    >
+      <div style={{ animation: glitch ? 'glitch 0.1s' : 'none' }}>
         {loading && (
-          <div className="text-center py-8">
-            <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
+          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+            <div style={{ 
+              color: '#FFD700', 
+              fontSize: 'clamp(16px, 2.5vmin, 24px)',
+              opacity: blink ? 1 : 0,
+              transition: 'opacity 0.3s'
+            }}>
               👁️ SCANNING AI ACTIVITY...
             </div>
-            <div className="text-gray-400 text-xs mt-2">Monitoring HackerNews for threats</div>
+            <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+              Monitoring HackerNews for threats
+            </div>
           </div>
         )}
 
@@ -199,20 +204,25 @@ export default function TheBasilisk() {
               </div>
             </div>
 
-            <div className="mt-3 text-center">
+            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
               <button
                 onClick={loadThreatData}
-                className="bg-red-600 text-white px-4 py-1 text-xs hover:bg-red-700 font-bold"
+                style={{
+                  backgroundColor: '#CC0000',
+                  color: '#FFFFFF',
+                  padding: '0.25rem 1rem',
+                  fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
               >
                 REFRESH SCAN
               </button>
-              <p className="text-gray-400 text-xs mt-2">
-                Live AI threat monitoring • Auto-refresh 60s
-              </p>
             </div>
           </>
         )}
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

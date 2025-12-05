@@ -1733,3 +1733,360 @@ body.quiet-mode .text-yellow-400 {
 body.quiet-mode .bg-red-900 {
   background-color: rgba(100, 0, 0, 0.3) !important;
 }
+
+
+/* ============================================
+   STRICT TELETEXT LAYOUT ENFORCEMENT
+   40 cols × 24 rows - NO EXCEPTIONS
+   ============================================ */
+
+/* Force VT323 font globally */
+* {
+  font-family: 'VT323', monospace !important;
+}
+
+/* Strict grid dimensions */
+.teletext-content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important; /* NO SCROLLING */
+  display: block;
+}
+
+/* Hide any overflow */
+.teletext-content > * {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   ZONE-SPECIFIC HEADER COLORS
+   ============================================ */
+
+/* Zone 100: TRUTH - Blue/Yellow (BBC) */
+.zone-100-header {
+  background-color: #0066CC !important;
+  color: #FFFF00 !important;
+}
+
+/* Zone 200: SYSTEM - Gold/Black (Financial) */
+.zone-200-header {
+  background-color: #FFD700 !important;
+  color: #000000 !important;
+}
+
+/* Zone 300: PULSE - Magenta/Cyan (Pop) */
+.zone-300-header {
+  background-color: #FF1493 !important;
+  color: #00FFFF !important;
+}
+
+/* Zone 400: PLANET - Green/White (Nature) */
+.zone-400-header {
+  background-color: #00CC66 !important;
+  color: #FFFFFF !important;
+}
+
+/* Zone 500: SHIELD - Red/Yellow (Alert) */
+.zone-500-header {
+  background-color: #CC0000 !important;
+  color: #FFFF00 !important;
+}
+
+/* Zone 666: GLITCH - Dark Red/Glitching */
+.zone-666-header {
+  background-color: #660000 !important;
+  color: #FF0000 !important;
+}
+
+/* Zone 800: HOME - Cyan/White */
+.zone-800-header {
+  background-color: #00CCCC !important;
+  color: #FFFFFF !important;
+}
+
+/* Zone 900: THEMES - Grey/Cyan (System) */
+.zone-900-header {
+  background-color: #666666 !important;
+  color: #00FFFF !important;
+}
+
+/* ============================================
+   GLITCH MODE SPECIAL EFFECTS
+   ============================================ */
+
+.glitch-mode {
+  animation: glitch-container 0.3s infinite;
+  filter: hue-rotate(180deg) contrast(1.2);
+}
+
+.glitch-mode .teletext-header {
+  animation: glitch-header 0.5s infinite;
+}
+
+.glitch-text {
+  animation: glitch-shake 0.2s infinite;
+  text-shadow: 
+    2px 0 #FF0000,
+    -2px 0 #00FFFF,
+    0 2px #FF00FF;
+}
+
+@keyframes glitch-container {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+@keyframes glitch-header {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(90deg);
+  }
+}
+
+@keyframes glitch-shake {
+  0%, 100% {
+    transform: skew(0deg);
+  }
+  25% {
+    transform: skew(-2deg);
+  }
+  50% {
+    transform: skew(2deg);
+  }
+  75% {
+    transform: skew(-1deg);
+  }
+}
+
+/* ============================================
+   TELETEXT CHARACTER BLOCKS
+   Use * > • for bullets, not CSS bullets
+   ============================================ */
+
+.teletext-bullet {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+
+.teletext-bullet::before {
+  content: '*';
+}
+
+/* Block graphics for authentic look */
+.block-full::before { content: '█'; }
+.block-dark::before { content: '▓'; }
+.block-medium::before { content: '▒'; }
+.block-light::before { content: '░'; }
+
+/* ============================================
+   DOUBLE HEIGHT TEXT COMPONENT
+   ============================================ */
+
+.double-height {
+  display: inline-block;
+  transform: scaleY(2);
+  transform-origin: top;
+  line-height: 0.5;
+  letter-spacing: -0.05em;
+}
+
+/* ============================================
+   FASTEXT NAVIGATION BUTTONS
+   ============================================ */
+
+.fastext-button {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.fastext-button:hover {
+  filter: brightness(1.2);
+  transform: scale(1.02);
+}
+
+.fastext-button:active {
+  filter: brightness(0.8);
+  transform: scale(0.98);
+}
+
+/* ============================================
+   PAGE CONTENT WRAPPERS
+   Ensure all pages follow 40x24 grid
+   ============================================ */
+
+.teletext-page-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Title rows */
+.teletext-page-title {
+  font-size: clamp(20px, 3vmin, 32px);
+  font-weight: bold;
+  text-align: center;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid currentColor;
+}
+
+/* Content rows */
+.teletext-page-content {
+  flex: 1;
+  overflow: hidden;
+  font-size: clamp(16px, 2.2vmin, 24px);
+  line-height: 1.3;
+}
+
+/* Footer rows */
+.teletext-page-footer {
+  font-size: clamp(14px, 1.8vmin, 20px);
+  text-align: center;
+  padding: 0.25rem 0;
+  border-top: 2px solid currentColor;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   Maintain 40x24 grid at all sizes
+   ============================================ */
+
+@media (max-width: 768px) {
+  .teletext-container {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+  }
+  
+  .teletext-header {
+    font-size: 1.2rem !important;
+  }
+  
+  .teletext-fastext {
+    font-size: 1rem !important;
+  }
+  
+  .teletext-page-content {
+    font-size: 1rem !important;
+  }
+}
+
+/* ============================================
+   ZONE-SPECIFIC CONTENT STYLING
+   ============================================ */
+
+/* Zone 300 (PULSE) - Gossip style with blocky structure */
+.zone-300-content {
+  color: #FF1493;
+}
+
+.zone-300-content .teletext-bullet::before {
+  content: '>';
+  color: #00FFFF;
+}
+
+/* Zone 666 (GLITCH) - Apply distortion to container, not content */
+.zone-666-content {
+  position: relative;
+}
+
+.zone-666-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 0, 0, 0.1) 2px,
+    rgba(255, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  animation: noise 0.2s infinite;
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* Focus indicators for keyboard navigation */
+.fastext-button:focus,
+button:focus,
+a:focus {
+  outline: 3px solid #FFFF00;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .teletext-container {
+    border-width: 6px;
+  }
+  
+  .teletext-header,
+  .teletext-fastext {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .crt-scanlines {
+    display: none;
+  }
+}
+
+/* ============================================
+   PRINT STYLES (for documentation)
+   ============================================ */
+
+@media print {
+  .teletext-screen {
+    background: white;
+  }
+  
+  .teletext-container {
+    border: 2px solid black;
+    box-shadow: none;
+  }
+  
+  .crt-scanlines {
+    display: none;
+  }
+  
+  .fastext-button {
+    border: 1px solid black;
+  }
+}

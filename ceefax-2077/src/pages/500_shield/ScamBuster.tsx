@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { SecurityService, type ScamAnalysis } from '../../services/SecurityService'
 
 export default function ScamBuster() {
@@ -55,14 +55,13 @@ export default function ScamBuster() {
   `
 
   return (
-    <TeletextGrid>
-      <div className={`teletext-content ${flashRed ? 'bg-red-900 bg-opacity-50' : ''}`}>
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${flashRed ? 'text-red-400 animate-pulse' : 'text-red-400'}`}>
-            SCAM BUSTER
-          </h1>
-          <p className="text-cyan-300 text-sm">AI Fraud Detection • Link & SMS Scanner</p>
-        </div>
+    <TeletextPage 
+      title={flashRed ? "🚨 SCAM BUSTER 🚨" : "SCAM BUSTER"} 
+      subtitle="AI Fraud Detection • Link & SMS Scanner"
+      footer="AI-powered fraud detection • Report scams to FTC"
+      zone={502}
+    >
+      <div style={{ backgroundColor: flashRed ? 'rgba(139, 0, 0, 0.5)' : 'transparent' }}>
 
         <div className="space-y-3">
           <div className="border border-red-400 p-2">
@@ -204,12 +203,7 @@ export default function ScamBuster() {
           )}
         </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            AI-powered fraud detection • Report scams to FTC
-          </p>
-        </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

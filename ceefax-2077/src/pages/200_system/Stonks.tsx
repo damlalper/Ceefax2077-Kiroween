@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { CoinGeckoService, type CryptoPrice } from '../../services/CoinGeckoService'
 import { useMarketCrash } from '../../hooks/useMarketCrash'
 
@@ -65,9 +65,9 @@ export default function Stonks() {
   }
 
   const getChangeColor = (change: number) => {
-    if (change > 0) return 'text-green-400'
-    if (change < 0) return 'text-red-400'
-    return 'text-gray-400'
+    if (change > 0) return '#00FF00'
+    if (change < 0) return '#FF0000'
+    return '#888888'
   }
 
   const getChangeIcon = (change: number) => {
@@ -77,126 +77,154 @@ export default function Stonks() {
   }
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${crashMode ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`}>
-            STONKS TERMINAL
-          </h1>
-          <p className="text-cyan-300 text-sm">Live Crypto Market Data</p>
-        </div>
+    <TeletextPage 
+      title={crashMode ? "🚨 STONKS 🚨" : "STONKS"} 
+      subtitle="Live Crypto Market • CoinGecko API"
+      footer="💎🙌 DIAMOND HANDS ONLY • NFA DYOR"
+      zone={201}
+    >
 
-        {loading && (
-          <div className="text-center py-8">
-            <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
-              ⚡ CONNECTING...
-            </div>
-            <div className="text-gray-400 text-xs mt-2">Fetching live prices from CoinGecko</div>
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+          <div style={{ 
+            color: '#FFD700', 
+            fontSize: 'clamp(16px, 2.5vmin, 24px)',
+            opacity: blink ? 1 : 0,
+            transition: 'opacity 0.3s'
+          }}>
+            ⚡ CONNECTING...
           </div>
-        )}
+          <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+            Fetching live prices from CoinGecko
+          </div>
+        </div>
+      )}
 
-        {error && (
-          <div className="border border-red-400 p-3 text-center">
-            <div className="text-red-400 text-sm">⚠ {error}</div>
+      {error && (
+        <div style={{ border: '2px solid #FF0000', padding: '1rem', textAlign: 'center' }}>
+          <div style={{ color: '#FF0000', fontSize: 'clamp(12px, 2vmin, 16px)' }}>⚠ {error}</div>
+          <button
+            onClick={loadPrices}
+            style={{
+              marginTop: '0.5rem',
+              backgroundColor: '#FFD700',
+              color: '#000000',
+              padding: '0.25rem 1rem',
+              fontSize: 'clamp(10px, 1.5vmin, 14px)',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            RETRY
+          </button>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <>
+          {/* Crash Mode Alert */}
+          {crashMode && riskAnalysis && (
+            <div style={{ 
+              border: '2px solid #FF0000', 
+              backgroundColor: 'rgba(139, 0, 0, 0.3)', 
+              padding: '0.5rem', 
+              marginBottom: '1rem',
+              animation: 'pulse 2s infinite'
+            }}>
+              <div style={{ color: '#FF0000', textAlign: 'center', fontWeight: 'bold', fontSize: 'clamp(12px, 2vmin, 16px)' }}>
+                🚨 {riskAnalysis.risk_level} RISK DETECTED 🚨
+              </div>
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', marginTop: '0.25rem' }}>
+                {riskAnalysis.recommendation}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {prices.map((asset) => (
+              <div 
+                key={asset.id} 
+                style={{
+                  border: crashMode && asset.id === 'bitcoin' ? '2px solid #FF0000' : '2px solid #FFD700',
+                  backgroundColor: crashMode && asset.id === 'bitcoin' ? 'rgba(139, 0, 0, 0.2)' : 'transparent',
+                  padding: '0.5rem'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ color: '#FFD700', fontWeight: 'bold', fontSize: 'clamp(12px, 2vmin, 16px)' }}>
+                      {asset.symbol}
+                    </div>
+                    <div style={{ color: '#FFFFFF', fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>
+                      ${CoinGeckoService.formatPrice(asset.current_price)}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: getChangeColor(asset.price_change_percentage_24h), fontSize: 'clamp(12px, 2vmin, 16px)' }}>
+                      {getChangeIcon(asset.price_change_percentage_24h)}{' '}
+                      {Math.abs(asset.price_change_percentage_24h).toFixed(2)}%
+                    </div>
+                    <div style={{ color: '#FFFFFF', fontSize: 'clamp(14px, 2.5vmin, 20px)', fontFamily: 'monospace', marginTop: '0.25rem' }}>
+                      {charts[asset.id] || '▁▂▃▄▅▆▇█'}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.25rem' }}>
+                  24h Vol: ${asset.volume_24h ? (asset.volume_24h / 1e9).toFixed(2) : '0'}B
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Market Sentiment */}
+          <div style={{ marginTop: '1rem', border: '2px solid #666666', padding: '0.5rem' }}>
+            <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>MARKET SENTIMENT</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+              <span style={{ color: '#00FF00' }}>
+                BULLISH {Math.round((prices.filter(p => p.price_change_percentage_24h > 0).length / prices.length) * 100)}%
+              </span>
+              <span style={{ color: '#FF0000' }}>
+                BEARISH {Math.round((prices.filter(p => p.price_change_percentage_24h <= 0).length / prices.length) * 100)}%
+              </span>
+            </div>
+            <div style={{ backgroundColor: '#333333', height: '12px', marginTop: '0.25rem', display: 'flex' }}>
+              <div 
+                style={{ 
+                  backgroundColor: '#00FF00',
+                  width: `${(prices.filter(p => p.price_change_percentage_24h > 0).length / prices.length) * 100}%` 
+                }} 
+              />
+              <div 
+                style={{ 
+                  backgroundColor: '#FF0000',
+                  width: `${(prices.filter(p => p.price_change_percentage_24h <= 0).length / prices.length) * 100}%` 
+                }} 
+              />
+            </div>
+          </div>
+
+          <div style={{ marginTop: '1rem', textAlign: 'center' }}>
             <button
               onClick={loadPrices}
-              className="mt-2 bg-yellow-600 text-black px-4 py-1 text-xs hover:bg-yellow-700 font-bold"
+              style={{
+                backgroundColor: '#FFD700',
+                color: '#000000',
+                padding: '0.25rem 1rem',
+                fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
             >
-              RETRY
+              REFRESH
             </button>
+            <p style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+              Live data • Auto-refresh 30s • CoinGecko API
+            </p>
           </div>
-        )}
-
-        {!loading && !error && (
-          <>
-            {/* Crash Mode Alert */}
-            {crashMode && riskAnalysis && (
-              <div className="border border-red-400 bg-red-900 bg-opacity-30 p-2 mb-3 animate-pulse">
-                <div className="text-red-400 text-center font-bold text-sm">
-                  🚨 {riskAnalysis.risk_level} RISK DETECTED 🚨
-                </div>
-                <div className="text-white text-xs text-center mt-1">
-                  {riskAnalysis.recommendation}
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              {prices.map((asset) => (
-                <div 
-                  key={asset.id} 
-                  className={`border p-2 ${
-                    crashMode && asset.id === 'bitcoin' 
-                      ? 'border-red-400 bg-red-900 bg-opacity-20' 
-                      : 'border-yellow-400'
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="text-yellow-300 font-bold">{asset.symbol}</div>
-                      <div className="text-white text-lg">
-                        ${CoinGeckoService.formatPrice(asset.current_price)}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className={getChangeColor(asset.price_change_percentage_24h)}>
-                        {getChangeIcon(asset.price_change_percentage_24h)}{' '}
-                        {Math.abs(asset.price_change_percentage_24h).toFixed(2)}%
-                      </div>
-                      <div className="text-white text-xl font-mono mt-1">
-                        {charts[asset.id] || '▁▂▃▄▅▆▇█'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-gray-400 text-xs mt-1">
-                    24h Vol: ${asset.volume_24h ? (asset.volume_24h / 1e9).toFixed(2) : '0'}B
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Market Sentiment */}
-            <div className="mt-4 border border-gray-600 p-2">
-              <div className="text-yellow-300 text-xs">MARKET SENTIMENT</div>
-              <div className="flex justify-between mt-1">
-                {prices.filter(p => p.price_change_percentage_24h > 0).length > prices.length / 2 ? (
-                  <>
-                    <span className="text-green-400">BULLISH {Math.round((prices.filter(p => p.price_change_percentage_24h > 0).length / prices.length) * 100)}%</span>
-                    <span className="text-red-400">BEARISH {Math.round((prices.filter(p => p.price_change_percentage_24h <= 0).length / prices.length) * 100)}%</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-green-400">BULLISH {Math.round((prices.filter(p => p.price_change_percentage_24h > 0).length / prices.length) * 100)}%</span>
-                    <span className="text-red-400">BEARISH {Math.round((prices.filter(p => p.price_change_percentage_24h <= 0).length / prices.length) * 100)}%</span>
-                  </>
-                )}
-              </div>
-              <div className="bg-gray-800 h-3 mt-1 flex">
-                <div 
-                  className="bg-green-500" 
-                  style={{ width: `${(prices.filter(p => p.price_change_percentage_24h > 0).length / prices.length) * 100}%` }} 
-                />
-                <div 
-                  className="bg-red-500" 
-                  style={{ width: `${(prices.filter(p => p.price_change_percentage_24h <= 0).length / prices.length) * 100}%` }} 
-                />
-              </div>
-            </div>
-
-            <div className="mt-3 text-center">
-              <button
-                onClick={loadPrices}
-                className="bg-yellow-600 text-black px-4 py-1 text-xs hover:bg-yellow-700 font-bold"
-              >
-                REFRESH
-              </button>
-              <p className="text-gray-400 text-xs mt-2">
-                Live data • Auto-refresh 30s • CoinGecko API
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-    </TeletextGrid>
+        </>
+      )}
+    </TeletextPage>
   )
 }

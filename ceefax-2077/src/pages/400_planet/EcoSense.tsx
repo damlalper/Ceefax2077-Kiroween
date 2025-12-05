@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { EnvironmentService, type AtmosphereData } from '../../services/EnvironmentService'
 
 export default function EcoSense() {
@@ -46,21 +46,27 @@ export default function EcoSense() {
   }, [data])
 
   return (
-    <TeletextGrid>
-      <div className={`teletext-content ${flashWarning ? 'bg-red-900 bg-opacity-30' : ''}`}>
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${data?.hazardous ? 'text-red-400 animate-pulse' : 'text-green-400'}`}>
-            ECO SENSE
-          </h1>
-          <p className="text-cyan-300 text-sm">Atmosphere Monitor • Environmental Sensors</p>
-        </div>
+    <TeletextPage 
+      title={data?.hazardous ? "🚨 ECO SENSE 🚨" : "ECO SENSE"} 
+      subtitle="Atmosphere Monitor • Environmental Sensors"
+      footer="📡 Auto-refresh 10s • Scientific monitoring"
+      zone={401}
+    >
+      <div style={{ animation: flashWarning ? 'pulse 2s infinite' : 'none' }}>
 
         {loading && (
-          <div className="text-center py-8">
-            <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
+          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+            <div style={{ 
+              color: '#FFD700', 
+              fontSize: 'clamp(16px, 2.5vmin, 24px)',
+              opacity: blink ? 1 : 0,
+              transition: 'opacity 0.3s'
+            }}>
               📡 SCANNING ATMOSPHERE...
             </div>
-            <div className="text-gray-400 text-xs mt-2">Reading environmental sensors</div>
+            <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
+              Reading environmental sensors
+            </div>
           </div>
         )}
 
@@ -68,80 +74,99 @@ export default function EcoSense() {
           <>
             {/* Hazard Warning */}
             {data.hazardous && (
-              <div className="border border-red-400 bg-red-900 bg-opacity-40 p-2 mb-3 animate-pulse">
-                <div className="text-red-400 text-center font-bold text-sm">
+              <div style={{ 
+                border: '2px solid #FF0000', 
+                backgroundColor: 'rgba(139, 0, 0, 0.4)', 
+                padding: '0.5rem', 
+                marginBottom: '1rem',
+                animation: 'pulse 2s infinite'
+              }}>
+                <div style={{ color: '#FF0000', textAlign: 'center', fontWeight: 'bold', fontSize: 'clamp(12px, 2vmin, 16px)' }}>
                   🚨 ENVIRONMENTAL HAZARD DETECTED 🚨
                 </div>
-                <div className="text-white text-xs text-center mt-1">
+                <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center', marginTop: '0.25rem' }}>
                   {data.warning}
                 </div>
               </div>
             )}
 
             {/* Weather Icon */}
-            <div className="border border-green-400 p-2 mb-3 text-center">
-              <pre className="text-cyan-300 text-xs leading-tight">
+            <div style={{ border: '2px solid #00CC66', padding: '0.5rem', marginBottom: '1rem', textAlign: 'center' }}>
+              <pre style={{ color: '#00FFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.2', margin: 0 }}>
                 {EnvironmentService.getWeatherIcon(data.aqi, data.temperature)}
               </pre>
-              <div className="text-white text-sm mt-2">
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)', marginTop: '0.5rem' }}>
                 {data.temperature}°C • {data.humidity}% Humidity
               </div>
             </div>
 
             {/* Air Quality Index */}
-            <div className={`border p-3 mb-3 ${
-              data.hazardous ? 'border-red-400 bg-red-900 bg-opacity-20' : 'border-green-400'
-            }`}>
-              <div className="text-center">
-                <div className="text-yellow-300 text-sm">AIR QUALITY INDEX</div>
-                <div className={`text-5xl font-bold ${EnvironmentService.getAQIColor(data.aqi)}`}>
+            <div style={{
+              border: data.hazardous ? '2px solid #FF0000' : '2px solid #00CC66',
+              backgroundColor: data.hazardous ? 'rgba(139, 0, 0, 0.2)' : 'transparent',
+              padding: '1rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)' }}>AIR QUALITY INDEX</div>
+                <div style={{ 
+                  fontSize: 'clamp(32px, 6vmin, 48px)', 
+                  fontWeight: 'bold',
+                  color: EnvironmentService.getAQIColor(data.aqi)
+                }}>
                   {data.aqi}
                 </div>
-                <div className={`text-sm ${EnvironmentService.getAQIColor(data.aqi)}`}>
+                <div style={{ 
+                  fontSize: 'clamp(12px, 2vmin, 16px)',
+                  color: EnvironmentService.getAQIColor(data.aqi)
+                }}>
                   {data.aqiLevel.replace(/_/g, ' ')}
                 </div>
               </div>
 
               {/* AQI Bar */}
-              <div className="mt-3 bg-gray-800 h-4 relative">
+              <div style={{ marginTop: '1rem', backgroundColor: '#333333', height: '16px', position: 'relative' }}>
                 <div
-                  className={`h-full transition-all ${
-                    data.aqi > 300 ? 'bg-red-800' :
-                    data.aqi > 200 ? 'bg-red-600' :
-                    data.aqi > 150 ? 'bg-red-400' :
-                    data.aqi > 100 ? 'bg-orange-400' :
-                    data.aqi > 50 ? 'bg-yellow-400' : 'bg-green-400'
-                  }`}
-                  style={{ width: `${Math.min((data.aqi / 500) * 100, 100)}%` }}
+                  style={{
+                    height: '100%',
+                    transition: 'width 0.3s',
+                    backgroundColor: 
+                      data.aqi > 300 ? '#8B0000' :
+                      data.aqi > 200 ? '#CC0000' :
+                      data.aqi > 150 ? '#FF0000' :
+                      data.aqi > 100 ? '#FF8800' :
+                      data.aqi > 50 ? '#FFD700' : '#00CC66',
+                    width: `${Math.min((data.aqi / 500) * 100, 100)}%`
+                  }}
                 />
               </div>
             </div>
 
             {/* Pollutants */}
-            <div className="border border-gray-600 p-2 mb-2">
-              <div className="text-yellow-300 text-xs mb-2">POLLUTANT LEVELS:</div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-white">PM2.5:</span>
-                  <span className={data.pm25 > 35 ? 'text-red-400' : 'text-green-400'}>
+            <div style={{ border: '2px solid #666666', padding: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.5rem' }}>POLLUTANT LEVELS:</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>PM2.5:</span>
+                  <span style={{ color: data.pm25 > 35 ? '#FF0000' : '#00CC66' }}>
                     {data.pm25} μg/m³
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-white">PM10:</span>
-                  <span className={data.pm10 > 150 ? 'text-red-400' : 'text-green-400'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>PM10:</span>
+                  <span style={{ color: data.pm10 > 150 ? '#FF0000' : '#00CC66' }}>
                     {data.pm10} μg/m³
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-white">O₃:</span>
-                  <span className={data.ozone > 70 ? 'text-yellow-400' : 'text-green-400'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>O₃:</span>
+                  <span style={{ color: data.ozone > 70 ? '#FFD700' : '#00CC66' }}>
                     {data.ozone} ppb
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-white">NO₂:</span>
-                  <span className={data.no2 > 40 ? 'text-yellow-400' : 'text-green-400'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>NO₂:</span>
+                  <span style={{ color: data.no2 > 40 ? '#FFD700' : '#00CC66' }}>
                     {data.no2} ppb
                   </span>
                 </div>
@@ -149,32 +174,43 @@ export default function EcoSense() {
             </div>
 
             {/* Radiation */}
-            <div className={`border p-2 mb-2 ${
-              data.radiationLevel === 'DANGEROUS' ? 'border-red-400 bg-red-900 bg-opacity-20' : 'border-gray-600'
-            }`}>
-              <div className="text-yellow-300 text-xs mb-2">☢️ RADIATION MONITOR:</div>
-              <div className="flex justify-between items-center">
-                <span className="text-white text-xs">Background Level</span>
-                <span className={`${EnvironmentService.getRadiationColor(data.radiationLevel)} font-bold`}>
+            <div style={{
+              border: data.radiationLevel === 'DANGEROUS' ? '2px solid #FF0000' : '2px solid #666666',
+              backgroundColor: data.radiationLevel === 'DANGEROUS' ? 'rgba(139, 0, 0, 0.2)' : 'transparent',
+              padding: '0.5rem',
+              marginBottom: '0.5rem'
+            }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.5rem' }}>☢️ RADIATION MONITOR:</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>Background Level</span>
+                <span style={{ 
+                  color: EnvironmentService.getRadiationColor(data.radiationLevel),
+                  fontWeight: 'bold',
+                  fontSize: 'clamp(12px, 2vmin, 16px)'
+                }}>
                   {data.radiation} μSv/h
                 </span>
               </div>
-              <div className={`text-xs mt-1 ${EnvironmentService.getRadiationColor(data.radiationLevel)}`}>
+              <div style={{ 
+                fontSize: 'clamp(10px, 1.5vmin, 14px)', 
+                marginTop: '0.25rem',
+                color: EnvironmentService.getRadiationColor(data.radiationLevel)
+              }}>
                 {data.radiationLevel}
               </div>
             </div>
 
             {/* Additional Data */}
-            <div className="border border-gray-600 p-2 mb-2">
-              <div className="text-yellow-300 text-xs mb-2">ATMOSPHERIC DATA:</div>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-white">Pressure:</span>
-                  <span className="text-cyan-400">{data.pressure} hPa</span>
+            <div style={{ border: '2px solid #666666', padding: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.5rem' }}>ATMOSPHERIC DATA:</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>Pressure:</span>
+                  <span style={{ color: '#00FFFF' }}>{data.pressure} hPa</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-white">UV Index:</span>
-                  <span className={data.uvIndex > 7 ? 'text-red-400' : data.uvIndex > 5 ? 'text-yellow-400' : 'text-green-400'}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#FFFFFF' }}>UV Index:</span>
+                  <span style={{ color: data.uvIndex > 7 ? '#FF0000' : data.uvIndex > 5 ? '#FFD700' : '#00CC66' }}>
                     {data.uvIndex}
                   </span>
                 </div>
@@ -183,27 +219,35 @@ export default function EcoSense() {
 
             {/* Warning Message */}
             {!data.hazardous && (
-              <div className="border border-green-400 p-2">
-                <div className="text-green-400 text-xs text-center">
+              <div style={{ border: '2px solid #00CC66', padding: '0.5rem' }}>
+                <div style={{ color: '#00CC66', fontSize: 'clamp(10px, 1.5vmin, 14px)', textAlign: 'center' }}>
                   {data.warning}
                 </div>
               </div>
             )}
 
-            <div className="mt-3 text-center">
+            <div style={{ marginTop: '1rem', textAlign: 'center' }}>
               <button
                 onClick={loadAtmosphereData}
-                className="bg-green-600 text-white px-4 py-1 text-xs hover:bg-green-700 font-bold"
+                style={{
+                  backgroundColor: '#00CC66',
+                  color: '#FFFFFF',
+                  padding: '0.25rem 1rem',
+                  fontSize: 'clamp(10px, 1.5vmin, 14px)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
               >
                 REFRESH SENSORS
               </button>
-              <p className="text-gray-400 text-xs mt-2">
+              <p style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.5rem' }}>
                 Auto-refresh 10s • Scientific monitoring
               </p>
             </div>
           </>
         )}
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

@@ -1,30 +1,58 @@
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage, { TeletextListItem, TeletextColumns } from '../../components/TeletextPage'
 
 export default function TruthHub() {
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-4">
-          <h1 className="text-blue-400 text-2xl double-height">THE TRUTH</h1>
-          <p className="text-cyan-300">News & Facts Intelligence</p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="border border-blue-400 p-2">
-            <div className="text-yellow-300">101 → GLOBAL WIRE</div>
-            <div className="text-white text-sm">AI-Summarized World News</div>
+    <TeletextPage 
+      title="THE TRUTH" 
+      subtitle="News & Facts Intelligence"
+      footer="Enter page number to navigate"
+      zone={100}
+    >
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '1rem',
+        fontSize: 'clamp(16px, 2.2vmin, 24px)'
+      }}>
+        <TeletextColumns
+          left={
+            <div style={{ color: '#FFFF00' }}>
+              <TeletextListItem bullet=">">
+                <span style={{ color: '#FFFF00' }}>101</span> <span style={{ color: '#FFFFFF' }}>GLOBAL WIRE</span>
+              </TeletextListItem>
+              <div style={{ color: '#00FFFF', fontSize: '0.9em', marginLeft: '2rem' }}>
+                AI-Summarized World News
+              </div>
+            </div>
+          }
+          right={
+            <div style={{ color: '#FFFF00' }}>
+              <TeletextListItem bullet=">">
+                <span style={{ color: '#FFFF00' }}>103</span> <span style={{ color: '#FFFFFF' }}>LIE DETECTOR</span>
+              </TeletextListItem>
+              <div style={{ color: '#00FFFF', fontSize: '0.9em', marginLeft: '2rem' }}>
+                Detect Manipulation & Bias
+              </div>
+            </div>
+          }
+        />
+        
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '2rem',
+          padding: '1rem',
+          border: '2px solid #0066CC',
+          backgroundColor: '#0066CC',
+          color: '#FFFF00'
+        }}>
+          <div style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
+            TRUTH TERMINAL ACTIVE
           </div>
-
-          <div className="border border-blue-400 p-2">
-            <div className="text-yellow-300">103 → LIE DETECTOR</div>
-            <div className="text-white text-sm">Detect Manipulation & Bias</div>
+          <div style={{ fontSize: '0.9em', marginTop: '0.5rem' }}>
+            FACT-CHECKING AI ONLINE
           </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm">Enter page number to navigate</p>
         </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

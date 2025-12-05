@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { CoinGeckoService } from '../../services/CoinGeckoService'
 import { useMarketCrash } from '../../hooks/useMarketCrash'
 
@@ -85,123 +85,122 @@ export default function OracleOfDoom() {
   `
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className={`text-xl ${crashMode ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`}>
-            ORACLE OF DOOM
-          </h1>
-          <p className="text-cyan-300 text-sm">Market Risk Doomsday Clock</p>
+    <TeletextPage 
+      title={crashMode ? "🚨 ORACLE OF DOOM 🚨" : "ORACLE OF DOOM"} 
+      subtitle="Market Risk Doomsday Clock"
+      footer="AI-powered risk analysis • MCP Agent Active"
+      zone={204}
+    >
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+          <div style={{ 
+            color: '#FFD700', 
+            fontSize: 'clamp(16px, 2.5vmin, 24px)',
+            opacity: blink ? 1 : 0,
+            transition: 'opacity 0.3s'
+          }}>
+            🔮 CONSULTING ORACLE...
+          </div>
         </div>
+      )}
 
-        {loading && (
-          <div className="text-center py-8">
-            <div className={`text-yellow-300 text-lg ${blink ? 'opacity-100' : 'opacity-0'}`}>
-              🔮 CONSULTING ORACLE...
+      {!loading && (
+        <>
+          {/* ASCII Skull - Only appears in HIGH RISK */}
+          {crashMode && (
+            <div style={{ border: '2px solid #FF0000', backgroundColor: 'rgba(139, 0, 0, 0.3)', padding: '0.5rem', marginBottom: '1rem' }}>
+              <pre style={{ color: '#FF0000', fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.2', textAlign: 'center', animation: 'pulse 2s infinite', margin: 0 }}>
+                {SKULL}
+              </pre>
+              <div style={{ color: '#FF0000', textAlign: 'center', fontWeight: 'bold', fontSize: 'clamp(12px, 2vmin, 16px)', marginTop: '0.5rem' }}>
+                ☠️ THE ORACLE HAS SPOKEN ☠️
+              </div>
+            </div>
+          )}
+
+          {/* Doomsday Clock */}
+          <div style={{ border: '2px solid #FF0000', padding: '1rem', marginBottom: '1rem' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 'clamp(40px, 8vmin, 60px)', marginBottom: '0.5rem' }}>⏰</div>
+              <div style={{ 
+                fontSize: 'clamp(32px, 6vmin, 48px)', 
+                fontWeight: 'bold',
+                color: getClockColor(doomLevel)
+              }}>
+                {doomLevel}%
+              </div>
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)', marginTop: '0.5rem' }}>{getDoomMessage(doomLevel)}</div>
+            </div>
+
+            <div style={{ marginTop: '1rem', backgroundColor: '#333333', height: '24px', position: 'relative' }}>
+              <div
+                style={{
+                  height: '100%',
+                  transition: 'width 0.3s',
+                  backgroundColor: 
+                    doomLevel > 70 ? '#FF0000' : 
+                    doomLevel > 50 ? '#FF8800' : 
+                    doomLevel > 30 ? '#FFD700' : '#00FF00',
+                  width: `${doomLevel}%`
+                }}
+              />
             </div>
           </div>
-        )}
 
-        {!loading && (
-          <>
-            {/* ASCII Skull - Only appears in HIGH RISK */}
-            {crashMode && (
-              <div className="border border-red-400 bg-red-900 bg-opacity-30 p-2 mb-3">
-                <pre className="text-red-400 text-xs leading-tight text-center animate-pulse">
-                  {SKULL}
-                </pre>
-                <div className="text-red-400 text-center font-bold text-sm mt-2">
-                  ☠️ THE ORACLE HAS SPOKEN ☠️
-                </div>
+          {/* Market Data */}
+          <div style={{ border: '2px solid #666666', padding: '0.5rem', marginBottom: '0.5rem' }}>
+            <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.5rem' }}>CURRENT MARKET:</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#FFFFFF' }}>BTC Price:</span>
+                <span style={{ color: btcPrice && btcPrice < 90000 ? '#FF0000' : '#00FF00' }}>
+                  ${btcPrice ? CoinGeckoService.formatPrice(btcPrice) : '---'}
+                </span>
               </div>
-            )}
-
-            {/* Doomsday Clock */}
-            <div className="border border-red-400 p-3 mb-3">
-              <div className="text-center">
-                <div className="text-6xl mb-2">⏰</div>
-                <div className={`text-5xl font-bold ${getClockColor(doomLevel)}`}>
-                  {doomLevel}%
-                </div>
-                <div className="text-white text-sm mt-2">{getDoomMessage(doomLevel)}</div>
-              </div>
-
-              <div className="mt-3 bg-gray-800 h-6 relative">
-                <div
-                  className={`h-full transition-all ${
-                    doomLevel > 70 ? 'bg-red-500' : doomLevel > 50 ? 'bg-orange-500' : doomLevel > 30 ? 'bg-yellow-500' : 'bg-green-500'
-                  }`}
-                  style={{ width: `${doomLevel}%` }}
-                />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#FFFFFF' }}>ETH Price:</span>
+                <span style={{ color: '#00FFFF' }}>
+                  ${ethPrice ? CoinGeckoService.formatPrice(ethPrice) : '---'}
+                </span>
               </div>
             </div>
+          </div>
 
-            {/* Market Data */}
-            <div className="border border-gray-600 p-2 mb-2">
-              <div className="text-yellow-300 text-xs mb-2">CURRENT MARKET:</div>
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-white">BTC Price:</span>
-                  <span className={btcPrice && btcPrice < 90000 ? 'text-red-400' : 'text-green-400'}>
-                    ${btcPrice ? CoinGeckoService.formatPrice(btcPrice) : '---'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-white">ETH Price:</span>
-                  <span className="text-cyan-400">
-                    ${ethPrice ? CoinGeckoService.formatPrice(ethPrice) : '---'}
-                  </span>
-                </div>
+          {/* Risk Factors */}
+          {riskAnalysis && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(12px, 2vmin, 16px)', borderBottom: '2px solid #666666', paddingBottom: '0.25rem' }}>
+                RISK FACTORS:
               </div>
-            </div>
-
-            {/* Risk Factors */}
-            {riskAnalysis && (
-              <div className="space-y-2">
-                <div className="text-yellow-300 text-sm border-b border-gray-600 pb-1">
-                  RISK FACTORS:
-                </div>
-                {riskAnalysis.factors.map((factor, idx) => (
-                  <div key={idx} className="border border-gray-600 p-2">
-                    <div className="flex justify-between items-center">
-                      <div className="text-white text-xs">{factor}</div>
-                      <div className={
-                        riskAnalysis.risk_level === 'CRITICAL' ? 'text-red-400' :
-                        riskAnalysis.risk_level === 'HIGH' ? 'text-orange-400' :
-                        riskAnalysis.risk_level === 'MEDIUM' ? 'text-yellow-400' :
-                        'text-green-400'
-                      }>
-                        {riskAnalysis.risk_level === 'CRITICAL' ? '💀' :
-                         riskAnalysis.risk_level === 'HIGH' ? '🔴' :
-                         riskAnalysis.risk_level === 'MEDIUM' ? '🟡' : '🟢'}
-                      </div>
+              {riskAnalysis.factors.map((factor, idx) => (
+                <div key={idx} style={{ border: '2px solid #666666', padding: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>{factor}</div>
+                    <div style={{ fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>
+                      {riskAnalysis.risk_level === 'CRITICAL' ? '💀' :
+                       riskAnalysis.risk_level === 'HIGH' ? '🔴' :
+                       riskAnalysis.risk_level === 'MEDIUM' ? '🟡' : '🟢'}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* MCP Analysis */}
-            {riskAnalysis && (
-              <div className="mt-3 border border-yellow-400 p-2">
-                <div className="text-yellow-300 text-xs mb-1">🤖 MCP ANALYSIS:</div>
-                <div className="text-white text-xs">
-                  {riskAnalysis.recommendation}
                 </div>
-                <div className="text-gray-400 text-xs mt-1">
-                  Risk Level: {riskAnalysis.risk_level} ({riskAnalysis.risk_score}/100)
-                </div>
-              </div>
-            )}
-
-            <div className="mt-3 text-center">
-              <p className="text-gray-400 text-xs">
-                AI-powered risk analysis • MCP Agent Active
-              </p>
+              ))}
             </div>
-          </>
-        )}
-      </div>
-    </TeletextGrid>
+          )}
+
+          {/* MCP Analysis */}
+          {riskAnalysis && (
+            <div style={{ marginTop: '1rem', border: '2px solid #FFD700', padding: '0.5rem' }}>
+              <div style={{ color: '#FFD700', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginBottom: '0.25rem' }}>🤖 MCP ANALYSIS:</div>
+              <div style={{ color: '#FFFFFF', fontSize: 'clamp(10px, 1.5vmin, 14px)' }}>
+                {riskAnalysis.recommendation}
+              </div>
+              <div style={{ color: '#888888', fontSize: 'clamp(10px, 1.5vmin, 14px)', marginTop: '0.25rem' }}>
+                Risk Level: {riskAnalysis.risk_level} ({riskAnalysis.risk_score}/100)
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </TeletextPage>
   )
 }

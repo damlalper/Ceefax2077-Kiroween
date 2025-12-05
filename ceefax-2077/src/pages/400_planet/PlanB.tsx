@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { NASAService, type Planet, type MarsPhoto } from '../../services/NASAService'
 
 export default function PlanB() {
@@ -64,145 +64,211 @@ export default function PlanB() {
     setCurrentPlanetIndex(prev => (prev - 1 + planets.length) % planets.length)
   }
 
-  const planet3D = NASAService.generate3DPlanet(currentPlanet, rotation, 15)
+  const planet3D = NASAService.generate3DPlanet(currentPlanet, rotation, 10)
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-green-400 text-xl">PLAN B</h1>
-          <p className="text-cyan-300 text-sm">Terraform Monitor • Planetary Analysis</p>
-        </div>
-
+    <TeletextPage
+      title="PLAN B"
+      subtitle={`> ${currentPlanet.name.toUpperCase()} • ${currentPlanet.habitability}%`}
+      footer="NASA API • TERRAFORM MONITOR"
+      zone={403}
+    >
+      <div style={{ fontSize: 'clamp(10px, 1.5vmin, 14px)', lineHeight: '1.2' }}>
+        
         {/* Planet Selector */}
-        <div className="flex justify-between items-center mb-3">
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '0.5rem'
+        }}>
           <button
             onClick={prevPlanet}
-            className="bg-green-600 text-white px-3 py-1 text-xs hover:bg-green-700"
+            style={{
+              padding: '0.25rem 0.5rem',
+              backgroundColor: '#00CC66',
+              color: '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '0.8em',
+              fontWeight: 'bold'
+            }}
           >
             ← PREV
           </button>
-          <div className={`text-lg font-bold ${currentPlanet.color}`}>
+          <div style={{ color: currentPlanet.color, fontSize: '1.2em', fontWeight: 'bold' }}>
             {currentPlanet.name.toUpperCase()}
           </div>
           <button
             onClick={nextPlanet}
-            className="bg-green-600 text-white px-3 py-1 text-xs hover:bg-green-700"
+            style={{
+              padding: '0.25rem 0.5rem',
+              backgroundColor: '#00CC66',
+              color: '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '0.8em',
+              fontWeight: 'bold'
+            }}
           >
             NEXT →
           </button>
         </div>
 
-        {/* 3D Planet Visualization */}
-        <div className="border border-green-400 bg-black p-3 mb-3">
-          <pre className={`text-center text-xs leading-tight font-mono ${currentPlanet.color}`}>
+        {/* 3D Planet Visualization - Compact */}
+        <div style={{
+          border: '2px solid #00CC66',
+          backgroundColor: '#000000',
+          padding: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          <pre style={{
+            textAlign: 'center',
+            fontSize: '0.6em',
+            lineHeight: '1',
+            fontFamily: "'VT323', monospace",
+            color: currentPlanet.color,
+            margin: 0
+          }}>
             {planet3D}
           </pre>
-          <div className="text-center text-gray-400 text-xs mt-2">
-            Use ← → arrows to switch planets
+          <div style={{ textAlign: 'center', color: '#666666', fontSize: '0.6em', marginTop: '0.25rem' }}>
+            ← → ARROWS TO SWITCH
           </div>
         </div>
 
-        {/* Habitability Score */}
-        <div className="border border-green-400 p-3 mb-3">
-          <div className="text-center">
-            <div className="text-yellow-300 text-sm">SURVIVAL SCORE</div>
-            <div className={`text-5xl font-bold ${NASAService.getHabitabilityColor(currentPlanet.habitability)}`}>
-              {currentPlanet.habitability}%
-            </div>
-            <div className="text-white text-xs mt-2">
-              {currentPlanet.habitability >= 80 ? 'IDEAL FOR LIFE' :
-               currentPlanet.habitability >= 20 ? 'TERRAFORMING POSSIBLE' :
-               currentPlanet.habitability > 0 ? 'EXTREME CHALLENGE' :
-               'UNINHABITABLE'}
-            </div>
+        {/* Habitability Score - Compact */}
+        <div style={{
+          border: '2px solid #00CC66',
+          padding: '0.5rem',
+          marginBottom: '0.5rem',
+          textAlign: 'center'
+        }}>
+          <div style={{ color: '#FFFF00', fontSize: '0.8em' }}>SURVIVAL</div>
+          <div style={{
+            color: NASAService.getHabitabilityColor(currentPlanet.habitability),
+            fontSize: '2em',
+            fontWeight: 'bold',
+            lineHeight: '1'
+          }}>
+            {currentPlanet.habitability}%
           </div>
-
+          <div style={{ color: '#FFFFFF', fontSize: '0.7em', marginTop: '0.25rem' }}>
+            {currentPlanet.habitability >= 80 ? 'IDEAL' :
+             currentPlanet.habitability >= 20 ? 'TERRAFORM OK' :
+             currentPlanet.habitability > 0 ? 'EXTREME' :
+             'IMPOSSIBLE'}
+          </div>
           {/* Progress Bar */}
-          <div className="mt-3 bg-gray-800 h-4 relative">
-            <div
-              className={`h-full transition-all ${
-                currentPlanet.habitability >= 80 ? 'bg-green-500' :
-                currentPlanet.habitability >= 20 ? 'bg-yellow-500' :
-                'bg-red-500'
-              }`}
-              style={{ width: `${currentPlanet.habitability}%` }}
-            />
+          <div style={{
+            marginTop: '0.5rem',
+            backgroundColor: '#1a1a1a',
+            height: '8px',
+            position: 'relative'
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${currentPlanet.habitability}%`,
+              backgroundColor: currentPlanet.habitability >= 80 ? '#00FF00' :
+                              currentPlanet.habitability >= 20 ? '#FFFF00' :
+                              '#FF0000',
+              transition: 'width 0.3s'
+            }} />
           </div>
         </div>
 
-        {/* Planet Data */}
-        <div className="border border-gray-600 p-2 mb-3">
-          <div className="text-yellow-300 text-xs mb-2">PLANETARY DATA:</div>
-          <div className="space-y-1 text-xs">
-            <div className="flex justify-between">
-              <span className="text-white">Atmosphere:</span>
-              <span className="text-cyan-400">{currentPlanet.atmosphere}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-white">Temperature:</span>
-              <span className="text-cyan-400">{currentPlanet.temperature}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-white">Water:</span>
-              <span className="text-cyan-400">{currentPlanet.water}</span>
-            </div>
+        {/* Planet Data - Compact */}
+        <div style={{
+          border: '1px solid #666666',
+          padding: '0.5rem',
+          marginBottom: '0.5rem',
+          fontSize: '0.75em'
+        }}>
+          <div style={{ color: '#FFFF00', marginBottom: '0.25rem' }}>DATA:</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#FFFFFF' }}>
+            <span>ATM:</span>
+            <span style={{ color: '#00FFFF' }}>{currentPlanet.atmosphere}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#FFFFFF' }}>
+            <span>TEMP:</span>
+            <span style={{ color: '#00FFFF' }}>{currentPlanet.temperature}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#FFFFFF' }}>
+            <span>H2O:</span>
+            <span style={{ color: '#00FFFF' }}>{currentPlanet.water}</span>
           </div>
         </div>
 
-        {/* Mars Rover Data */}
+        {/* Mars Rover Data - Compact */}
         {currentPlanet.name === 'Mars' && (
           <>
             {loadingMars && (
-              <div className="border border-red-400 p-3 mb-3 text-center">
-                <div className="text-red-400 text-sm">📡 CONNECTING TO NASA...</div>
-                <div className="text-gray-400 text-xs mt-1">Fetching Perseverance data</div>
+              <div style={{
+                border: '1px solid #FF6666',
+                padding: '0.5rem',
+                marginBottom: '0.5rem',
+                textAlign: 'center',
+                fontSize: '0.75em'
+              }}>
+                <div style={{ color: '#FF6666' }}>📡 NASA API...</div>
               </div>
             )}
 
             {marsPhoto && marsAscii && (
-              <div className="border border-red-400 bg-red-900 bg-opacity-20 p-2 mb-3">
-                <div className="text-red-400 text-xs mb-2 text-center">
-                  🚀 LATEST FROM PERSEVERANCE ROVER
+              <div style={{
+                border: '1px solid #FF6666',
+                backgroundColor: 'rgba(153, 0, 0, 0.2)',
+                padding: '0.25rem',
+                marginBottom: '0.5rem'
+              }}>
+                <div style={{
+                  color: '#FF6666',
+                  fontSize: '0.6em',
+                  marginBottom: '0.25rem',
+                  textAlign: 'center'
+                }}>
+                  🚀 PERSEVERANCE
                 </div>
-                <pre className="text-red-300 text-xs leading-tight font-mono overflow-x-auto">
+                <pre style={{
+                  color: '#FF9999',
+                  fontSize: '0.5em',
+                  lineHeight: '1',
+                  fontFamily: "'VT323', monospace",
+                  overflow: 'hidden',
+                  margin: 0
+                }}>
                   {marsAscii}
                 </pre>
-                <div className="text-gray-400 text-xs mt-2 text-center">
-                  Sol {marsPhoto.sol} • {marsPhoto.earth_date} • {marsPhoto.camera}
+                <div style={{
+                  color: '#666666',
+                  fontSize: '0.6em',
+                  marginTop: '0.25rem',
+                  textAlign: 'center'
+                }}>
+                  SOL {marsPhoto.sol} • {marsPhoto.earth_date}
                 </div>
               </div>
             )}
           </>
         )}
 
-        {/* Terraform Assessment */}
-        <div className={`border p-2 ${
-          currentPlanet.habitability >= 20 ? 'border-green-400 bg-green-900 bg-opacity-20' : 'border-red-400 bg-red-900 bg-opacity-20'
-        }`}>
-          <div className="text-yellow-300 text-xs mb-2">TERRAFORM ASSESSMENT:</div>
-          <div className="text-white text-xs">
-            {currentPlanet.name === 'Earth' && (
-              <>✓ Current home. Protect at all costs. Climate action required.</>
-            )}
-            {currentPlanet.name === 'Mars' && (
-              <>⚠️ Possible backup. Requires massive terraforming. Decades of work. Water exists as ice.</>
-            )}
-            {currentPlanet.name === 'Jupiter' && (
-              <>✗ Gas giant. No solid surface. Impossible for human habitation. Moons may be viable.</>
-            )}
-            {currentPlanet.name === 'Titan' && (
-              <>⚠️ Saturn's moon. Thick atmosphere. Liquid methane lakes. Extreme cold. Research ongoing.</>
-            )}
+        {/* Assessment - Compact */}
+        <div style={{
+          border: `1px solid ${currentPlanet.habitability >= 20 ? '#00CC66' : '#CC0000'}`,
+          backgroundColor: currentPlanet.habitability >= 20 ? 'rgba(0, 153, 0, 0.2)' : 'rgba(153, 0, 0, 0.2)',
+          padding: '0.5rem',
+          fontSize: '0.7em'
+        }}>
+          <div style={{ color: '#FFFF00', marginBottom: '0.25rem' }}>ASSESSMENT:</div>
+          <div style={{ color: '#FFFFFF' }}>
+            {currentPlanet.name === 'Earth' && '✓ PROTECT. CLIMATE ACTION NOW.'}
+            {currentPlanet.name === 'Mars' && '⚠️ BACKUP. DECADES WORK. ICE H2O.'}
+            {currentPlanet.name === 'Jupiter' && '✗ GAS GIANT. NO SURFACE. MOONS?'}
+            {currentPlanet.name === 'Titan' && '⚠️ METHANE LAKES. EXTREME COLD.'}
           </div>
         </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            {currentPlanet.name === 'Mars' ? 'NASA Mars Rover API • Real data' : 'Simulated planetary data'}
-          </p>
-        </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

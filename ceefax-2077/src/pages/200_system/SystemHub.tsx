@@ -1,40 +1,34 @@
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 
 export default function SystemHub() {
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-4">
-          <h1 className="text-yellow-400 text-2xl double-height">THE SYSTEM</h1>
-          <p className="text-cyan-300">Economy & Tech Intelligence</p>
+    <TeletextPage 
+      title="THE SYSTEM" 
+      subtitle="Economy & Tech Intelligence"
+      footer="Enter page number to navigate"
+      zone={200}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ border: '2px solid #FFD700', padding: '0.5rem' }}>
+          <div style={{ color: '#FFD700', fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>201 → STONKS</div>
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Crypto/Stock Block Charts</div>
         </div>
 
-        <div className="space-y-2">
-          <div className="border border-yellow-400 p-2">
-            <div className="text-yellow-300">201 → STONKS</div>
-            <div className="text-white text-sm">Crypto/Stock Block Charts</div>
-          </div>
-
-          <div className="border border-yellow-400 p-2">
-            <div className="text-yellow-300">202 → CODE EXORCIST</div>
-            <div className="text-white text-sm">AI Legacy Code Refactor</div>
-          </div>
-
-          <div className="border border-yellow-400 p-2">
-            <div className="text-yellow-300">204 → ORACLE OF DOOM</div>
-            <div className="text-white text-sm">Market Risk Doomsday Clock</div>
-          </div>
-
-          <div className="border border-red-400 p-2 bg-red-900 bg-opacity-20">
-            <div className="text-red-400">205 → THE BASILISK</div>
-            <div className="text-white text-sm">AI Threat Monitor</div>
-          </div>
+        <div style={{ border: '2px solid #FFD700', padding: '0.5rem' }}>
+          <div style={{ color: '#FFD700', fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>202 → CODE EXORCIST</div>
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)' }}>AI Legacy Code Refactor</div>
         </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm">Enter page number to navigate</p>
+        <div style={{ border: '2px solid #FFD700', padding: '0.5rem' }}>
+          <div style={{ color: '#FFD700', fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>204 → ORACLE OF DOOM</div>
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)' }}>Market Risk Doomsday Clock</div>
+        </div>
+
+        <div style={{ border: '2px solid #FF0000', padding: '0.5rem', backgroundColor: 'rgba(139, 0, 0, 0.2)' }}>
+          <div style={{ color: '#FF0000', fontSize: 'clamp(14px, 2.5vmin, 20px)' }}>205 → THE BASILISK</div>
+          <div style={{ color: '#FFFFFF', fontSize: 'clamp(12px, 2vmin, 16px)' }}>AI Threat Monitor</div>
         </div>
       </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

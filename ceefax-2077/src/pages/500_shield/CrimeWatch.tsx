@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import TeletextGrid from '../../components/TeletextGrid'
+import TeletextPage from '../../components/TeletextPage'
 import { SecurityService, type CrimeRisk } from '../../services/SecurityService'
 
 export default function CrimeWatch() {
@@ -27,12 +27,12 @@ export default function CrimeWatch() {
   }
 
   return (
-    <TeletextGrid>
-      <div className="teletext-content">
-        <div className="text-center mb-3">
-          <h1 className="text-red-400 text-xl">CRIME WATCH</h1>
-          <p className="text-cyan-300 text-sm">Location Safety Score • Risk Analysis</p>
-        </div>
+    <TeletextPage 
+      title="CRIME WATCH" 
+      subtitle="Location Safety Score • Risk Analysis"
+      footer="Data from local crime reports • Stay vigilant"
+      zone={501}
+    >
 
         {/* Input */}
         <div className="space-y-3">
@@ -155,12 +155,6 @@ export default function CrimeWatch() {
           )}
         </div>
 
-        <div className="mt-3 text-center">
-          <p className="text-gray-400 text-xs">
-            Data from local crime reports • Stay vigilant
-          </p>
-        </div>
-      </div>
-    </TeletextGrid>
+    </TeletextPage>
   )
 }

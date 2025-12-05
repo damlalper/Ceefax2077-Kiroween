@@ -5,7 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import KeyboardListener from './components/KeyboardListener'
 import BiosBootLoader from './components/BiosBootLoader'
 import BiometricGate from './components/BiometricGate'
-import TeletextGrid from './components/TeletextGrid'
+import TeletextLayout from './components/TeletextLayout'
 import { VHSPlayback } from './components/VHSPlayback'
 import { useVHS } from './hooks/useVHS'
 import { useAgentHooks } from './hooks/useAgentHooks'
@@ -25,6 +25,7 @@ if (typeof window !== 'undefined') {
 import TruthHub from './pages/100_truth/TruthHub'
 import GlobalWire from './pages/100_truth/GlobalWire'
 import LieDetector from './pages/100_truth/LieDetector'
+import MemoryVault from './pages/100_truth/MemoryVault'
 
 // ZONE 200: SYSTEM
 import SystemHub from './pages/200_system/SystemHub'
@@ -56,9 +57,11 @@ import GlitchMode from './pages/666_glitch/GlitchMode'
 
 // ZONE 800: TELE-HOME (Frankenstein)
 import { HomeHub, TeleHome, TimeMachine, PixelGen } from './pages/800_home'
+import TheRenderer from './pages/800_home/TheRenderer'
 
 // ZONE 900: THEMES (Skeleton Crew)
 import { ThemeSelector, TapeLibrary, HookDashboard } from './pages/900_themes'
+import LocalGhost from './pages/900_themes/LocalGhost'
 
 // Fallback
 import SignalLostPage from './components/SignalLostPage'
@@ -98,6 +101,7 @@ function TeletextRouter() {
     if (currentPage === 100) return <TruthHub />
     if (currentPage === 101) return <GlobalWire />
     if (currentPage === 103) return <LieDetector />
+    if (currentPage === 105) return <MemoryVault />
 
     // ZONE 200: THE SYSTEM (Economy & Tech)
     if (currentPage === 200) return <SystemHub />
@@ -132,8 +136,10 @@ function TeletextRouter() {
     if (currentPage === 801) return <TeleHome />
     if (currentPage === 802) return <TimeMachine />
     if (currentPage === 803) return <PixelGen />
+    if (currentPage === 805) return <TheRenderer />
 
     // ZONE 900: THEMES (Skeleton Crew)
+    if (currentPage === 904) return <LocalGhost />
     if (currentPage === 905) return <ThemeSelector />
     if (currentPage === 906) return <TapeLibrary onPlayTape={playTape} />
     if (currentPage === 907) return <HookDashboard />
@@ -148,9 +154,9 @@ function TeletextRouter() {
       {isPlaybackMode && currentTape ? (
         <VHSPlayback tape={currentTape} onStop={stopPlayback} />
       ) : (
-        <TeletextGrid>
+        <TeletextLayout>
           {renderPage()}
-        </TeletextGrid>
+        </TeletextLayout>
       )}
     </>
   )
